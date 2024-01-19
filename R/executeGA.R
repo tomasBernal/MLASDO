@@ -172,11 +172,14 @@ executeGA <- function(
       # This is necessary because some train set solution may have died
       rfData <- na.omit(rfData)
 
+      rfDataDiagnosis <- rfData$dependent
+      rfData$dependent <- NULL
+
       # Creating the ranger model
       model <- ranger(
 
-        dependent.variable.name = "dependent",
-        data = rfData,
+        x = rfData,
+        y = rfDataDiagnosis,
         num.trees = numTrees,
         mtry = mtry,
         splitrule = splitrule,
@@ -193,7 +196,7 @@ executeGA <- function(
 
       # Get the confusion matrix
       cfModel <-
-        confusionMatrix(modelPrediction,  factor(solutionData[-SubsetTrain], levels = c(0, 1)))
+        confusionMatrix(modelPrediction,  factor(na.omit(solutionData[-SubsetTrain]), levels = c(0, 1)))
 
       # Return the balanced accuracy of the ranger model
       return(unname(cfModel$byClass['Balanced Accuracy']))
