@@ -168,6 +168,10 @@ executeGA <- function(
 
       rfData$dependent <- as.factor(solutionData[SubsetTrain])
 
+      # We need to delete the rows with NA
+      # This is necessary because some train set solution may have died
+      rfData <- na.omit(rfData)
+
       # Creating the ranger model
       model <- ranger(
 
