@@ -164,22 +164,11 @@ executeGA <- function(
 
     } else if(mlAlgorithm == "RF"){
 
-      rfData <- omicTrain
-
-      rfData$dependent <- as.factor(solutionData[SubsetTrain])
-
-      # We need to delete the rows with NA
-      # This is necessary because some train set solution may have died
-      rfData <- na.omit(rfData)
-
-      rfDataDiagnosis <- rfData$dependent
-      rfData$dependent <- NULL
 
       # Creating the ranger model
       model <- ranger(
-
-        x = rfData,
-        y = rfDataDiagnosis,
+        x = as.matrix(omicTrain),
+        y = as.matrix(solutionData[SubsetTrain]),
         num.trees = numTrees,
         mtry = mtry,
         splitrule = splitrule,
