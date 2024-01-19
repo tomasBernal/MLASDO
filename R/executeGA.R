@@ -165,10 +165,15 @@ executeGA <- function(
     } else if(mlAlgorithm == "RF"){
 
 
+      rfData <- omicTrain
+
+      rfData$dependent <- as.factor(solutionData[SubsetTrain])
+
       # Creating the ranger model
       model <- ranger(
-        x = omicTrain,
-        y = as.factor(solutionData[SubsetTrain]),
+
+        dependent.variable.name = "dependent",
+        data = rfData,
         num.trees = numTrees,
         mtry = mtry,
         splitrule = splitrule,
@@ -184,10 +189,11 @@ executeGA <- function(
       modelPrediction <- factor(predict(model, omicTest)$predictions, levels = c(0, 1))
 
       # Get the confusion matrix
-      cfModel <- confusionMatrix(modelPrediction,  factor(solutionData[-SubsetTrain], levels = c(0, 1)))
+      cfModel <-
+        confusionMatrix(modelPrediction,  factor(solutionData[-SubsetTrain], levels = c(0, 1)))
 
       # Return the balanced accuracy of the ranger model
-      return(unname(cfModel$byClass['Balanced Accuracy']))
+      return(cfModel$byClass['Balanced Accuracy'])
     }
   }
 
