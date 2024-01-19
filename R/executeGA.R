@@ -167,8 +167,8 @@ executeGA <- function(
 
       # Creating the ranger model
       model <- ranger(
-        x = as.matrix(omicTrain),
-        y = as.matrix(solutionData[SubsetTrain]),
+        x = omicTrain,
+        y = as.factor(solutionData[SubsetTrain]),
         num.trees = numTrees,
         mtry = mtry,
         splitrule = splitrule,
