@@ -181,11 +181,10 @@ executeGA <- function(
       )
 
       # Use the model to predict on the test set
-      modelPrediction <- factor(predict(model, omicTest)$predictions, levels = c(0, 1))
+      modelPrediction <- predict(model, omicTest)$predictions
 
       # Get the confusion matrix
-      cfModel <-
-        confusionMatrix(modelPrediction,  factor(na.omit(solutionData[-SubsetTrain]), levels = c(0, 1)))
+      cfModel <- confusionMatrix(as.factor(as.integer(modelPrediction)), as.factor(solutionData[-SubsetTrain]))
 
       # Return the balanced accuracy of the ranger model
       return(unname(cfModel$byClass['Balanced Accuracy']))
