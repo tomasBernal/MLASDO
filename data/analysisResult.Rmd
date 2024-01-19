@@ -1,0 +1,361 @@
+---
+title: "Analysis of the solution obtained after running the genetic algorithm"
+author: ""
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+params:
+  geneticAlgorithm : ""
+  pcaAnalisis : ""
+  numericTable : ""
+  totalTable : ""
+  clinicData : ""
+  classVariable: ""
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+library(plotly)
+```
+
+# PCA Analysis
+
+```{r}
+classVariable <- params$pca[[params$classVariable]]
+
+ggplot(params$pca, aes(PC1, PC2)) + 
+  modelr::geom_ref_line(h = 0) +
+  modelr::geom_ref_line(v = 0) +
+  geom_jitter(aes(color = classVariable)) +
+   xlab("First Principal Component") + 
+  ylab("Second Principal Component") + 
+  ggtitle("PCA Analysis of Changed Diagnostics")
+```
+
+# Table of clinical data for patients
+
+```{r}
+DT::datatable(params$clinicData, class = 'cell-border stripe', options = list(scrollX = TRUE))
+```
+
+```{r, include=FALSE}
+numericTable <- params$numericTable
+
+numericVariables <- rownames(numericTable)
+
+totalTable <- params$totalTable
+
+totalTable$logCCCM <- ifelse(totalTable$CCCM == 0, 1, totalTable$CCCM)
+
+totalTable$logCCCM <- log(totalTable$logCCCM, base = 2)
+
+totalTable$logECEM <- ifelse(totalTable$ECEM == 0, 1, totalTable$ECEM)
+
+totalTable$logECEM <- log(totalTable$logECEM, base = 2)
+
+totalTable$logCE <- ifelse(totalTable$CE == 0, 1, totalTable$CE)
+
+totalTable$logCE <- log(totalTable$logCE, base = 2)
+```
+
+```{r, include=FALSE}
+totalTable$ColorsCCCM <- NA
+totalTable$ColorsECEM <- NA
+totalTable$ColorsCE <- NA
+
+totalTable$textCCCM <- NA
+totalTable$textECEM <- NA
+totalTable$textCE <- NA
+
+for(indexRatio in 1:nrow(totalTable)){
+
+  if(totalTable$CCCM[indexRatio] == 0){
+
+    totalTable$ColorsCCCM[indexRatio] <- "black"
+
+  } else {
+
+    if(abs(totalTable$logCCCM[indexRatio]) < 1){
+      totalTable$ColorsCCCM[indexRatio] <- "gold"
+    } else if (abs(totalTable$logCCCM[indexRatio]) > 1 && abs(totalTable$logCCCM[indexRatio]) < 2){
+      totalTable$ColorsCCCM[indexRatio] <- "orange"
+    } else {
+      totalTable$ColorsCCCM[indexRatio] <- "red"
+    }
+
+  }
+
+
+  text <- ""
+
+  if(rownames(totalTable)[indexRatio] %in% numericVariables){
+
+    text <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][1]
+    text <- paste(text, "(Numeric)", "Ratio:", round(totalTable$logCCCM[indexRatio], digits = 3),  sep = " ")
+    
+    text <- paste(text, paste("Number of patients", "Control", "->", "Case", ":", sep = " "), sep = "<br>")
+    text <- paste(text, numericTable[rownames(totalTable)[indexRatio], "NumPatientsCC"], sep = " ")
+    
+    text <- paste(text, paste("Mean of the patients", "Control", "->", "Case", ":", sep = " "), sep = "<br>")
+    text <- paste(text, round(numericTable[rownames(totalTable)[indexRatio], "MeanCC"], digits = 3), sep = " ")
+
+    text <- paste(text, paste("Number of patients", "Control", "->", "Control", ":", sep = " "), sep = "<br>")
+    text <- paste(text, numericTable[rownames(totalTable)[indexRatio], "NumPatientsCM"], sep = " ")
+
+    text <- paste(text, paste("Mean of the patients", "Control", "->", "Control", ":", sep = " "), sep = "<br>")
+    text <- paste(text, round(numericTable[rownames(totalTable)[indexRatio], "MeanCM"], digits = 3), sep = " ")
+
+  } else {
+
+    predictor <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][1]
+    
+    predictorValue <- strsplit(predictor, " ")[[1]][2]
+    predictorValue <- replace(predictorValue, is.na(predictorValue), "Empty")
+    
+    vsValue <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][2]
+    vsValue <- replace(vsValue, is.na(vsValue), "Empty")
+    
+
+    text <- paste(strsplit(predictor, " ")[[1]][1], "=", predictorValue, "(Categoric)", "Ratio:", round(totalTable$logCCCM[indexRatio], digits = 3), sep = " ")
+
+    text <- paste(text, "<br>", sep = "")
+    text <- paste(text, paste("Number of patients", "Control", "->", "Case", "", sep = " "), predictorValue, ":", sep = "")
+
+    text <- paste(text, totalTable$SumCCNumerator[indexRatio], sep = " ")
+    text <- paste(text, "<br>", sep = "")
+
+    text <- paste(text, paste("Number of patients", "Control", "->", "Case", "", sep = " "), vsValue, ":", sep = "")
+
+    text <- paste(text, totalTable$SumCCDenominator[indexRatio], sep = " ")
+    text <- paste(text, "<br>", sep = "")
+
+
+    text <- paste(text, paste("Number of patients", "Control", "->", "Control", "", sep = " "), predictorValue, ":", sep = "")
+    text <- paste(text, totalTable$SumCMNumerator[indexRatio], sep = " ")
+
+    text <- paste(text, "<br>", sep = "")
+    text <- paste(text, paste("Number of patients", "Control", "->", "Control", "", sep = " "), vsValue, ":", sep = "")
+
+    text <- paste(text, totalTable$SumCMDenominator[indexRatio], sep = " ")
+
+  }
+
+  totalTable$textCCCM[indexRatio] <- text
+
+  if(totalTable$ECEM[indexRatio] == 0){
+
+    totalTable$ColorsECEM[indexRatio] <- "black"
+
+  } else {
+
+    if(abs(totalTable$logECEM[indexRatio]) < 1){
+      totalTable$ColorsECEM[indexRatio] <- "gold"
+    } else if (abs(totalTable$logECEM[indexRatio]) > 1 && abs(totalTable$logECEM[indexRatio]) < 2){
+      totalTable$ColorsECEM[indexRatio] <- "orange"
+    } else {
+      totalTable$ColorsECEM[indexRatio] <- "red"
+    }
+  }
+
+  text <- ""
+
+  if(rownames(totalTable)[indexRatio] %in% numericVariables){
+
+    text <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][1]
+
+    text <- paste(text, "(Numeric)","Ratio:", round(totalTable$logECEM[indexRatio], digits = 3), sep = " ")
+
+
+    text <- paste(text, paste("Number of patients", "Case", "->", "Control", ":", sep = " "), sep = "<br>")
+
+    text <- paste(text, numericTable[rownames(totalTable)[indexRatio], "NumPatientsEC"], sep = " ")
+
+
+    text <- paste(text, paste("Mean of the patients", "Case", "->", "Control", ":", sep = " "), sep = "<br>")
+
+    text <- paste(text, round(numericTable[rownames(totalTable)[indexRatio], "MeanEC"], digits = 3), sep = " ")
+
+
+    text <- paste(text, paste("Number of patients", "Case", "->", "Case", ":", sep = " "), sep = "<br>")
+
+    text <- paste(text, numericTable[rownames(totalTable)[indexRatio], "NumPatientsEM"], sep = " ")
+
+
+    text <- paste(text, paste("Mean of the patients", "Case", "->", "Case", ":", sep = " "), sep = "<br>")
+
+    text <- paste(text, round(numericTable[rownames(totalTable)[indexRatio], "MeanEM"], digits = 3), sep = " ")
+
+  } else {
+
+    predictor <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][1]
+    
+    predictorValue <- strsplit(predictor, " ")[[1]][2]
+    predictorValue <- replace(predictorValue, is.na(predictorValue), "Empty")
+    
+    vsValue <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][2]
+    vsValue <- replace(vsValue, is.na(vsValue), "Empty")
+    
+    text <- paste(strsplit(predictor, " ")[[1]][1], "=", predictorValue, "(Categoric)","Ratio:", round(totalTable$logECEM[indexRatio], digits = 3), sep = " ")
+
+    text <- paste(text, "<br>", sep = "")
+    text <- paste(text, paste("Number of patients", "Case", "->", "Control", "", sep = " "), predictorValue, ":", sep = "")
+
+    text <- paste(text, totalTable$SumECNumerator[indexRatio], sep = " ")
+    text <- paste(text, "<br>", sep = "")
+
+    text <- paste(text, paste("Number of patients", "Case", "->", "Control", "", sep = " "), vsValue, ":", sep = "")
+
+    text <- paste(text, totalTable$SumECDenominator[indexRatio], sep = " ")
+
+    text <- paste(text, "<br>", sep = "")
+
+
+    text <- paste(text, paste("Number of patients", "Case", "->", "Case", "", sep = " "), predictorValue, ":", sep = "")
+
+    text <- paste(text, totalTable$SumEMNumerator[indexRatio], sep = " ")
+
+    text <- paste(text, "<br>", sep = "")
+
+    text <- paste(text, paste("Number of patients", "Case", "->", "Case", "", sep = " "), vsValue, ":", sep = "")
+
+    text <- paste(text, totalTable$SumEMDenominator[indexRatio], sep = " ")
+  }
+
+  totalTable$textECEM[indexRatio] <- text
+
+
+  if(totalTable$CE[indexRatio] == 0){
+
+    totalTable$ColorsCE[indexRatio] <- "black"
+
+  } else {
+
+    if(abs(totalTable$logCE[indexRatio]) < 1){
+      totalTable$ColorsCE[indexRatio] <- "gold"
+    } else if (abs(totalTable$logCE[indexRatio]) > 1 && abs(totalTable$logCE[indexRatio]) < 2){
+      totalTable$ColorsCE[indexRatio] <- "orange"
+    } else {
+      totalTable$ColorsCE[indexRatio] <- "red"
+    }
+  }
+
+  text <- ""
+
+  if(rownames(totalTable)[indexRatio] %in% numericVariables){
+
+    text <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][1]
+
+    text <- paste(text, "(Numeric)", "Ratio:", round(totalTable$logCE[indexRatio], digits = 3), sep = " ")
+
+    
+    text <- paste(text, paste("Number of patients total of", "Control", "(before genetic):", sep = " "), sep = "<br>")
+
+    text <- paste(text, numericTable[rownames(totalTable)[indexRatio], "NumPatientsC"], sep = " ")
+
+
+    text <- paste(text, paste("Mean of the patients total of", "Control", "(before genetic):", sep = " "), sep = "<br>")
+
+    text <- paste(text, round(numericTable[rownames(totalTable)[indexRatio], "MeanC"], digits = 3), sep = " ")
+
+
+    text <- paste(text, paste("Number of patients total of", "Case", "(before genetic):", sep = " "), sep = "<br>")
+
+    text <- paste(text, numericTable[rownames(totalTable)[indexRatio], "NumPatientsE"], sep = " ")
+
+
+    text <- paste(text, paste("Mean of the patients total of", "Case", "(before genetic):", sep = " "), sep = "<br>")
+
+    text <- paste(text, round(numericTable[rownames(totalTable)[indexRatio], "MeanE"], digits = 3), sep = " ")
+
+  } else {
+
+    predictor <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][1]
+    
+    predictorValue <- strsplit(predictor, " ")[[1]][2]
+    predictorValue <- replace(predictorValue, is.na(predictorValue), "Empty")
+    
+    vsValue <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][2]
+    vsValue <- replace(vsValue, is.na(vsValue), "Empty")
+    
+    
+    text <- paste(strsplit(predictor, " ")[[1]][1], "=", predictorValue, "(Categoric)","Ratio:", round(totalTable$logCE[indexRatio], digits = 3), sep = " ")
+
+    text <- paste(text, "<br>", sep = "")
+    
+    text <- paste(text, paste("Number of patients total of", "Control", "(before genetic) ", sep = " "), predictorValue, ":", sep = "")
+
+    text <- paste(text, totalTable$SumCNumerator[indexRatio], sep = " ")
+
+    text <- paste(text, "<br>", sep = "")
+
+    text <- paste(text, paste("Number of patients total of", "Control", "(before genetic) ", sep = " "), vsValue, ":", sep = "")
+
+    text <- paste(text, totalTable$SumCDenominator[indexRatio], sep = " ")
+
+    text <- paste(text, "<br>", sep = "")
+
+
+    text <- paste(text, paste("Number of patients total of", "Case", "(before genetic) ", sep = " "), predictorValue, ":", sep = "")
+
+    text <- paste(text, totalTable$SumENumerator[indexRatio], sep = " ")
+
+    text <- paste(text, "<br>", sep = "")
+
+    text <- paste(text, paste("Number of patients total of", "Case", "(before genetic) ", sep = " "), vsValue, ":", sep = "")
+
+    text <- paste(text, totalTable$SumEDenominator[indexRatio], sep = " ")
+  }
+
+  totalTable$textCE[indexRatio] <- text
+}
+```
+
+
+# Ratio Analysis
+
+```{r}
+plot <- plot_ly(totalTable,x=~logCCCM,y=~rownames(totalTable), type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCCCM ), height = 800, width = 1000, hoverinfo = "text", text =~textCCCM)
+
+title <- paste("Ratio of patients who changed from", "Case", "to", "Control", "versus those who continued as", "Case", sep = " ")
+plot <- plot %>% layout(title = title,
+                        xaxis = list(title = "Ratio on a logarithmic scale (base 2)", tickvals = seq(-ceiling(-min(totalTable$logCCCM)), ceiling(max(totalTable$logCCCM)))),
+                        yaxis = list(title = "Predictor"))
+```
+
+```{r}
+plot
+```
+
+
+```{r, include = FALSE}
+plot <- plot_ly(totalTable,x=~logECEM,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsECEM ), height = 800, width = 1000, hoverinfo = "text", text =~textECEM)
+
+title <- paste("Ratio of patients who changed from", "Control", "to", "Case", "versus those who continued as", "Control", sep = " ")
+
+plot <- plot %>% layout(title = title,
+                        xaxis = list(title = "Ratio on a logarithmic scale (base 2)", tickvals = seq(-ceiling(-min(totalTable$logECEM)), ceiling(max(totalTable$logECEM)))),
+                        yaxis = list(title = "Predictor"))
+```
+
+```{r}
+plot
+```
+
+```{r, include = FALSE}
+plot <- plot_ly(totalTable,x=~logCE,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCE ), height = 800, width = 1000, hoverinfo = "text", text =~textCE)
+
+title <- paste("Ratio between the total number of patients", "Control", "and", "Case", sep = " ")
+
+plot <- plot %>% layout(title = title,
+                        xaxis = list(title = "Ratio on a logarithmic scale (base 2)", tickvals = seq(-ceiling(-min(totalTable$logCE)), ceiling(max(totalTable$logCE)))),
+                        yaxis = list(title = "Predictor"))
+```
+
+```{r}
+plot
+```
