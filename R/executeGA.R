@@ -164,10 +164,11 @@ executeGA <- function(
 
     } else if(mlAlgorithm == "RF"){
 
-
       rfData <- omicTrain
 
       rfData$dependent <- as.factor(solutionData[SubsetTrain])
+
+      rfData <- na.omit(rfData)
 
       # Creating the ranger model
       model <- ranger(
