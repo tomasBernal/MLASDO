@@ -109,7 +109,7 @@ MLASDO::detectAnomalies(savingName = "DefaultExecutionLasso", mlAlgorithm = "Las
 
 MLASDO::detectAnomalies(savingName = "DefaultExecutionRF", mlAlgorithm = "RF")
 
-MLASDO::detectAnomalies(savingName = "QuickExecution", mlAlgorithm = "Lasso", nIterations = 3, nStopIter = 1, populationSize = 20, activePredictors = c("sex", "age", "Mutation", "Ethnicity"))
+MLASDO::detectAnomalies(savingName = "QuickExecution", mlAlgorithm = "Lasso", nIterations = 3, nStopIter = 2, populationSize = 20, activePredictors = c("sex", "age", "Mutation", "Ethnicity"))
 
 MLASDO::detectAnomalies(savingName = "ExecutionWithOwnData", mlAlgorithm = "RF", omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv", idColumn = "Patient.Id", nIterations = 3, populationSize = 10, classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"))
 
