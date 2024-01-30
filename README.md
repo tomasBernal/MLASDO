@@ -132,7 +132,7 @@ Test Execution, with this execution, we will be able to verify if we have set th
         savingName = "QuickExecution",
         mlAlgorithm = "Lasso", 
         nIterations = 3, 
-        nStopIter = 1, 
+        nStopIter = 2, 
         populationSize = 20, 
         classVariable = "Ca.Co.Last", 
         idColumn = "Trial", 

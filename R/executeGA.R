@@ -210,7 +210,7 @@ executeGA <- function(
   generateInitialPopulation <- function(object) {
 
     # Initialize a matrix to store the population
-    population <- matrix(nrow = object@popSize, ncol = object@nBits)
+    population <- matrix(0, nrow = object@popSize, ncol = object@nBits)
 
     # For each individual
     for (i in 1:object@popSize) {

@@ -250,8 +250,6 @@ detectAnomalies <- function(
 
   #### DATA PROCESSING ####
 
-  # Primero vamos a
-
   omicData <- omicData[,!(names(omicData) %in% activePredictors)]
 
   omicsFiltered <- omicData[,!(names(omicData) %in% classVariable)]
