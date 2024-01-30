@@ -131,6 +131,9 @@ executeGA <- function(
   # This function evaluates each possible solution
   fitness <- function(genome) {
 
+    # Substitute the NA values for 0
+    genome <- replace(genome, is.na(genome), 0)
+
     # Calculating new diagnoses determined by the current solution
     # It is done through an XOR operation
     solutionData <- bitwXor(omic[[classVariable]], genome)
@@ -154,8 +157,12 @@ executeGA <- function(
         # Get the confusion matrix
         cfModel <- confusionMatrix(as.factor(as.integer(modelPrediction)), as.factor(solutionData[-SubsetTrain]))
 
+        specificity <- ifelse(is.na(as.numeric(cfModel$byClass["Specificity"])), 0,  as.numeric(cfModel$byClass["Specificity"]))
+
+        sensitivity <- ifelse(is.na(as.numeric(cfModel$byClass["Sensitivity"])), 0,  as.numeric(cfModel$byClass["Sensitivity"]))
+
         # Save the balanced mean obtained in this iteration
-        balancedAccValues[i] <- unname(cfModel$byClass['Balanced Accuracy'])
+        balancedAccValues[i] <- (specificity + sensitivity) / 2
 
       }
 
@@ -164,17 +171,11 @@ executeGA <- function(
 
     } else if(mlAlgorithm == "RF"){
 
-      rfData <- omicTrain
-
-      rfData$dependent <- as.factor(solutionData[SubsetTrain])
-
-      rfData <- na.omit(rfData)
-
       # Creating the ranger model
       model <- ranger(
 
-        dependent.variable.name = "dependent",
-        data = rfData,
+        x = omicTrain,
+        y = solutionData[SubsetTrain],
         num.trees = numTrees,
         mtry = mtry,
         splitrule = splitrule,
@@ -187,14 +188,19 @@ executeGA <- function(
       )
 
       # Use the model to predict on the test set
-      modelPrediction <- factor(predict(model, omicTest)$predictions, levels = c(0, 1))
+      modelPrediction <- predict(model, omicTest)$predictions
 
       # Get the confusion matrix
       cfModel <-
-        confusionMatrix(modelPrediction,  factor(solutionData[-SubsetTrain], levels = c(0, 1)))
+        confusionMatrix(as.factor(as.integer(modelPrediction)), as.factor(solutionData[-SubsetTrain]))
+
+      specificity <- ifelse(is.na(as.numeric(cfModel$byClass["Specificity"])), 0,  as.numeric(cfModel$byClass["Specificity"]))
+
+      sensitivity <- ifelse(is.na(as.numeric(cfModel$byClass["Sensitivity"])), 0,  as.numeric(cfModel$byClass["Sensitivity"]))
 
       # Return the balanced accuracy of the ranger model
-      return(cfModel$byClass['Balanced Accuracy'])
+      return((specificity + sensitivity) / 2)
+
     }
   }
 
