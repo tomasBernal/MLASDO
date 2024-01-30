@@ -4,21 +4,32 @@
 \alias{performRatioAnalysis}
 \title{performRatioAnalysis}
 \usage{
-performRatioAnalysis(clinicData, activePredictors, classVariable, savingName)
+performRatioAnalysis(
+  justAnalysis,
+  solutionPath,
+  clinicData,
+  activePredictors,
+  classVariable,
+  savingName
+)
 }
 \arguments{
+\item{justAnalysis}{Indicates whether to perform the analysis directly (TRUE) or to run the genetic algorithm (FALSE). Default value: FALSE.}
+
+\item{solutionPath}{Path to genetic algorithm solution.}
+
 \item{clinicData}{Dataset of clinic data that will be used.}
 
-\item{activePredictors}{activePredictors on which the study of the ratios will be conducted after the genetic algorithm has been performed.}
+\item{activePredictors}{activePredictors on which the study of the ratios will be conducted after the genetic algorithm has been performed. Default value: All the predictors in clinic data, except classVariable and idColumn.}
 
 \item{classVariable}{Target variable, which must be binary, meaning it has two possible values.}
 
-\item{savingName}{Name under which the model and solution were saved after the execution of the genetic algorithm.}
+\item{savingName}{Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.}
 }
 \description{
 This function performs ratio-based analysis on the active activePredictors passed as parameters.
 }
 \examples{
 
-MLASDO::performRatioAnalysis(clinicData = clinicData, activePredictors = activePredictors, classVariable = classVariable, savingName = savingName)
+MLASDO::performRatioAnalysis(justAnalysis = justAnalysis, solutionPath = solutionPath, clinicData = clinicData, activePredictors = activePredictors, classVariable = classVariable, savingName = savingName)
 }

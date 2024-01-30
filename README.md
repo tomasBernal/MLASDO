@@ -18,7 +18,7 @@ This software uses two datasets:
 
 - Dataset with any omics content (transcriptomics, metabolomics, proteomics, methylomics...) of each patient. This dataset will be used to train the machine learning algorithm in charge of classifying the patients.
 
-- Clinical data dataset, this will contain different clinical data for each patient. This dataset will be used to create a report based on ratios, with this report providing evidence to support that the diagnoses identified as abnormal are indeed abnormal.
+- Clinical data dataset, this will contain different clinical data for each patient. This dataset will be used to create a report based on ratios, with this report providing evidence to support that the diagnoses identified as anomalous are indeed anomalous.
 
 Therefore, the first step will be to check that both datasets are composed of the same patients, ensuring consistency between the detection of the anomalous cases and their subsequent evidencing.
 
@@ -55,49 +55,62 @@ This process is repeated for the specified number of generations, until a certai
 
 This procedure is used to determine which samples were anomalous. The genetic algorithm locates these anomalous samples and the machine learning algorithm evidences this detection, validating that these samples belong to the alternative group.
 
-### Step 3. Generating reports to evidence the detection of abnormal cases
+### Step 3. Generating reports to evidence the detection of anomalous cases
 
 After the execution, the software indicates which samples are anomalous cases, the last step is to analyse if these cases detected as anomalous really are, providing evidence based on the clinical data of the patients, for which a report is created.
 
 This report is made up of three sections:
 
-- PCA analysis, which graphically shows the distribution of diagnoses once the abnormal cases are reclassified.
+- PCA analysis, which graphically shows the distribution of diagnoses once the anomalous cases are reclassified.
 
 - Table of patients' clinical data, in which the clinical data dataset is displayed.
 
 - Ratio-based analysis, in which 3 graphs are shown:
-    - The first will show the ratios of the different clinical data between CONTROL and CONTROL patients detected as abnormal (actually they would be CASE).
+    - The first will show the ratios of the different clinical data between CONTROL and CONTROL patients detected as anomalous (actually they would be CASE).
 
-    - The second will show the ratios of the different clinical data between CASE and CASE patients detected as abnormal (actually they would be CONTROL).
+    - The second will show the ratios of the different clinical data between CASE and CASE patients detected as anomalous (actually they would be CONTROL).
 
-    - The third will show the ratios of the different clinical data between CONTROL and CASE patients once the abnormal cases are reclassified.
+    - The third will show the ratios of the different clinical data between CONTROL and CASE patients once the anomalous cases are reclassified.
 
 ## What software we have developed for this purpose
 
 To solve this problem, the MLASDO software (Machine learning based Anomalous Sample Detection on Omics), which is an R package, has been implemented.
 
-In this software it is possible to configure
+In this software it is possible to configure:
 - The different parameters on the execution of the genetic algorithm.
+    - Such as the number of iterations or the selection, mutation and crossover operators.
 - The Machine Learning algorithm to use.
-- The different parameters on the execution of the Lasso algorithm.
-- The different parameters on the execution of the Random Forest algorithm.
-- The variable on which you want to detect anomalous cases.
-- The clinical data on which to perform the analysis.
+    - You can choose between a Lasso and a Random Forest model.
+- The different parameters of the Machine Learning algorithm.
+- The variable to predict and therefore on which the detection of anomalous cases will be performed.
+- The clinical data (variables) on which to perform the analysis.
 
 In addition, with this software, it is possible to perform the detection and subsequent analysis on your own datasets, although the software includes a couple of sample datasets.
+
+### Software Pipeline
+
+![Image of the pipeline](images/pipeline.png)
+
+In the previous image it is possible to observe the MLASDO execution pipeline, this pipeline can start in two different stages:
+- Reading the solution (anomalous cases) of a previously executed genetic algorithm.
+- Executing the genetic algorithm to obtain the solution (anomalous cases).
+
+Once the solution of the genetic algorithm (anomalous cases) has been obtained, the following execution steps are:
+- Performance of the PCA analysis.
+- Performing the ratio analysis, based on the activePredictors.
+- Compilation of the markdown.
 
 ### R packages required
 - devtools
 - dplyr
 - GA
 - glmnet
+- ranger
 - caret
 - doParallel
 
 ### Installation
 ```
-    install.packages("devtools")
- 
     library(devtools)
 
     install_github("tomasBernal/MLASDO")
@@ -108,25 +121,21 @@ In addition, with this software, it is possible to perform the detection and sub
 ### Examples of use of such software
 
 
-Default Execution with Lasso model, the default parameters can be observed in the documentation:
+Default complete execution with Lasso model, the default parameters can be observed in the code manual:
 ```
     MLASDO::detectAnomalies(
         savingName = "DefaultExecutionLasso", 
-        mlAlgorithm = "Lasso", 
-        classVariable = "Ca.Co.Last", 
-        idColumn = "Trial")
+        mlAlgorithm = "Lasso")
 ```
 
-Default Execution with Random Forest model, the default parameters can be observed in the documentation:
+Default complete execution with Random Forest model, the default parameters can be observed in the code manual:
 ```
     MLASDO::detectAnomalies(
         savingName = "DefaultExecutionLasso", 
-        mlAlgorithm = "RF", 
-        classVariable = "Ca.Co.Last", 
-        idColumn = "Trial")
+        mlAlgorithm = "RF")
 ```
 
-Test Execution, with this execution, we will be able to verify if we have set the parameters related to the data, active predictors, and the class variable correctly:
+Test complete execution, with this execution, we will be able to verify if we have set the parameters related to the data, active predictors, and the class variable correctly:
 ```
     MLASDO::detectAnomalies(
         savingName = "QuickExecution",
@@ -134,14 +143,11 @@ Test Execution, with this execution, we will be able to verify if we have set th
         nIterations = 3, 
         nStopIter = 2, 
         populationSize = 20, 
-        classVariable = "Ca.Co.Last", 
-        idColumn = "Trial", 
         activePredictors = c("sex", "age_at_baseline", "Mutation", "Ethnicity")
     )
 ```
 
-
-Execution with your own data:
+Complete execution with your own data:
 ```
     MLASDO::detectAnomalies(
         savingName = "ExecutionWithOwnData", 
@@ -156,10 +162,26 @@ Execution with your own data:
     )
 ```
 
+Execution with reading of the GA solution with your own data:
+```
+    MLASDO::detectAnomalies(
+        justAnalysis = TRUE,
+        solutionPath = "GA_solution.rds",
+        savingName = "ExecutionWithOwnData",
+        omicDataPath = "./myOmicData.tsv", 
+        clinicDataPath = "./myClinicData.tsv", 
+        idColumn = "Patient.Id",
+        classVariable = "Diagnosis", 
+        activePredictors = c("sex", "age", "Ethnicity")
+    )
+```
+
 ## Credits
-**Project Leader:** Juan Antonio Botia Blaya https://github.com/juanbot
+### Project Leader: Juan Antonio Botia Blaya 
 
-**Main developer:** Tomás Bernal Beltrán https://github.com/tomasBernal
+**github:** https://github.com/juanbot
 
-## Contact
+### Main developer: Tomás Bernal Beltrán 
+**github:** https://github.com/tomasBernal
+
 **email address:** tomas.bernalb@um.es

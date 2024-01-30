@@ -5,7 +5,9 @@
 \title{executeAndPerformAnalysis}
 \usage{
 detectAnomalies(
-  mlAlgorithm,
+  justAnalysis = FALSE,
+  solutionPath = "",
+  mlAlgorithm = "RF",
   numLassoExecutions = 5,
   numTrees = 100,
   mtry = 225,
@@ -34,57 +36,61 @@ detectAnomalies(
 )
 }
 \arguments{
-\item{mlAlgorithm}{Machine Learning algorithm to be applied, the options are: Lasso or RF (Random Forest).}
+\item{justAnalysis}{Indicates whether to perform the analysis directly (TRUE) or to run the genetic algorithm (FALSE). Default value: FALSE.}
 
-\item{numLassoExecutions}{Number of times the Lasso algorithm is executed.}
+\item{solutionPath}{Path to genetic algorithm solution.}
 
-\item{numTrees}{Number of trees of the Random Forest model.}
+\item{mlAlgorithm}{Machine Learning algorithm to be applied, the options are: Lasso or RF (Random Forest). Default value: RF.}
 
-\item{mtry}{Number of predictors that are evaluated at each partition (node) of each tree.}
+\item{numLassoExecutions}{Number of times the Lasso algorithm is executed. Default value: 5.}
 
-\item{splitrule}{This is the rule used by the algorithm to select the predictor and the optimal value to separate a node into two branches during the tree construction.}
+\item{numTrees}{Number of trees of the Random Forest model. Default value: 100.}
 
-\item{sampleFraction}{Fraction of the training data that will be used to create each of the trees in the forest.}
+\item{mtry}{Number of predictors that are evaluated at each partition (node) of each tree. Default value: 225.}
 
-\item{maxDepth}{Maximum height of each tree in the forest.}
+\item{splitrule}{This is the rule used by the algorithm to select the predictor and the optimal value to separate a node into two branches during the tree construction. Default value: gini.}
 
-\item{minNodeSize}{Minimum number of observations required in a node to be able to split it.}
+\item{sampleFraction}{Fraction of the training data that will be used to create each of the trees in the forest. Default value: 1.}
+
+\item{maxDepth}{Maximum height of each tree in the forest. Default value: 4.}
+
+\item{minNodeSize}{Minimum number of observations required in a node to be able to split it. Default value: 30.}
 
 \item{omicDataPath}{Path to omic data. If the user does not specify a path, the sample data will be used.}
 
 \item{clinicDataPath}{Path to clinic data. If the user does not specify a path, the sample data will be used.}
 
-\item{idColumn}{Variable that indicates the identifier of each patient in both datasets.}
+\item{idColumn}{Variable that indicates the identifier of each patient in both datasets. If the user does not specify a path to his own data, the value for the sample data, Trial, will be used.}
 
-\item{activePredictors}{Predictors on which the study of the ratios will be conducted after the genetic algorithm has been performed.}
+\item{activePredictors}{Predictors on which the study of the ratios will be conducted after the genetic algorithm has been performed. Default value: All the predictors in clinic data, except classVariable and idColumn.}
 
-\item{classVariable}{Target variable, which must be binary, meaning it has two possible values.}
+\item{classVariable}{Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.}
 
 \item{savingName}{Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.}
 
-\item{nCores}{Number of cores to be used in parallelization.}
+\item{nCores}{Number of cores to be used in parallelization. Default value: 6.}
 
-\item{partitionPercentage}{Percentage (expressed as a fraction) with which the data will be split into a training and test set.}
+\item{partitionPercentage}{Percentage (expressed as a fraction) with which the data will be split into a training and test set. Default value: 0.9 (90%).}
 
-\item{nIterations}{Number of iterations (generations) the genetic algorithm will perform.}
+\item{nIterations}{Number of iterations (generations) the genetic algorithm will perform. Default value: 200.}
 
-\item{nStopIter}{Number of iterations after which the algorithm will stop if all of them have the same fitness value.}
+\item{nStopIter}{Number of iterations after which the algorithm will stop if all of them have the same fitness value. Default value: 25.}
 
-\item{populationSize}{Number of solutions that will be part of the initial population.}
+\item{populationSize}{Number of solutions that will be part of the initial population. Default value: 150.}
 
-\item{diagnosticChangeProbability}{Percentage (expressed as a fraction) indicating the probability of each gene in the solutions to be changed.}
+\item{diagnosticChangeProbability}{Percentage (expressed as a fraction) indicating the probability of each gene in the solutions to be changed. Default value: 0.1 (10%).}
 
-\item{crossoverOperator}{Crossover operator used in the genetic algorithm.}
+\item{crossoverOperator}{Crossover operator used in the genetic algorithm. Default value: Single Point Crossover.}
 
-\item{crossoverProbability}{Percentage (expressed as a fraction) indicating the probability of crossover occurrence.}
+\item{crossoverProbability}{Percentage (expressed as a fraction) indicating the probability of crossover occurrence. Default value: 0.8 (80%).}
 
-\item{selectionOperator}{Selection operator used in the genetic algorithm.}
+\item{selectionOperator}{Selection operator used in the genetic algorithm. Default value: Tournament Selection.}
 
-\item{mutationOperator}{Mutation operator used in the genetic algorithm.}
+\item{mutationOperator}{Mutation operator used in the genetic algorithm. Default value: Random Mutation.}
 
-\item{mutationProbability}{Percentage (expressed as a fraction) indicating the probability of mutation occurrence.}
+\item{mutationProbability}{Percentage (expressed as a fraction) indicating the probability of mutation occurrence. Default value: 0.1 (10%).}
 
-\item{seed}{Seed used for the creation of training and test sets.}
+\item{seed}{Seed used for the creation of training and test sets. Default value: 1234.}
 }
 \description{
 Methodology based on the combination of a genetic algorithm and a Machine Learning technique to mutate the final
@@ -99,11 +105,13 @@ and accuracy of the data.
 }
 \examples{
 
-MLASDO::detectAnomalies(savingName = "DefaultExecutionLasso", mlAlgorithm = "Lasso", classVariable = "Ca.Co.Last", idColumn = "Trial")
+MLASDO::detectAnomalies(savingName = "DefaultExecutionLasso", mlAlgorithm = "Lasso",)
 
-MLASDO::detectAnomalies(savingName = "DefaultExecutionRF", mlAlgorithm = "RF", classVariable = "Ca.Co.Last", idColumn = "Trial")
+MLASDO::detectAnomalies(savingName = "DefaultExecutionRF", mlAlgorithm = "RF")
 
-MLASDO::detectAnomalies(savingName = "QuickExecution", mlAlgorithm = "Lasso", nIterations = 3, nStopIter = 1, populationSize = 20, classVariable = "Ca.Co.Last", idColumn = "Trial", activePredictors = c("sex", "age", "Mutation", "Ethnicity"))
+MLASDO::detectAnomalies(savingName = "QuickExecution", mlAlgorithm = "Lasso", nIterations = 3, nStopIter = 1, populationSize = 20, activePredictors = c("sex", "age", "Mutation", "Ethnicity"))
 
 MLASDO::detectAnomalies(savingName = "ExecutionWithOwnData", mlAlgorithm = "RF", omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv", idColumn = "Patient.Id", nIterations = 3, populationSize = 10, classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"))
+
+MLASDO::detectAnomalies(justAnalysis = TRUE, solutionPath = "GA_solution.rds", savingName = "ExecutionWithOwnData", omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv",idColumn = "Patient.Id",classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"))
 }

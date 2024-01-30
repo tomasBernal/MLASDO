@@ -17,22 +17,18 @@ compileMarkdown <- function(savingName, clinicData, classVariable){
 
   name <- paste("GA", savingName, sep="_")
 
-  solutionPath <- paste(name, "Solution.rds", sep="_")
-  solutionGA <- readRDS(solutionPath)
-
   pcaPath <- paste(name, "PCA.tsv", sep="_")
   pca <- read.table(pcaPath, header = TRUE, sep = "\t", row.names = 1)
 
-  solutionPathNumeric <- paste(name, "NumericTable.tsv", sep="_")
-  solutionPathtTotal <- paste(name, "TotalTable.tsv", sep="_")
+  gaPathNumeric <- paste(name, "NumericTable.tsv", sep="_")
+  gaPathTotal <- paste(name, "TotalTable.tsv", sep="_")
 
-  numeric <- read.table(solutionPathNumeric, header = TRUE, sep = "\t", row.names = 1)
-  total <- read.table(solutionPathtTotal, header = TRUE, sep = "\t", row.names = 1)
+  numeric <- read.table(gaPathNumeric, header = TRUE, sep = "\t", row.names = 1)
+  total <- read.table(gaPathTotal, header = TRUE, sep = "\t", row.names = 1)
 
   rmarkdown::render(input = system.file("data", "analysisResult.Rmd", package = "MLASDO"),
                    params = list(
                                  clinicData = clinicData,
-                                 geneticAlgorithm = solutionGA,
                                  pcaAnalisis = pca,
                                  numericTable = numeric,
                                  totalTable = total,

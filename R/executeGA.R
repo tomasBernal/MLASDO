@@ -37,31 +37,33 @@
 #' samples and the machine learning algorithm evidences this detection, validating that these samples belong to the
 #' alternative group.
 #'
+#' @param mlAlgorithm Machine Learning algorithm to be applied, the options are: Lasso or RF (Random Forest). Default value: RF.
 #'
-#' @param mlAlgorithm Machine Learning algorithm to be applied, the options are: Lasso or RF (Random Forest).
-#' @param numLassoExecutions Number of times the Lasso algorithm is executed.
-#' @param numTrees Number of trees of the Random Forest model.
-#' @param mtry Number of predictors that are evaluated at each partition (node) of each tree.
-#' @param splitrule This is the rule used by the algorithm to select the predictor and the optimal value to separate a node into two branches during the tree construction.
-#' @param sampleFraction Fraction of the training data that will be used to create each of the trees in the forest.
-#' @param maxDepth Maximum height of each tree in the forest.
-#' @param minNodeSize Minimum number of observations required in a node to be able to split it.
+#' @param numLassoExecutions Number of times the Lasso algorithm is executed. Default value: 5.
+#' @param numTrees Number of trees of the Random Forest model. Default value: 100.
+#' @param mtry Number of predictors that are evaluated at each partition (node) of each tree. Default value: 225.
+#' @param splitrule This is the rule used by the algorithm to select the predictor and the optimal value to separate a node into two branches during the tree construction. Default value: gini.
+#' @param sampleFraction Fraction of the training data that will be used to create each of the trees in the forest. Default value: 1.
+#' @param maxDepth Maximum height of each tree in the forest. Default value: 4.
+#' @param minNodeSize Minimum number of observations required in a node to be able to split it. Default value: 30.
+#'
 #' @param omicData Dataset of omic data that will be used.
-#' @param activePredictors Predictors on which the study of the ratios will be conducted after the genetic algorithm has been performed.
-#' @param classVariable Target variable, which must be binary, meaning it has two possible values.
-#' @param savingName Name under which the model and solution will be saved after execution.
-#' @param nCores Number of cores to be used in parallelization.
-#' @param partitionPercentage Percentage (expressed as a fraction) with which the data will be split into a training and test set.
-#' @param nIterations Number of iterations (generations) the genetic algorithm will perform.
-#' @param nStopIter Number of iterations after which the algorithm will stop if all of them have the same fitness value.
-#' @param populationSize Number of solutions that will be part of the initial population.
-#' @param diagnosticChangeProbability Percentage (expressed as a fraction) indicating the probability of each gene in the solutions to be changed.
-#' @param crossoverOperator Crossover operator used in the genetic algorithm.
-#' @param crossoverProbability Percentage (expressed as a fraction) indicating the probability of crossover occurrence.
-#' @param selectionOperator Selection operator used in the genetic algorithm.
-#' @param mutationOperator Mutation operator used in the genetic algorithm.
-#' @param mutationProbability Percentage (expressed as a fraction) indicating the probability of mutation occurrence.
-#' @param seed Seed used for the creation of training and test sets.
+#' @param activePredictors Predictors on which the study of the ratios will be conducted after the genetic algorithm has been performed. Default value: All the predictors in clinic data, except classVariable and idColumn.
+#' @param classVariable Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.
+#'
+#' @param savingName Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.
+#' @param nCores Number of cores to be used in parallelization. Default value: 6.
+#' @param partitionPercentage Percentage (expressed as a fraction) with which the data will be split into a training and test set. Default value: 0.9 (90%).
+#' @param nIterations Number of iterations (generations) the genetic algorithm will perform. Default value: 200.
+#' @param nStopIter Number of iterations after which the algorithm will stop if all of them have the same fitness value. Default value: 25.
+#' @param populationSize Number of solutions that will be part of the initial population. Default value: 150.
+#' @param diagnosticChangeProbability Percentage (expressed as a fraction) indicating the probability of each gene in the solutions to be changed. Default value: 0.1 (10%).
+#' @param crossoverOperator Crossover operator used in the genetic algorithm. Default value: Single Point Crossover.
+#' @param crossoverProbability Percentage (expressed as a fraction) indicating the probability of crossover occurrence. Default value: 0.8 (80%).
+#' @param selectionOperator Selection operator used in the genetic algorithm. Default value: Tournament Selection.
+#' @param mutationOperator Mutation operator used in the genetic algorithm. Default value: Random Mutation.
+#' @param mutationProbability Percentage (expressed as a fraction) indicating the probability of mutation occurrence. Default value: 0.1 (10%).
+#' @param seed Seed used for the creation of training and test sets. Default value: 1234.
 #'
 #'
 #' @export

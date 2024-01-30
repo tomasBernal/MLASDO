@@ -2,22 +2,26 @@
 #'
 #' This function performs PCA analysis on the changed diagnoses after the execution of the genetic algorithm.
 #'
+#' @param justAnalysis Indicates whether to perform the analysis directly (TRUE) or to run the genetic algorithm (FALSE). Default value: FALSE.
+#' @param solutionPath Path to genetic algorithm solution.
 #'
-#' @param idColumn Variable that indicates the identifier of each patient in both datasets.
+#' @param idColumn Variable that indicates the identifier of each patient in both datasets. If the user does not specify a path to his own data, the value for the sample data, Trial, will be used.
 #' @param omicData Dataset of omic data that will be used.
-#' @param activePredictors Predictors on which the study of the ratios will be conducted after the genetic algorithm has been performed.
-#' @param classVariable Target variable, which must be binary, meaning it has two possible values.
-#' @param savingName Name under which the model and solution were saved after the execution of the genetic algorithm.
+#' @param activePredictors Predictors on which the study of the ratios will be conducted after the genetic algorithm has been performed. Default value: All the predictors in clinic data, except classVariable and idColumn.
+#' @param classVariable Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.
+#' @param savingName Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.
 #'
 #'
 #' @export
 #'
 #' @examples
 #'
-#' MLASDO::performPCAAnalysis(idColumn = idColumn, omicData = omicData, activePredictors = activePredictors, classVariable = classVariable, savingName = savingName)
+#' MLASDO::performPCAAnalysis(justAnalysis = justAnalysis, solutionPath = solutionPath, idColumn = idColumn, omicData = omicData, activePredictors = activePredictors, classVariable = classVariable, savingName = savingName)
 
 
 performPCAAnalysis <- function(
+    justAnalysis,
+    solutionPath,
     idColumn,
     omicData,
     activePredictors,
@@ -32,9 +36,17 @@ performPCAAnalysis <- function(
   omic <- omicData
 
   #### GENETIC ALGORITHM SOLUTION READING ####
+
+
   name <- paste("GA", savingName, sep="_")
-  solutionPath <- paste(name, "Solution.rds", sep="_")
-  solutionGA <- readRDS(solutionPath)
+
+  if(justAnalysis){
+    solutionGA <- readRDS(solutionPath)
+  } else {
+    gaPath <- paste(name, "Solution.rds", sep="_")
+    solutionGA <- readRDS(gaPath)
+  }
+
 
   #### PCA ANALYSIS ####
 
@@ -107,6 +119,6 @@ performPCAAnalysis <- function(
   colnames(pca)[colnames(pca) == "classVariable"] <- classVariable
 
   # Save the pca analysis
-  solutionPath <- paste(name, "PCA.tsv", sep="_")
-  write.table(pca, solutionPath, row.names = T, col.names = T, sep =  '\t')
+  gaPath <- paste(name, "PCA.tsv", sep="_")
+  write.table(pca, gaPath, row.names = T, col.names = T, sep =  '\t')
 }

@@ -7,7 +7,6 @@ output:
     toc: true
     toc_float: true
 params:
-  geneticAlgorithm : ""
   pcaAnalisis : ""
   numericTable : ""
   totalTable : ""
@@ -26,9 +25,9 @@ library(plotly)
 # PCA Analysis
 
 ```{r}
-classVariable <- params$pca[[params$classVariable]]
+classVariable <- params$pcaAnalisis[[params$classVariable]]
 
-ggplot(params$pca, aes(PC1, PC2)) + 
+ggplot(params$pcaAnalisis, aes(PC1, PC2)) + 
   modelr::geom_ref_line(h = 0) +
   modelr::geom_ref_line(v = 0) +
   geom_jitter(aes(color = classVariable)) +

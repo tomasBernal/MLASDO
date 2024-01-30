@@ -2,21 +2,25 @@
 #'
 #' This function performs ratio-based analysis on the active activePredictors passed as parameters.
 #'
+#' @param justAnalysis Indicates whether to perform the analysis directly (TRUE) or to run the genetic algorithm (FALSE). Default value: FALSE.
+#' @param solutionPath Path to genetic algorithm solution.
 #'
 #' @param clinicData Dataset of clinic data that will be used.
-#' @param activePredictors activePredictors on which the study of the ratios will be conducted after the genetic algorithm has been performed.
+#' @param activePredictors activePredictors on which the study of the ratios will be conducted after the genetic algorithm has been performed. Default value: All the predictors in clinic data, except classVariable and idColumn.
 #' @param classVariable Target variable, which must be binary, meaning it has two possible values.
-#' @param savingName Name under which the model and solution were saved after the execution of the genetic algorithm.
+#' @param savingName Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.
 #'
 #'
 #' @export
 #'
 #' @examples
 #'
-#' MLASDO::performRatioAnalysis(clinicData = clinicData, activePredictors = activePredictors, classVariable = classVariable, savingName = savingName)
+#' MLASDO::performRatioAnalysis(justAnalysis = justAnalysis, solutionPath = solutionPath, clinicData = clinicData, activePredictors = activePredictors, classVariable = classVariable, savingName = savingName)
 
 
 performRatioAnalysis <- function(
+    justAnalysis,
+    solutionPath,
     clinicData,
     activePredictors,
     classVariable,
@@ -28,8 +32,14 @@ performRatioAnalysis <- function(
 
   #### GENETIC ALGORITHM SOLUTION READING ####
   name <- paste("GA", savingName, sep="_")
-  solutionPath <- paste(name, "Solution.rds", sep="_")
-  solutionGA <- readRDS(solutionPath)
+
+  if(justAnalysis){
+    solutionGA <- readRDS(solutionPath)
+  } else {
+    gaPath <- paste(name, "Solution.rds", sep="_")
+    solutionGA <- readRDS(gaPath)
+  }
+
 
   #### DATA PROCESSING ####
 
@@ -433,11 +443,11 @@ performRatioAnalysis <- function(
 
 
   # Save the ratio analysis
-  solutionPathCategoric <- paste(name, "CategoricTable.tsv", sep="_")
-  solutionPathNumeric <- paste(name, "NumericTable.tsv", sep="_")
-  solutionPathtTotal <- paste(name, "TotalTable.tsv", sep="_")
+  gaPathCategoric <- paste(name, "CategoricTable.tsv", sep="_")
+  gaPathNumeric <- paste(name, "NumericTable.tsv", sep="_")
+  gaPathTotal <- paste(name, "TotalTable.tsv", sep="_")
 
-  write.table(categoricalResult, solutionPathCategoric, row.names = T, col.names = T, sep =  '\t')
-  write.table(numericResult, solutionPathNumeric, row.names = T, col.names = T, sep =  '\t')
-  write.table(totalResult, solutionPathtTotal, row.names = T, col.names = T, sep =  '\t')
+  write.table(categoricalResult, gaPathCategoric, row.names = T, col.names = T, sep =  '\t')
+  write.table(numericResult, gaPathNumeric, row.names = T, col.names = T, sep =  '\t')
+  write.table(totalResult, gaPathTotal, row.names = T, col.names = T, sep =  '\t')
 }
