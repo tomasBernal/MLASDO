@@ -441,11 +441,14 @@ performRatioAnalysis <- function(
   rownames(numericResult) <- namesNumericRows
   rownames(totalResult) <- namesAllRows
 
+  dir.create("ratioTables")
+
+  path <- paste("ratioTables", name, sep = "/")
 
   # Save the ratio analysis
-  gaPathCategoric <- paste(name, "CategoricTable.tsv", sep="_")
-  gaPathNumeric <- paste(name, "NumericTable.tsv", sep="_")
-  gaPathTotal <- paste(name, "TotalTable.tsv", sep="_")
+  gaPathCategoric <- paste(path, "CategoricTable.tsv", sep="_")
+  gaPathNumeric <- paste(path, "NumericTable.tsv", sep="_")
+  gaPathTotal <- paste(path, "TotalTable.tsv", sep="_")
 
   write.table(categoricalResult, gaPathCategoric, row.names = T, col.names = T, sep =  '\t')
   write.table(numericResult, gaPathNumeric, row.names = T, col.names = T, sep =  '\t')
