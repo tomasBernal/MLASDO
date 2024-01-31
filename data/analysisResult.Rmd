@@ -43,9 +43,9 @@ precisionDF <- precisionDF %>% accumulate_by(~generation)
 ```
 
 ```{r, include = FALSE}
-precisionPlot <- plot_ly(precisionDF, x=~generation, y=~precision, frame=~Generation, hoveron = "points", hoverinfo = "text", text = paste("Maximum accuracy value obtained: ", round(precisionDF$precision, 2), sep = ""), type = 'scatter', mode = 'lines+markers', name ="Precision", color = I("cadetblue3"))
+precisionPlot <- plot_ly(precisionDF, x=~generation, y=~precision, hoveron = "points", hoverinfo = "text", text = paste("Maximum accuracy value obtained: ", round(precisionDF$precision, 2), "<br> Generation: ", precisionDF$generation, sep = ""), type = 'scatter', mode = 'lines+markers', name ="Precision", color = I("cadetblue3"))
 
-precisionPlot <- precisionPlot %>% add_trace(x=~generation, y = ~meanPrecision, name='Mean', mode = 'lines+markers', color = I("brown3"), hoverinfo = "text", text = paste("Average of the accuracies obtained: ", round(precisionDF$meanPrecision, 2), sep = "")) 
+precisionPlot <- precisionPlot %>% add_trace(x=~generation, y = ~meanPrecision, name='Mean', mode = 'lines+markers', color = I("brown3"), hoverinfo = "text", text = paste("Average of the accuracies obtained: ", round(precisionDF$meanPrecision, 2), "<br> Generation: ", precisionDF$generation, sep = "")) 
   
 precisionPlot <- precisionPlot %>%  layout(title = "Evolution of the accuracy obtained during generations",
                         xaxis = list(title = "Actual generation"), yaxis = list(title = "Precision value <br> <br>", ticksuffix = "%",  range = c((min(params$algorithmPrecisions) * 100) - 5, min(100, (max(params$algorithmPrecisions) * 100) + 5)), xaxis = list(range = c(0, max(precisionDF$Generation)))))

@@ -318,6 +318,10 @@ detectAnomalies <- function(
 
   validClinicData <- validClinicData[, (names(validClinicData) %in% c(activePredictors, idColumn, classVariable))]
 
+  dir.create(savingName)
+  dir.create(paste(savingName, "geneticAlgorithm", sep = "/"))
+  dir.create(paste(savingName, "analysisData", sep = "/"))
+
   if(!justAnalysis){
     print("Executing the genetic algorithm")
     MLASDO::executeGA(mlAlgorithm = mlAlgorithm, numLassoExecutions = numLassoExecutions, numTrees = numTrees, mtry = mtry, splitrule = splitrule, sampleFraction = sampleFraction, maxDepth = maxDepth, minNodeSize = minNodeSize, omicData = omicData, savingName = savingName, classVariable = classVariable, activePredictors = activePredictors, nCores = nCores, partitionPercentage = partitionPercentage, nIterations = nIterations, nStopIter = nStopIter, populationSize = populationSize, diagnosticChangeProbability = diagnosticChangeProbability, crossoverOperator = crossoverOperator, crossoverProbability = crossoverProbability, selectionOperator = selectionOperator, mutationOperator = mutationOperator, mutationProbability = mutationProbability, seed = seed)

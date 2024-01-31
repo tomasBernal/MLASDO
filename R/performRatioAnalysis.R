@@ -33,13 +33,16 @@ performRatioAnalysis <- function(
   #### GENETIC ALGORITHM SOLUTION READING ####
   name <- paste("GA", savingName, sep="_")
 
+  dirPath <- paste(savingName, "geneticAlgorithm", name, sep = "/")
+
   if(justAnalysis){
     solutionGA <- readRDS(solutionPath)
   } else {
-    gaPath <- paste(name, "Solution.rds", sep="_")
+    gaPath <- paste(dirPath, "Solution.rds", sep="_")
     solutionGA <- readRDS(gaPath)
   }
 
+  dirPath <- paste(savingName, "analysisData", name, sep = "/")
 
   #### DATA PROCESSING ####
 
@@ -441,14 +444,10 @@ performRatioAnalysis <- function(
   rownames(numericResult) <- namesNumericRows
   rownames(totalResult) <- namesAllRows
 
-  dir.create("ratioTables")
-
-  path <- paste("ratioTables", name, sep = "/")
-
   # Save the ratio analysis
-  gaPathCategoric <- paste(path, "CategoricTable.tsv", sep="_")
-  gaPathNumeric <- paste(path, "NumericTable.tsv", sep="_")
-  gaPathTotal <- paste(path, "TotalTable.tsv", sep="_")
+  gaPathCategoric <- paste(dirPath, "CategoricTable.tsv", sep="_")
+  gaPathNumeric <- paste(dirPath, "NumericTable.tsv", sep="_")
+  gaPathTotal <- paste(dirPath, "TotalTable.tsv", sep="_")
 
   write.table(categoricalResult, gaPathCategoric, row.names = T, col.names = T, sep =  '\t')
   write.table(numericResult, gaPathNumeric, row.names = T, col.names = T, sep =  '\t')

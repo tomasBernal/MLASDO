@@ -20,11 +20,13 @@ compileMarkdown <- function(savingName, geneticAlgorithm, originalDiagnosis, cli
 
   name <- paste("GA", savingName, sep="_")
 
-  pcaPath <- paste(name, "PCA.tsv", sep="_")
+  dirPath <- paste(savingName, "analysisData", name, sep = "/")
+
+  pcaPath <- paste(dirPath, "PCA.tsv", sep="_")
   pca <- read.table(pcaPath, header = TRUE, sep = "\t", row.names = 1)
 
-  gaPathNumeric <- paste(name, "NumericTable.tsv", sep="_")
-  gaPathTotal <- paste(name, "TotalTable.tsv", sep="_")
+  gaPathNumeric <- paste(dirPath, "NumericTable.tsv", sep="_")
+  gaPathTotal <- paste(dirPath, "TotalTable.tsv", sep="_")
 
   numeric <- read.table(gaPathNumeric, header = TRUE, sep = "\t", row.names = 1)
   total <- read.table(gaPathTotal, header = TRUE, sep = "\t", row.names = 1)

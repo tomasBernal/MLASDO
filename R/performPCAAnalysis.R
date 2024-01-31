@@ -39,13 +39,16 @@ performPCAAnalysis <- function(
 
   name <- paste("GA", savingName, sep="_")
 
+  dirPath <- paste(savingName, "geneticAlgorithm", name, sep = "/")
+
   if(justAnalysis){
     solutionGA <- readRDS(solutionPath)
   } else {
-    gaPath <- paste(name, "Solution.rds", sep="_")
+    gaPath <- paste(dirPath, "Solution.rds", sep="_")
     solutionGA <- readRDS(gaPath)
   }
 
+  dirPath <- paste(savingName, "analysisData", name, sep = "/")
 
   #### PCA ANALYSIS ####
 
@@ -118,6 +121,6 @@ performPCAAnalysis <- function(
   colnames(pca)[colnames(pca) == "classVariable"] <- classVariable
 
   # Save the pca analysis
-  gaPath <- paste(name, "PCA.tsv", sep="_")
+  gaPath <- paste(dirPath, "PCA.tsv", sep="_")
   write.table(pca, gaPath, row.names = T, col.names = T, sep =  '\t')
 }
