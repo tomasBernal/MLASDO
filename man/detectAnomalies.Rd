@@ -17,6 +17,8 @@ detectAnomalies(
   minNodeSize = 30,
   omicDataPath = "",
   clinicDataPath = "",
+  omicPredictorsToIgnore = "",
+  clinicPredictorsToIgnore = "",
   idColumn,
   activePredictors = NULL,
   classVariable,
@@ -36,9 +38,9 @@ detectAnomalies(
 )
 }
 \arguments{
-\item{justAnalysis}{Indicates whether to perform the analysis directly (TRUE) or to run the genetic algorithm (FALSE). Default value: FALSE.}
+\item{justAnalysis}{Boolean Indicates whether to perform the analysis directly (TRUE) or to run the genetic algorithm (FALSE). Default value: FALSE.}
 
-\item{solutionPath}{Path to genetic algorithm solution.}
+\item{solutionPath}{String Path to genetic algorithm solution.}
 
 \item{mlAlgorithm}{Machine Learning algorithm to be applied, the options are: Lasso or RF (Random Forest). Default value: RF.}
 
@@ -59,6 +61,10 @@ detectAnomalies(
 \item{omicDataPath}{Path to omic data. If the user does not specify a path, the sample data will be used.}
 
 \item{clinicDataPath}{Path to clinic data. If the user does not specify a path, the sample data will be used.}
+
+\item{omicPredictorsToIgnore}{Variables to be removed from the omic dataset. These will not be taken into account in the execution.}
+
+\item{clinicPredictorsToIgnore}{Variables to be removed from the clinic dataset. These will not be taken into account in the execution.}
 
 \item{idColumn}{Variable that indicates the identifier of each patient in both datasets. If the user does not specify a path to his own data, the value for the sample data, Trial, will be used.}
 
@@ -95,8 +101,7 @@ detectAnomalies(
 \description{
 Methodology based on the combination of a genetic algorithm and a Machine Learning technique to mutate the final
 diagnosis of patients, detecting anomalies in them.
-}
-\details{
+
 These discrepancies may have their origin in the evolution of the subject itself, leading it from one group to
 another in biological terms, or they may derive from human error in the labelling of the samples, among other causes.
 

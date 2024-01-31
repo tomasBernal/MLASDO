@@ -1,69 +1,75 @@
 #' executeGA
 #'
-#' Methodology based on the combination of a genetic algorithm and a Machine Learning technique to mutate the final
+#' @description Methodology based on the combination of a genetic algorithm and a Machine Learning technique to mutate the final
 #' diagnosis of patients, detecting anomalies in them.
 #'
 #' These discrepancies may have their origin in the evolution of the subject itself, leading it from one group to
 #' another in biological terms, or they may derive from human error in the labelling of the samples, among other causes.
 #'
-#' This detection is done by combining a genetic algorithm and a machine learning algorithm, in this case a Lasso model.
+#' This detection is done by combining a genetic algorithm and a machine learning algorithm, it is possible to use a Lasso model
+#' or a Random Forest model.
 #'
-#' A genetic algorithm is a technique inspired by biological evolution that simulates the process of natural selection
-#' and evolution of species, the execution of a genetic algorithm starts with a randomly generated initial solution set.
-#'
-#'      In this case, it is assumed that certain patients are misdiagnosed, so the initial solution set will be created by
-#'      randomly changing 10% of the patient diagnoses in each of these solutions.
-#'
+#' A genetic algorithm is a technique inspired by biological evolution that simulates the process of natural selection and
+#' evolution of species, the execution of a genetic algorithm starts with a randomly generated initial solution set.
+
+#' - In this case, it is assumed that certain patients are misdiagnosed, so the initial solution set will be created by
+#' randomly changing 10% of the patient diagnoses in each of these solutions.
+
 #' In each generation (iteration) of the genetic algorithm, each of the solutions from the set of possible solutions is
-#' used as a training dataset for a Lasso model, which will classify the patients and whose performance will determine
-#' the fitness value (score) of the solution.
-#'
-#'      The score of each solution is defined by the average of the balanced accuracies obtained after training
-#'      5 Lasso models with that solution as training dataset.
-#'
+#' used as a training dataset for the ML model, which will classify the patients and whose performance will determine the
+#' fitness value (score) of the solution.
+
+#' The way in which the score for each solution is calculated depends on the model used:
+
+#'  - For the Lasso model, the score of each solution is defined by the average of the balanced accuracies obtained after
+#'  training 5 Lasso models with that solution as training dataset.
+
+#' - For RF model, the score of each solution is defined by the balanced accuracy obtained after training the RF model with
+#' that solution as training dataset.
+
 #' After this evaluation, a ranking of the solutions is created:
+
+#'   - The two best solutions are combined to generate a new solution that is added to the set of possible solutions to the
+#'   problem.
+
+#' - Simultaneously, a certain number of the worst solutions are eliminated from the generation, i.e. they are no longer part
+#' of the set of possible solutions to the problem.
+
+#' This process is repeated for the specified number of generations, until a certain predefined threshold is reached in the
+#' score of the solutions or until the value of the best score of the set of solutions is repeated for a certain specified
+#' number of generations.
+
+#' This procedure is used to determine which samples were anomalous. The genetic algorithm locates these anomalous samples
+#' and the machine learning algorithm evidences this detection, validating that these samples belong to the alternative group.
 #'
-#'      The two best solutions are combined to generate a new solution that is added to the set of possible solutions
-#'      to the problem.
 #'
-#'      Simultaneously, a certain number of the worst solutions are eliminated from the generation, i.e. they are no
-#'      longer part of the set of possible solutions to the problem.
+#' @param mlAlgorithm String | Machine Learning algorithm to be applied, the options are: Lasso or RF (Random Forest). Default value: RF.
 #'
-#' This process is repeated for the specified number of generations, until a certain predefined threshold is reached in
-#' the score of the solutions or until the value of the best score of the set of solutions is repeated for a certain
-#' specified number of generations.
-#'
-#' This procedure is used to determine which samples were anomalous. The genetic algorithm locates these anomalous
-#' samples and the machine learning algorithm evidences this detection, validating that these samples belong to the
-#' alternative group.
-#'
-#' @param mlAlgorithm Machine Learning algorithm to be applied, the options are: Lasso or RF (Random Forest). Default value: RF.
-#'
-#' @param numLassoExecutions Number of times the Lasso algorithm is executed. Default value: 5.
-#' @param numTrees Number of trees of the Random Forest model. Default value: 100.
-#' @param mtry Number of predictors that are evaluated at each partition (node) of each tree. Default value: 225.
-#' @param splitrule This is the rule used by the algorithm to select the predictor and the optimal value to separate a node into two branches during the tree construction. Default value: gini.
-#' @param sampleFraction Fraction of the training data that will be used to create each of the trees in the forest. Default value: 1.
-#' @param maxDepth Maximum height of each tree in the forest. Default value: 4.
-#' @param minNodeSize Minimum number of observations required in a node to be able to split it. Default value: 30.
+#' @param numLassoExecutions Integer | Number of times the Lasso algorithm is executed. Default value: 5.
+#' @param numTrees Integer | Number of trees of the Random Forest model. Default value: 100.
+#' @param mtry Integer | Number of predictors that are evaluated at each partition (node) of each tree. Default value: 225.
+#' @param splitrule String | This is the rule used by the algorithm to select the predictor and the optimal value to separate a node into two branches during the tree construction. Default value: gini.
+#' @param sampleFraction Decimal | Fraction of the training data that will be used to create each of the trees in the forest. Default value: 1.
+#' @param maxDepth Integer | Maximum height of each tree in the forest. Default value: 4.
+#' @param minNodeSize Integer | Minimum number of observations required in a node to be able to split it. Default value: 30.
 #'
 #' @param omicData Dataset of omic data that will be used.
-#' @param activePredictors Predictors on which the study of the ratios will be conducted after the genetic algorithm has been performed. Default value: All the predictors in clinic data, except classVariable and idColumn.
-#' @param classVariable Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.
+#' @param activePredictors Array of Strings | Predictors on which the study of the ratios will be conducted after the genetic algorithm has been performed. Default value: All the predictors in clinic data, except classVariable and idColumn.
+#' @param classVariable String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.
+#' @param savingName String | Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.
 #'
-#' @param savingName Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.
-#' @param nCores Number of cores to be used in parallelization. Default value: 6.
-#' @param partitionPercentage Percentage (expressed as a fraction) with which the data will be split into a training and test set. Default value: 0.9 (90%).
-#' @param nIterations Number of iterations (generations) the genetic algorithm will perform. Default value: 200.
-#' @param nStopIter Number of iterations after which the algorithm will stop if all of them have the same fitness value. Default value: 25.
-#' @param populationSize Number of solutions that will be part of the initial population. Default value: 150.
-#' @param diagnosticChangeProbability Percentage (expressed as a fraction) indicating the probability of each gene in the solutions to be changed. Default value: 0.1 (10%).
-#' @param crossoverOperator Crossover operator used in the genetic algorithm. Default value: Single Point Crossover.
-#' @param crossoverProbability Percentage (expressed as a fraction) indicating the probability of crossover occurrence. Default value: 0.8 (80%).
-#' @param selectionOperator Selection operator used in the genetic algorithm. Default value: Tournament Selection.
-#' @param mutationOperator Mutation operator used in the genetic algorithm. Default value: Random Mutation.
-#' @param mutationProbability Percentage (expressed as a fraction) indicating the probability of mutation occurrence. Default value: 0.1 (10%).
-#' @param seed Seed used for the creation of training and test sets. Default value: 1234.
+#' @param nCores Integer | Number of cores to be used in parallelization. Default value: 6.
+#' @param partitionPercentage Decimal | Percentage (expressed as a fraction) with which the data will be split into a training and test set. Default value: 0.9 (90%).
+#' @param nIterations Integer | Number of iterations (generations) the genetic algorithm will perform. Default value: 200.
+#' @param nStopIter Integer | Number of iterations after which the algorithm will stop if all of them have the same fitness value. Default value: 25.
+#' @param populationSize Integer | Number of solutions that will be part of the initial population. Default value: 150.
+#' @param diagnosticChangeProbability Decimal | Percentage (expressed as a fraction) indicating the probability of each gene in the solutions to be changed. Default value: 0.1 (10%).
+#' @param crossoverOperator String | Crossover operator used in the genetic algorithm. Default value: Single Point Crossover.
+#' @param crossoverProbability Decimal | Percentage (expressed as a fraction) indicating the probability of crossover occurrence. Default value: 0.8 (80%).
+#' @param selectionOperator String | Selection operator used in the genetic algorithm. Default value: Tournament Selection.
+#' @param mutationOperator String | Mutation operator used in the genetic algorithm. Default value: Random Mutation.
+#' @param mutationProbability Decimal | Percentage (expressed as a fraction) indicating the probability of mutation occurrence. Default value: 0.1 (10%).
+#' @param seed Integer | Seed used for the creation of training and test sets. Default value: 1234.
 #'
 #'
 #' @export

@@ -1,6 +1,6 @@
 #' executeAndPerformAnalysis
 #'
-#' Methodology based on the combination of a genetic algorithm and a Machine Learning technique to mutate the final
+#' @description Methodology based on the combination of a genetic algorithm and a Machine Learning technique to mutate the final
 #' diagnosis of patients, detecting anomalies in them.
 #'
 #' These discrepancies may have their origin in the evolution of the subject itself, leading it from one group to
@@ -9,38 +9,41 @@
 #' The identification and correction of these erroneous situations becomes essential to preserve the integrity
 #' and accuracy of the data.
 #'
-#' @param justAnalysis Indicates whether to perform the analysis directly (TRUE) or to run the genetic algorithm (FALSE). Default value: FALSE.
-#' @param solutionPath Path to genetic algorithm solution.
+#' @param justAnalysis Bool | Indicates whether to perform the analysis directly (TRUE) or to run the genetic algorithm (FALSE). Default value: FALSE.
+#' @param solutionPath String | Path to genetic algorithm solution.
 #'
-#' @param mlAlgorithm Machine Learning algorithm to be applied, the options are: Lasso or RF (Random Forest). Default value: RF.
+#' @param mlAlgorithm String | Machine Learning algorithm to be applied, the options are: Lasso or RF (Random Forest). Default value: RF.
 #'
-#' @param numLassoExecutions Number of times the Lasso algorithm is executed. Default value: 5.
-#' @param numTrees Number of trees of the Random Forest model. Default value: 100.
-#' @param mtry Number of predictors that are evaluated at each partition (node) of each tree. Default value: 225.
-#' @param splitrule This is the rule used by the algorithm to select the predictor and the optimal value to separate a node into two branches during the tree construction. Default value: gini.
-#' @param sampleFraction Fraction of the training data that will be used to create each of the trees in the forest. Default value: 1.
-#' @param maxDepth Maximum height of each tree in the forest. Default value: 4.
-#' @param minNodeSize Minimum number of observations required in a node to be able to split it. Default value: 30.
+#' @param numLassoExecutions Integer | Number of times the Lasso algorithm is executed. Default value: 5.
+#' @param numTrees Integer | Number of trees of the Random Forest model. Default value: 100.
+#' @param mtry Integer | Number of predictors that are evaluated at each partition (node) of each tree. Default value: 225.
+#' @param splitrule String | This is the rule used by the algorithm to select the predictor and the optimal value to separate a node into two branches during the tree construction. Default value: gini.
+#' @param sampleFraction Decimal | Fraction of the training data that will be used to create each of the trees in the forest. Default value: 1.
+#' @param maxDepth Integer | Maximum height of each tree in the forest. Default value: 4.
+#' @param minNodeSize Integer | Minimum number of observations required in a node to be able to split it. Default value: 30.
 #'
-#' @param omicDataPath Path to omic data. If the user does not specify a path, the sample data will be used.
-#' @param clinicDataPath Path to clinic data. If the user does not specify a path, the sample data will be used.
-#' @param idColumn Variable that indicates the identifier of each patient in both datasets. If the user does not specify a path to his own data, the value for the sample data, Trial, will be used.
-#' @param activePredictors Predictors on which the study of the ratios will be conducted after the genetic algorithm has been performed. Default value: All the predictors in clinic data, except classVariable and idColumn.
-#' @param classVariable Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.
-#' @param savingName Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.
+#' @param omicDataPath String | Path to omic data. If the user does not specify a path, the sample data will be used.
+#' @param clinicDataPath String | Path to clinic data. If the user does not specify a path, the sample data will be used.
+#' @param omicPredictorsToIgnore Array of Strings | Variables to be removed from the omic dataset. These will not be taken into account in the execution.
+#' @param clinicPredictorsToIgnore Array of Strings | Variables to be removed from the clinic dataset. These will not be taken into account in the execution.
 #'
-#' @param nCores Number of cores to be used in parallelization. Default value: 6.
-#' @param partitionPercentage Percentage (expressed as a fraction) with which the data will be split into a training and test set. Default value: 0.9 (90%).
-#' @param nIterations Number of iterations (generations) the genetic algorithm will perform. Default value: 200.
-#' @param nStopIter Number of iterations after which the algorithm will stop if all of them have the same fitness value. Default value: 25.
-#' @param populationSize Number of solutions that will be part of the initial population. Default value: 150.
-#' @param diagnosticChangeProbability Percentage (expressed as a fraction) indicating the probability of each gene in the solutions to be changed. Default value: 0.1 (10%).
-#' @param crossoverOperator Crossover operator used in the genetic algorithm. Default value: Single Point Crossover.
-#' @param crossoverProbability Percentage (expressed as a fraction) indicating the probability of crossover occurrence. Default value: 0.8 (80%).
-#' @param selectionOperator Selection operator used in the genetic algorithm. Default value: Tournament Selection.
-#' @param mutationOperator Mutation operator used in the genetic algorithm. Default value: Random Mutation.
-#' @param mutationProbability Percentage (expressed as a fraction) indicating the probability of mutation occurrence. Default value: 0.1 (10%).
-#' @param seed Seed used for the creation of training and test sets. Default value: 1234.
+#' @param idColumn String | Variable that indicates the identifier of each patient in both datasets. If the user does not specify a path to his own data, the value for the sample data, Trial, will be used.
+#' @param activePredictors Array of Strings | Predictors on which the study of the ratios will be conducted after the genetic algorithm has been performed. Default value: All the predictors in clinic data, except classVariable and idColumn.
+#' @param classVariable String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.
+#' @param savingName String | Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.
+#'
+#' @param nCores Integer | Number of cores to be used in parallelization. Default value: 6.
+#' @param partitionPercentage Decimal | Percentage (expressed as a fraction) with which the data will be split into a training and test set. Default value: 0.9 (90%).
+#' @param nIterations Integer | Number of iterations (generations) the genetic algorithm will perform. Default value: 200.
+#' @param nStopIter Integer | Number of iterations after which the algorithm will stop if all of them have the same fitness value. Default value: 25.
+#' @param populationSize Integer | Number of solutions that will be part of the initial population. Default value: 150.
+#' @param diagnosticChangeProbability Decimal | Percentage (expressed as a fraction) indicating the probability of each gene in the solutions to be changed. Default value: 0.1 (10%).
+#' @param crossoverOperator String | Crossover operator used in the genetic algorithm. Default value: Single Point Crossover.
+#' @param crossoverProbability Decimal | Percentage (expressed as a fraction) indicating the probability of crossover occurrence. Default value: 0.8 (80%).
+#' @param selectionOperator String | Selection operator used in the genetic algorithm. Default value: Tournament Selection.
+#' @param mutationOperator String | Mutation operator used in the genetic algorithm. Default value: Random Mutation.
+#' @param mutationProbability Decimal | Percentage (expressed as a fraction) indicating the probability of mutation occurrence. Default value: 0.1 (10%).
+#' @param seed Integer | Seed used for the creation of training and test sets. Default value: 1234.
 #'
 #'
 #' @export
@@ -70,6 +73,8 @@ detectAnomalies <- function(
     minNodeSize = 30,
     omicDataPath = "",
     clinicDataPath = "",
+    omicPredictorsToIgnore = NULL,
+    clinicPredictorsToIgnore = NULL,
     idColumn,
     activePredictors = NULL,
     classVariable,
@@ -148,6 +153,26 @@ detectAnomalies <- function(
   clinicData <- read.table(clinicRoute, header = TRUE, sep = "\t", row.names = 1)
 
   #### CHECKING PARAMETERS ####
+
+  if(omicPredictorsToIgnore != NULL){
+
+    validColumnsToRemove <- names(omicData) %in% omicPredictorsToIgnore
+
+    if(any(validColumnsToRemove)){
+      omicData <- omicData[, -which(names(omicData) %in% validColumnsToRemove)]
+    }
+
+  }
+
+  if(clinicPredictorsToIgnore != NULL){
+
+    validColumnsToRemove <- names(clinicData) %in% clinicPredictorsToIgnore
+
+    if(any(validColumnsToRemove)){
+      clinicData <- clinicData[, -which(names(clinicData) %in% validColumnsToRemove)]
+    }
+
+  }
 
   if(is.null(activePredictors)){
     activePredictors <- names(clinicData)
@@ -256,9 +281,11 @@ detectAnomalies <- function(
   # Finally, check if the variables selected for ratio analysis are valid
   invalidPredictors <- activePredictors[!(activePredictors %in% names(clinicData))]
 
-  if (length(invalidPredictors) > 0) {
-    cat("The following selected variables for analysis do not exist in the dataframe:\n")
-    return(paste(invalidPredictors, collapse = ", "))
+  if (any(invalidPredictors)) {
+    print("The following selected variables for analysis do not exist in the dataframe:\n")
+    print(paste(invalidPredictors, collapse = ", "))
+
+    activePredictors <- activePredictors[, invalidPredictors]
   }
 
   # If the name is empty, we need to establish a default one

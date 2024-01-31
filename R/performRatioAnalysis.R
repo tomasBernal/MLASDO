@@ -1,14 +1,14 @@
 #' performRatioAnalysis
 #'
-#' This function performs ratio-based analysis on the active activePredictors passed as parameters.
+#' @description This function performs ratio-based analysis on the active activePredictors passed as parameters.
 #'
-#' @param justAnalysis Indicates whether to perform the analysis directly (TRUE) or to run the genetic algorithm (FALSE). Default value: FALSE.
-#' @param solutionPath Path to genetic algorithm solution.
+#' @param Bool | Indicates whether to perform the analysis directly (TRUE) or to run the genetic algorithm (FALSE). Default value: FALSE.
+#' @param solutionPath String | Path to genetic algorithm solution.
 #'
 #' @param clinicData Dataset of clinic data that will be used.
-#' @param activePredictors activePredictors on which the study of the ratios will be conducted after the genetic algorithm has been performed. Default value: All the predictors in clinic data, except classVariable and idColumn.
-#' @param classVariable Target variable, which must be binary, meaning it has two possible values.
-#' @param savingName Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.
+#' @param activePredictors Array of Strings | Predictors on which the study of the ratios will be conducted after the genetic algorithm has been performed. Default value: All the predictors in clinic data, except classVariable and idColumn.
+#' @param classVariable String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.
+#' @param savingName String | Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.
 #'
 #'
 #' @export

@@ -1,10 +1,11 @@
 #' compileMarkdown
 #'
-#' This function compiles the markdown file with the analysis results
+#' @description This function compiles the markdown file with the analysis results
 #'
-#' @param savingName Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.
 #' @param clinicData Dataset of clinic data that will be used.
-#' @param classVariable Target variable, which must be binary, meaning it has two possible values.
+#' @param classVariable String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.
+#' @param savingName String | Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.
+#'
 #'
 #' @export
 #'
