@@ -121,6 +121,14 @@ detectAnomalies <- function(
     return("The package dplyr is not installed")
   }
 
+  if (!require("plotly", character.only = TRUE)) {
+    return("The package plotly is not installed")
+  }
+
+  if (!require("lazyeval", character.only = TRUE)) {
+    return("The package lazyeval is not installed")
+  }
+
   #### CHECKING INITIAL STEP ####
 
   if(justAnalysis & solutionPath == ""){

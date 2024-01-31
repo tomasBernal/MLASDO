@@ -108,6 +108,8 @@ Once the solution of the genetic algorithm (anomalous cases) has been obtained, 
 - ranger
 - caret
 - doParallel
+- plotly
+- lazyeval
 
 ### Installation
 ```
@@ -166,6 +168,7 @@ Execution with reading of the GA solution with your own data:
 ```
     MLASDO::detectAnomalies(
         justAnalysis = TRUE,
+        geneticPath = "GA.rds",
         solutionPath = "GA_solution.rds",
         savingName = "ExecutionWithOwnData",
         omicDataPath = "./myOmicData.tsv", 
