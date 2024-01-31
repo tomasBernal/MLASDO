@@ -217,25 +217,19 @@ executeGA <- function(
   # Function to generate the initial population of individuals
   generateInitialPopulation <- function(object) {
 
-    # Initialize a matrix to store the population
-    population <- matrix(0, nrow = object@popSize, ncol = object@nBits)
+    population <- matrix(
+                      as.double(NA),
+                      nrow = object@popSize,
+                      ncol = object@nBits
+                  )
 
-    # For each individual
-    for (i in 1:object@popSize) {
+    for(j in 1:object@nBits){
 
-      set.seed(seed)
-
-      # Each gene of the individual has a 10% probability of being 1
-      # This value means that the patient's diagnosis corresponding to the gene will change
-      population[i, ] <- rbinom(object@nBits, size = 1, prob = diagnosticChangeProbability)
-
+      population[,j] <- round(rbinom(object@popSize, size = 1, prob = probCambioDiagnostico))
     }
 
     storage.mode(population) <- "integer"
-
-    # Return the generated population
     return(population)
-
   }
 
 
