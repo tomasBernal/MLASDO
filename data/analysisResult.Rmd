@@ -29,17 +29,6 @@ library(lazyeval)
 
 ```{r, include = FALSE}
 precisionDF <- data.frame(generation = 1:length(params$algorithmPrecisions), precision = params$algorithmPrecisions * 100, meanPrecision = cummean(params$algorithmPrecisions * 100))
-
-accumulate_by <- function(dat, var) {
-  var <- f_eval(var, dat)
-  lvls <- plotly:::getLevels(var)
-  dats <- lapply(seq_along(lvls), function(x) {
-    cbind(dat[var %in% lvls[seq(1, x)], ], Generation = lvls[[x]])
-  })
-  bind_rows(dats)
-}
-
-precisionDF <- precisionDF %>% accumulate_by(~generation)
 ```
 
 ```{r, include = FALSE}
