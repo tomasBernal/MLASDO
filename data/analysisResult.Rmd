@@ -72,7 +72,7 @@ changedDF <- data.frame(
 ```
 
 ```{r, include = FALSE}
-originalBars <- plot_ly(originalDF, x = "CASE", y = ~Case, type = 'bar', name = 'Num Case', marker = list(color = '#FF7256'), hoverinfo = "text", text = paste("Patients: ", y, sep = ""))
+originalBars <- plot_ly(originalDF, x = "CASE", y = ~Case, type = 'bar', name = 'Num Case', marker = list(color = '#FF7256'), hoverinfo = "text", text = paste("Patients: ", ~Case, sep = ""))
 
 originalBars <- originalBars %>% add_trace(x = "CONTROL", y = ~Control, name = 'Num Control', marker = list(color = 'darkolivegreen1'))
 
