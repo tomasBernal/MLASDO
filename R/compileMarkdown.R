@@ -33,8 +33,9 @@ compileMarkdown <- function(savingName, geneticAlgorithm, originalDiagnosis, cli
 
   algorithmPrecisions <- geneticAlgorithm@summary[,1]
 
-  outputName <- paste(".", savingName, "analysisResult_", sep = "/")
-  outputName <- paste(outputName, savingName, ".html", sep = "")
+  outputName <- paste("analysisResult_", name, ".html", sep = "")
+
+  outputPath <- paste("./", savingName, "/", sep = "")
 
   rmarkdown::render(input = system.file("data", "analysisResult.Rmd", package = "MLASDO"),
                    params = list(
@@ -45,6 +46,7 @@ compileMarkdown <- function(savingName, geneticAlgorithm, originalDiagnosis, cli
                                  numericTable = numeric,
                                  totalTable = total,
                                  classVariable = classVariable),
-                   output_file = outputName
+                   output_file = outputName,
+                   output_dir = outputPath
                    )
 }
