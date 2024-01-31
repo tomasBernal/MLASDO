@@ -159,7 +159,7 @@ detectAnomalies <- function(
     validColumnsToRemove <- names(omicData) %in% omicPredictorsToIgnore
 
     if(any(validColumnsToRemove)){
-      omicData <- omicData[, -which(names(omicData) %in% validColumnsToRemove)]
+      omicData <- omicData[, !validColumnsToRemove]
     }
 
   }
@@ -169,7 +169,7 @@ detectAnomalies <- function(
     validColumnsToRemove <- names(clinicData) %in% clinicPredictorsToIgnore
 
     if(any(validColumnsToRemove)){
-      clinicData <- clinicData[, -which(names(clinicData) %in% validColumnsToRemove)]
+      clinicData <- clinicData[, !validColumnsToRemove]
     }
 
   }
@@ -281,11 +281,11 @@ detectAnomalies <- function(
   # Finally, check if the variables selected for ratio analysis are valid
   invalidPredictors <- activePredictors[!(activePredictors %in% names(clinicData))]
 
-  if (any(invalidPredictors)) {
+  if (length(invalidPredictors) > 0) {
     print("The following selected variables for analysis do not exist in the dataframe:\n")
     print(paste(invalidPredictors, collapse = ", "))
 
-    activePredictors <- activePredictors[, invalidPredictors]
+    activePredictors <- activePredictors[!(activePredictors %in% invalidPredictors)]
   }
 
   # If the name is empty, we need to establish a default one
