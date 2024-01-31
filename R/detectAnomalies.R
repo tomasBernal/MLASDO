@@ -177,8 +177,6 @@ detectAnomalies <- function(
   if(is.null(activePredictors)){
     activePredictors <- names(clinicData)
 
-    print(activePredictors)
-
     activePredictors <- activePredictors[activePredictors != classVariable]
 
     activePredictors <- activePredictors[activePredictors != idColumn]
@@ -378,5 +376,5 @@ detectAnomalies <- function(
   changedClinicData[[classVariable]] <- changedDiagnoses
 
   print("Compiling Markdown file")
-  MLASDO::compileMarkdown(savingName = savingName, clinicData = changedClinicData, classVariable = classVariable)
+  MLASDO::compileMarkdown(savingName = savingName, originalDiagnosis = omicData[[classVariable]], clinicData = changedClinicData, classVariable = classVariable)
 }

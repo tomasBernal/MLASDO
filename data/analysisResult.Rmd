@@ -7,11 +7,12 @@ output:
     toc: true
     toc_float: true
 params:
-  pcaAnalisis : ""
-  numericTable : ""
-  totalTable : ""
-  clinicData : ""
-  classVariable: ""
+  originalDiagnosis : NULL
+  clinicData : NULL
+  pcaAnalisis : NULL
+  numericTable : NULL
+  totalTable : NULL
+  classVariable: NULL
 ---
 
 ```{r setup, include=FALSE}
@@ -21,6 +22,61 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r, include=FALSE}
 library(plotly)
 ```
+
+
+# Diagnostics distribution
+
+```{r, include = FALSE}
+originalDF <- data.frame(
+  Case = sum( params$originalDiagnosis == "Case"),
+  Control = sum( params$originalDiagnosis == "Control")
+)
+
+changedDF <- data.frame(
+  Case = sum(params$clinicData == "Case"),
+  Control = sum(params$clinicData == "Control"),
+  Case2Control = sum(params$clinicData == "Case2Control"),
+  Control2Case = sum(params$clinicData == "Control2Case")
+)
+```
+
+```{r, include = FALSE}
+originalBars <- plot_ly(originalDF, x = "CASE", y = ~Case, frame = ~Generacion, type = 'bar', name = 'Num Case', marker = list(color = '#EE3B3B'), texttemplate = "Patients: %{y}")
+
+originalBars <- originalBars %>% add_trace(x = "CONTROL", y = ~Control, frame = ~Generacion, name = 'Num Control', marker = list(color = '#76EE00'))
+
+originalBars <- originalBars %>% style(hoverinfo = 'none')
+
+originalBars <- originalBars %>% layout(title = "Distribution of patient diagnoses", yaxis = list(title = "Number of patients <br> <br>")) 
+```
+
+```{r, include = FALSE}
+changedBars <- plot_ly(changedDF, x = "CASE", y = ~Case, frame = ~Generacion, type = 'bar', name = 'Num Case', marker = list(color = '#EE3B3B'), texttemplate = "Patients: %{y}")
+
+changedBars <- changedBars %>% add_trace(x = "CONTROL", y = ~Control, frame = ~Generacion, name = 'Num Control', marker = list(color = '#76EE00'))
+
+changedBars <- changedBars %>% add_trace(x = "CASE2CONTROL", y = ~Case2Control, frame = ~Generacion, name = 'Num Case2Control', marker = list(color = '#8EE5EE'))
+
+changedBars <- changedBars %>% add_trace(x = "CONTROL2CASE", y = ~Control2Case, frame = ~Generacion, name = 'Num Control2Case', marker = list(color = '#BF3EFF'))
+
+changedBars <- changedBars %>% style(hoverinfo = 'none')
+
+changedBars <- changedBars %>% layout(title = "Distribution of patient diagnoses", yaxis = list(title = "Number of patients <br> <br>")) 
+```
+
+
+```{r, include = FALSE}
+dashboard <- subplot(originalBars, changedBars, nrows = 1, margin = 0.1, shareX = FALSE, shareY = FALSE, titleX = TRUE, titleY = TRUE)  
+
+dashboard <- dashboard %>%  layout(title = "Distribution of patient diagnoses", showlegend = FALSE)
+```
+
+```{r}
+dashboard
+```
+
+
+
 
 # PCA Analysis
 
