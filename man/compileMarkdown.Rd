@@ -4,20 +4,30 @@
 \alias{compileMarkdown}
 \title{compileMarkdown}
 \usage{
-compileMarkdown(savingName, clinicData, classVariable)
+compileMarkdown(
+  savingName,
+  geneticAlgorithm,
+  originalDiagnosis,
+  clinicData,
+  classVariable
+)
 }
 \arguments{
-\item{savingName}{Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.}
+\item{savingName}{String | Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.}
+
+\item{geneticAlgorithm}{Genetic algorithm object.}
+
+\item{originalDiagnosis}{Original diagnostics of the patients.}
 
 \item{clinicData}{Dataset of clinic data that will be used.}
 
-\item{classVariable}{Target variable, which must be binary, meaning it has two possible values.}
+\item{classVariable}{String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.}
 }
 \description{
 This function compiles the markdown file with the analysis results
 }
 \examples{
 
-MLASDO::compileMarkdown(savingName = savingName, clinicData = clinicData, classVariable = classVariable)
+MLASDO::compileMarkdown(savingName = savingName, geneticAlgorithm = geneticAlgorithm, clinicData = clinicData, classVariable = classVariable)
 
 }

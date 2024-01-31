@@ -1,6 +1,6 @@
 #' performPCAAnalysis
 #'
-#' @descrption This function performs PCA analysis on the changed diagnoses after the execution of the genetic algorithm.
+#' @description This function performs PCA analysis on the changed diagnoses after the execution of the genetic algorithm.
 #'
 #' @param justAnalysis Bool | Indicates whether to perform the analysis directly (TRUE) or to run the genetic algorithm (FALSE). Default value: FALSE.
 #' @param solutionPath String | Path to genetic algorithm solution.

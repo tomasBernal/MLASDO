@@ -29,7 +29,7 @@ compileMarkdown <- function(savingName, geneticAlgorithm, originalDiagnosis, cli
   numeric <- read.table(gaPathNumeric, header = TRUE, sep = "\t", row.names = 1)
   total <- read.table(gaPathTotal, header = TRUE, sep = "\t", row.names = 1)
 
-  algorithmPrecisions <- ga@summary[,1]
+  algorithmPrecisions <- geneticAlgorithm@summary[,1]
 
   rmarkdown::render(input = system.file("data", "analysisResult.Rmd", package = "MLASDO"),
                    params = list(
