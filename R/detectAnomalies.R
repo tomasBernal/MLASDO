@@ -154,7 +154,7 @@ detectAnomalies <- function(
 
   #### CHECKING PARAMETERS ####
 
-  if(omicPredictorsToIgnore != NULL){
+  if(!is.null(omicPredictorsToIgnore)){
 
     validColumnsToRemove <- names(omicData) %in% omicPredictorsToIgnore
 
@@ -164,7 +164,7 @@ detectAnomalies <- function(
 
   }
 
-  if(clinicPredictorsToIgnore != NULL){
+  if(!is.null(clinicPredictorsToIgnore)){
 
     validColumnsToRemove <- names(clinicData) %in% clinicPredictorsToIgnore
 
@@ -176,6 +176,8 @@ detectAnomalies <- function(
 
   if(is.null(activePredictors)){
     activePredictors <- names(clinicData)
+
+    print(activePredictors)
 
     activePredictors <- activePredictors[activePredictors != classVariable]
 
