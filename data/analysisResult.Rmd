@@ -44,7 +44,7 @@ precisionDF <- precisionDF %>% accumulate_by(~generation)
 ```{r}
 lineas <- plot_ly(precisionDF, x=~generation, y=~precision, frame=~Generation, hoveron = "points", hoverinfo = "text", text = paste("Valor máximo de precisión: ", round(precisionDF$precision, 2), sep = ""), type = 'scatter', mode = 'lines+markers', name ="Precision", color = I("cadetblue3"))
 
-lineas <- lineas %>% add_trace(x=~generation, y = ~meanPrecision, name='Mean', mode = 'lines+markers', color = I("brown3"), width = 1000, height = 1000, hoverinfo = "text", text = paste("Average of the accuracies obtained: ", round(datosPlot$meanPrecision, 2), sep = "")) 
+lineas <- lineas %>% add_trace(x=~generation, y = ~meanPrecision, name='Mean', mode = 'lines+markers', color = I("brown3"), width = 1000, height = 1000, hoverinfo = "text", text = paste("Average of the accuracies obtained: ", round(precisionDF$meanPrecision, 2), sep = "")) 
   
 lineas <- lineas %>%  layout(title = "Evolution of the accuracy obtained during generations",
                         xaxis = list(title = "Actual generation"), yaxis = list(title = "Precision value <br> <br>", ticksuffix = "%",  range = c(60, 90)), xaxis = list(range = c(0, 55)))
