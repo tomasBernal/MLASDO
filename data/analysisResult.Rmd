@@ -26,6 +26,7 @@ library(lazyeval)
 ```
 
 # Evolution of precision obtained
+
 ```{r, include = FALSE}
 precisionDF <- data.frame(generation = 1:length(params$algorithmPrecisions), precision = params$algorithmPrecisions * 100, meanPrecision = cummean(params$algorithmPrecisions * 100))
 
@@ -54,7 +55,6 @@ precisionPlot <- precisionPlot %>%  layout(title = "Evolution of the accuracy ob
 precisionPlot 
 ```
 
-
 # Diagnostics distribution
 
 ```{r, include = FALSE}
@@ -72,9 +72,9 @@ changedDF <- data.frame(
 ```
 
 ```{r, include = FALSE}
-originalBars <- plot_ly(originalDF, x = "CASE", y = ~Case, type = 'bar', name = 'Num Case', marker = list(color = '#FF7256'), hovertext = ~Case, hovertemplate = "Patients: %{y}<extra></extra>")
+originalBars <- plot_ly(originalDF, x = "CASE", y = ~Case, type = 'bar', name = 'Num Case', marker = list(color = '#FF7256'), hovertext = ~Case, hovertemplate = "Patients: %{y}")
 
-originalBars <- originalBars %>% add_trace(x = "CONTROL", y = ~Control, name = 'Num Control', marker = list(color = 'darkolivegreen1'), hovertext = ~Control, hovertemplate = "Patients: %{y}<extra></extra>")
+originalBars <- originalBars %>% add_trace(x = "CONTROL", y = ~Control, name = 'Num Control', marker = list(color = 'darkolivegreen1'), hovertext = ~Control, hovertemplate = "Patients: %{y}")
 
 originalBars <- originalBars %>% style(hoverinfo = 'none')
 
@@ -82,19 +82,18 @@ originalBars <- originalBars %>% layout(title = "Distribution of patient diagnos
 ```
 
 ```{r, include = FALSE}
-changedBars <- plot_ly(changedDF, x = "CASE", y = ~Case, type = 'bar', name = 'Num Case', marker = list(color = '#FF7256'), hoverinfo = "text", text = paste("Patients: ", changedDF$Case, sep = ""))
+changedBars <- plot_ly(changedDF, x = "CASE", y = ~Case, type = 'bar', name = 'Num Case', marker = list(color = '#FF7256'), hovertext = ~Case, hovertemplate = "Patients: %{y}")
 
-changedBars <- changedBars %>% add_trace(x = "CONTROL", y = ~Control, name = 'Num Control', marker = list(color = 'darkolivegreen1'), hoverinfo = "text", text = paste("Patients: ", changedDF$Control, sep = ""))
+changedBars <- changedBars %>% add_trace(x = "CONTROL", y = ~Control, name = 'Num Control', marker = list(color = 'darkolivegreen1'), hovertext = ~Control, hovertemplate = "Patients: %{y}")
 
-changedBars <- changedBars %>% add_trace(x = "CASE2CONTROL", y = ~Case2Control, name = 'Num Case2Control', marker = list(color = 'darkgoldenrod1'), hoverinfo = "text", text = paste("Patients: ", changedDF$Case2Control, sep = ""))
+changedBars <- changedBars %>% add_trace(x = "CASE2CONTROL", y = ~Case2Control, name = 'Num Case2Control', marker = list(color = 'darkgoldenrod1'), hovertext = ~Case2Control, hovertemplate = "Patients: %{y}")
 
-changedBars <- changedBars %>% add_trace(x = "CONTROL2CASE", y = ~Control2Case, name = 'Num Control2Case', marker = list(color = '#FF7F00'), hoverinfo = "text", text = paste("Patients: ", changedDF$Control2Case, sep = ""))
+changedBars <- changedBars %>% add_trace(x = "CONTROL2CASE", y = ~Control2Case, name = 'Num Control2Case', marker = list(color = '#FF7F00'), hovertext = ~Control2Case, hovertemplate = "Patients: %{y}")
 
 changedBars <- changedBars %>% style(hoverinfo = 'none')
 
 changedBars <- changedBars %>% layout(title = "Distribution of patient diagnoses", yaxis = list(title = "Number of patients <br> <br>")) 
 ```
-
 
 ```{r, include = FALSE}
 dashboard <- subplot(originalBars, changedBars, nrows = 1, margin = 0.1, shareX = FALSE, shareY = FALSE, titleX = TRUE, titleY = TRUE)  
@@ -105,9 +104,6 @@ dashboard <- dashboard %>%  layout(title = "Distribution of patient diagnoses", 
 ```{r}
 dashboard
 ```
-
-
-
 
 # PCA Analysis
 
@@ -401,7 +397,6 @@ for(indexRatio in 1:nrow(totalTable)){
 }
 ```
 
-
 # Ratio Analysis
 
 ```{r}
@@ -416,7 +411,6 @@ plot <- plot %>% layout(title = title,
 ```{r}
 plot
 ```
-
 
 ```{r, include = FALSE}
 plot <- plot_ly(totalTable,x=~logECEM,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsECEM ), height = 800, width = 1000, hoverinfo = "text", text =~textECEM)

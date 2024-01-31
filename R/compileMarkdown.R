@@ -40,6 +40,6 @@ compileMarkdown <- function(savingName, geneticAlgorithm, originalDiagnosis, cli
                                  numericTable = numeric,
                                  totalTable = total,
                                  classVariable = classVariable),
-                   output_file = "analysisResult.html",
+                   output_file = paste("analysisResult_", savingName, ".html", sep = ""),
                    output_dir = "./")
 }
