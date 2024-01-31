@@ -47,7 +47,7 @@ precisionPlot <- plot_ly(precisionDF, x=~generation, y=~precision, frame=~Genera
 precisionPlot <- precisionPlot %>% add_trace(x=~generation, y = ~meanPrecision, name='Mean', mode = 'lines+markers', color = I("brown3"), hoverinfo = "text", text = paste("Average of the accuracies obtained: ", round(precisionDF$meanPrecision, 2), sep = "")) 
   
 precisionPlot <- precisionPlot %>%  layout(title = "Evolution of the accuracy obtained during generations",
-                        xaxis = list(title = "Actual generation"), yaxis = list(title = "Precision value <br> <br>", ticksuffix = "%",  range = c(min(params$algorithmPrecisions) - 5, max(params$algorithmPrecisions))))
+                        xaxis = list(title = "Actual generation"), yaxis = list(title = "Precision value <br> <br>", ticksuffix = "%",  range = c((min(params$algorithmPrecisions) * 100) - 5, min(100, (max(params$algorithmPrecisions) * 100) + 5))))
 ```
 
 ```{r}
@@ -72,7 +72,7 @@ changedDF <- data.frame(
 ```
 
 ```{r, include = FALSE}
-originalBars <- plot_ly(originalDF, x = "CASE", y = ~Case, type = 'bar', name = 'Num Case', marker = list(color = '#FF7256'), hoverinfo = "text", text = "Patients: %{y}")
+originalBars <- plot_ly(originalDF, x = "CASE", y = ~Case, type = 'bar', name = 'Num Case', marker = list(color = '#FF7256'), hoverinfo = "text", text = paste("Patients: ", y, sep = ""))
 
 originalBars <- originalBars %>% add_trace(x = "CONTROL", y = ~Control, name = 'Num Control', marker = list(color = 'darkolivegreen1'))
 
