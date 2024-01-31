@@ -231,6 +231,8 @@ executeGA <- function(
 
     }
 
+    storage.mode(population) <- "integer"
+
     # Return the generated population
     return(population)
 
