@@ -63,7 +63,7 @@ changedDF <- data.frame(
 ```{r, include = FALSE}
 originalBars <- plot_ly(originalDF, x = "CASE", y = ~Case, type = 'bar', name = 'Num Case', marker = list(color = '#FF7256'), hovertext = ~Case, hovertemplate = "Patients: %{y}<extra></extra>")
 
-originalBars <- originalBars %>% add_trace(x = "CONTROL", y = ~Control, name = 'Num Control', marker = list(color = 'darkolivegreen1'), hovertext = ~Control, hovertemplate = "Patients: %{y}<extra></extra>")
+originalBars <- originalBars %>% add_trace(x = "CONTROL", y = ~Control, name = 'Num Control', marker = list(color = '#CAFF70'), hovertext = ~Control, hovertemplate = "Patients: %{y}<extra></extra>")
 
 originalBars <- originalBars %>% style(hoverinfo = 'none')
 
@@ -73,9 +73,9 @@ originalBars <- originalBars %>% layout(title = "Distribution of patient diagnos
 ```{r, include = FALSE}
 changedBars <- plot_ly(changedDF, x = "CASE", y = ~Case, type = 'bar', name = 'Num Case', marker = list(color = '#FF7256'), hovertext = ~Case, hovertemplate = "Patients: %{y}<extra></extra>")
 
-changedBars <- changedBars %>% add_trace(x = "CONTROL", y = ~Control, name = 'Num Control', marker = list(color = 'darkolivegreen1'), hovertext = ~Control, hovertemplate = "Patients: %{y}<extra></extra>")
+changedBars <- changedBars %>% add_trace(x = "CONTROL", y = ~Control, name = 'Num Control', marker = list(color = '#CAFF70'), hovertext = ~Control, hovertemplate = "Patients: %{y}<extra></extra>")
 
-changedBars <- changedBars %>% add_trace(x = "CASE2CONTROL", y = ~Case2Control, name = 'Num Case2Control', marker = list(color = 'darkgoldenrod1'), hovertext = ~Case2Control, hovertemplate = "Patients: %{y}<extra></extra>")
+changedBars <- changedBars %>% add_trace(x = "CASE2CONTROL", y = ~Case2Control, name = 'Num Case2Control', marker = list(color = '#FFB90F'), hovertext = ~Case2Control, hovertemplate = "Patients: %{y}<extra></extra>")
 
 changedBars <- changedBars %>% add_trace(x = "CONTROL2CASE", y = ~Control2Case, name = 'Num Control2Case', marker = list(color = '#FF7F00'), hovertext = ~Control2Case, hovertemplate = "Patients: %{y}<extra></extra>")
 
