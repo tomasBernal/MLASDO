@@ -7,6 +7,7 @@ output:
     toc: true
     toc_float: true
 params:
+  algorithmPrecisions : NULL
   originalDiagnosis : NULL
   clinicData : NULL
   pcaAnalisis : NULL
@@ -23,6 +24,32 @@ knitr::opts_chunk$set(echo = TRUE)
 library(plotly)
 ```
 
+# Evolution of precision obtained
+```{r, include = FALSE}
+precisionDF <- data.frame(generation = 1:length(params$algorithmPrecisions), precision = params$algorithmPrecisions * 100, meanPrecision = cummean(params$algorithmPrecisions * 100))
+
+accumulate_by <- function(dat, var) {
+  var <- f_eval(var, dat)
+  lvls <- plotly:::getLevels(var)
+  dats <- lapply(seq_along(lvls), function(x) {
+    cbind(dat[var %in% lvls[seq(1, x)], ], Generation = lvls[[x]])
+  })
+  bind_rows(dats)
+}
+
+precisionDF <- precisionDF %>% accumulate_by(~generation)
+```
+
+```{r}
+lineas <- plot_ly(precisionDF, x=~generation, y=~precision, frame=~Generation, hoveron = "points", hoverinfo = "text", text = paste("Valor máximo de precisión: ", round(precisionDF$precision, 2), sep = ""), type = 'scatter', mode = 'lines+markers', name ="Precision", color = I("cadetblue3"))
+
+lineas <- lineas %>% add_trace(x=~generation, y = ~meanPrecision, name='Mean', mode = 'lines+markers', color = I("brown3"), width = 1000, height = 1000, hoverinfo = "text", text = paste("Average of the accuracies obtained: ", round(datosPlot$meanPrecision, 2), sep = "")) 
+  
+lineas <- lineas %>%  layout(title = "Evolution of the accuracy obtained during generations",
+                        xaxis = list(title = "Actual generation"), yaxis = list(title = "Precision value <br> <br>", ticksuffix = "%",  range = c(60, 90)), xaxis = list(range = c(0, 55)))
+
+lineas 
+```
 
 # Diagnostics distribution
 
@@ -41,9 +68,9 @@ changedDF <- data.frame(
 ```
 
 ```{r, include = FALSE}
-originalBars <- plot_ly(originalDF, x = "CASE", y = ~Case, type = 'bar', name = 'Num Case', marker = list(color = '#EE3B3B'), texttemplate = "Patients: %{y}")
+originalBars <- plot_ly(originalDF, x = "CASE", y = ~Case, type = 'bar', name = 'Num Case', marker = list(color = '#FF7256'), hoverinfo = "text", text = "Patients: %{y}")
 
-originalBars <- originalBars %>% add_trace(x = "CONTROL", y = ~Control, name = 'Num Control', marker = list(color = '#76EE00'))
+originalBars <- originalBars %>% add_trace(x = "CONTROL", y = ~Control, name = 'Num Control', marker = list(color = 'darkolivegreen1'))
 
 originalBars <- originalBars %>% style(hoverinfo = 'none')
 
@@ -51,13 +78,13 @@ originalBars <- originalBars %>% layout(title = "Distribution of patient diagnos
 ```
 
 ```{r, include = FALSE}
-changedBars <- plot_ly(changedDF, x = "CASE", y = ~Case, type = 'bar', name = 'Num Case', marker = list(color = '#EE3B3B'), texttemplate = "Patients: %{y}")
+changedBars <- plot_ly(changedDF, x = "CASE", y = ~Case, type = 'bar', name = 'Num Case', marker = list(color = '#FF7256'), hoverinfo = "text", text = "Patients: %{y}")
 
-changedBars <- changedBars %>% add_trace(x = "CONTROL", y = ~Control, name = 'Num Control', marker = list(color = '#76EE00'))
+changedBars <- changedBars %>% add_trace(x = "CONTROL", y = ~Control, name = 'Num Control', marker = list(color = 'darkolivegreen1'))
 
-changedBars <- changedBars %>% add_trace(x = "CASE2CONTROL", y = ~Case2Control, name = 'Num Case2Control', marker = list(color = '#8EE5EE'))
+changedBars <- changedBars %>% add_trace(x = "CASE2CONTROL", y = ~Case2Control, name = 'Num Case2Control', marker = list(color = 'darkgoldenrod1'))
 
-changedBars <- changedBars %>% add_trace(x = "CONTROL2CASE", y = ~Control2Case, name = 'Num Control2Case', marker = list(color = '#BF3EFF'))
+changedBars <- changedBars %>% add_trace(x = "CONTROL2CASE", y = ~Control2Case, name = 'Num Control2Case', marker = list(color = '#FF7F00'))
 
 changedBars <- changedBars %>% style(hoverinfo = 'none')
 

@@ -10,6 +10,7 @@
 #' and accuracy of the data.
 #'
 #' @param justAnalysis Bool | Indicates whether to perform the analysis directly (TRUE) or to run the genetic algorithm (FALSE). Default value: FALSE.
+#' @param geneticPath String | Path to genetic algorithm object.
 #' @param solutionPath String | Path to genetic algorithm solution.
 #'
 #' @param mlAlgorithm String | Machine Learning algorithm to be applied, the options are: Lasso or RF (Random Forest). Default value: RF.
@@ -58,11 +59,12 @@
 #'
 #' MLASDO::detectAnomalies(savingName = "ExecutionWithOwnData", mlAlgorithm = "RF", omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv", idColumn = "Patient.Id", nIterations = 3, populationSize = 10, classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"))
 #'
-#' MLASDO::detectAnomalies(justAnalysis = TRUE, solutionPath = "GA_solution.rds", savingName = "ExecutionWithOwnData", omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv",idColumn = "Patient.Id",classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"))
+#' MLASDO::detectAnomalies(justAnalysis = TRUE, geneticPath = "GA.rds", solutionPath = "GA_solution.rds", savingName = "ExecutionWithOwnData", omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv",idColumn = "Patient.Id",classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"))
 
 detectAnomalies <- function(
     justAnalysis = FALSE,
     solutionPath = "",
+    geneticPath = "",
     mlAlgorithm = "RF",
     numLassoExecutions = 5,
     numTrees = 100,
@@ -123,6 +125,10 @@ detectAnomalies <- function(
 
   if(justAnalysis & solutionPath == ""){
     return("If you want to perform the analysis only, you must indicate the path to the final solution of the genetic algorithm.")
+  }
+
+  if(justAnalysis & geneticPath == ""){
+    return("If you want to perform the analysis only, you must indicate the path to the genetic algorithm object.")
   }
 
   #### CHECKING ML ALGORITHM ####
@@ -320,10 +326,17 @@ detectAnomalies <- function(
   name <- paste("GA", savingName, sep="_")
 
   if(justAnalysis){
+
+    geneticAlgorithm <- readRDS(geneticPath)
     solutionGA <- readRDS(solutionPath)
+
   } else {
+
     gaPath <- paste(name, "Solution.rds", sep="_")
     solutionGA <- readRDS(gaPath)
+
+    gaPath <- paste(name, ".rds", sep="_")
+    geneticAlgorithm <- readRDS(gaPath)
   }
 
 
@@ -376,5 +389,5 @@ detectAnomalies <- function(
   changedClinicData[[classVariable]] <- changedDiagnoses
 
   print("Compiling Markdown file")
-  MLASDO::compileMarkdown(savingName = savingName, originalDiagnosis = omicData[[classVariable]], clinicData = changedClinicData, classVariable = classVariable)
+  MLASDO::compileMarkdown(savingName = savingName, geneticAlgorithm = geneticAlgorithm, originalDiagnosis = omicData[[classVariable]], clinicData = changedClinicData, classVariable = classVariable)
 }
