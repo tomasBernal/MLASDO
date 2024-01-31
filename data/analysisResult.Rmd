@@ -41,9 +41,9 @@ changedDF <- data.frame(
 ```
 
 ```{r, include = FALSE}
-originalBars <- plot_ly(originalDF, x = "CASE", y = ~Case, frame = ~Generacion, type = 'bar', name = 'Num Case', marker = list(color = '#EE3B3B'), texttemplate = "Patients: %{y}")
+originalBars <- plot_ly(originalDF, x = "CASE", y = ~Case, type = 'bar', name = 'Num Case', marker = list(color = '#EE3B3B'), texttemplate = "Patients: %{y}")
 
-originalBars <- originalBars %>% add_trace(x = "CONTROL", y = ~Control, frame = ~Generacion, name = 'Num Control', marker = list(color = '#76EE00'))
+originalBars <- originalBars %>% add_trace(x = "CONTROL", y = ~Control, name = 'Num Control', marker = list(color = '#76EE00'))
 
 originalBars <- originalBars %>% style(hoverinfo = 'none')
 
@@ -51,13 +51,13 @@ originalBars <- originalBars %>% layout(title = "Distribution of patient diagnos
 ```
 
 ```{r, include = FALSE}
-changedBars <- plot_ly(changedDF, x = "CASE", y = ~Case, frame = ~Generacion, type = 'bar', name = 'Num Case', marker = list(color = '#EE3B3B'), texttemplate = "Patients: %{y}")
+changedBars <- plot_ly(changedDF, x = "CASE", y = ~Case, type = 'bar', name = 'Num Case', marker = list(color = '#EE3B3B'), texttemplate = "Patients: %{y}")
 
-changedBars <- changedBars %>% add_trace(x = "CONTROL", y = ~Control, frame = ~Generacion, name = 'Num Control', marker = list(color = '#76EE00'))
+changedBars <- changedBars %>% add_trace(x = "CONTROL", y = ~Control, name = 'Num Control', marker = list(color = '#76EE00'))
 
-changedBars <- changedBars %>% add_trace(x = "CASE2CONTROL", y = ~Case2Control, frame = ~Generacion, name = 'Num Case2Control', marker = list(color = '#8EE5EE'))
+changedBars <- changedBars %>% add_trace(x = "CASE2CONTROL", y = ~Case2Control, name = 'Num Case2Control', marker = list(color = '#8EE5EE'))
 
-changedBars <- changedBars %>% add_trace(x = "CONTROL2CASE", y = ~Control2Case, frame = ~Generacion, name = 'Num Control2Case', marker = list(color = '#BF3EFF'))
+changedBars <- changedBars %>% add_trace(x = "CONTROL2CASE", y = ~Control2Case, name = 'Num Control2Case', marker = list(color = '#BF3EFF'))
 
 changedBars <- changedBars %>% style(hoverinfo = 'none')
 
