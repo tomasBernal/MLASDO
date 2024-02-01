@@ -225,7 +225,7 @@ executeGA <- function(
 
     for(j in 1:object@popSize){
 
-      population[j, ] <- round(rbinom(object@nBits, size = 1, prob = probCambioDiagnostico))
+      population[j, ] <- round(rbinom(object@nBits, size = 1, prob = diagnosticChangeProbability))
     }
 
     storage.mode(population) <- "integer"
