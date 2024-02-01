@@ -37,7 +37,7 @@ precisionPlot <- plot_ly(precisionDF, x=~generation, y=~precision, hoveron = "po
 precisionPlot <- precisionPlot %>% add_trace(x=~generation, y = ~meanPrecision, name='Mean', mode = 'lines+markers', color = I("brown3"), hoverinfo = "text", text = paste("Average of the accuracies obtained: ", round(precisionDF$meanPrecision, 2), "%<br>Generation: ", precisionDF$generation, sep = "")) 
   
 precisionPlot <- precisionPlot %>%  layout(title = "Evolution of the accuracy obtained during generations",
-                        xaxis = list(title = "Actual generation"), yaxis = list(title = "Precision value <br> <br>", ticksuffix = "%",  range = c((min(params$algorithmPrecisions) * 100) - 5, min(100, (max(params$algorithmPrecisions) * 100) + 5)), xaxis = list(range = c(0, max(precisionDF$Generation)))))
+                        xaxis = list(title = "Actual generation <br>"), yaxis = list(title = "Precision value <br> <br> <br>", ticksuffix = "%",  range = c((min(params$algorithmPrecisions) * 100) - 5, min(100, (max(params$algorithmPrecisions) * 100) + 5)), xaxis = list(range = c(0, max(precisionDF$Generation)))))
 ```
 
 ```{r}
@@ -85,9 +85,33 @@ changedBars <- changedBars %>% layout(title = "Distribution of patient diagnoses
 ```
 
 ```{r, include = FALSE}
+
+annotations = list( 
+  list( 
+    x = 0.15,  
+    y = 1.0,  
+    text = "Before detection",  
+    xref = "paper",  
+    yref = "paper",  
+    xanchor = "center",  
+    yanchor = "bottom",  
+    showarrow = FALSE 
+  ),  
+  list( 
+    x = 0.81,  
+    y = 1,  
+    text = "After detection",  
+    xref = "paper",  
+    yref = "paper",  
+    xanchor = "center",  
+    yanchor = "bottom",  
+    showarrow = FALSE 
+  )
+)
+
 dashboard <- subplot(originalBars, changedBars, nrows = 1, margin = 0.1, shareX = FALSE, shareY = FALSE, titleX = TRUE, titleY = TRUE)  
 
-dashboard <- dashboard %>%  layout(title = "Distribution of patient diagnoses", showlegend = FALSE)
+dashboard <- dashboard %>%  layout(title = "Distribution of patient diagnoses", showlegend = FALSE, annotations = annotations)
 ```
 
 ```{r}
