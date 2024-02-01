@@ -67,7 +67,7 @@ originalBars <- originalBars %>% add_trace(x = "CONTROL", y = ~Control, name = '
 
 originalBars <- originalBars %>% style(hoverinfo = 'none')
 
-originalBars <- originalBars %>% layout(title = "Distribution of patient diagnoses (before detection)", yaxis = list(title = "Number of patients <br> <br>")) 
+originalBars <- originalBars %>% layout(title = "Distribution of patient diagnoses", yaxis = list(title = "Number of patients (before detection) <br> <br>")) 
 ```
 
 ```{r, include = FALSE}
@@ -81,7 +81,7 @@ changedBars <- changedBars %>% add_trace(x = "CONTROL2CASE", y = ~Control2Case, 
 
 changedBars <- changedBars %>% style(hoverinfo = 'none')
 
-changedBars <- changedBars %>% layout(title = "Distribution of patient diagnoses (after detection)", yaxis = list(title = "Number of patients <br> <br>")) 
+changedBars <- changedBars %>% layout(title = "Distribution of patient diagnoses", yaxis = list(title = "Number of patients (after detection) <br> <br>")) 
 ```
 
 ```{r, include = FALSE}
@@ -210,16 +210,16 @@ for(indexRatio in 1:nrow(totalTable)){
     text <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][1]
     text <- paste(text, "(Numeric)", "Ratio:", round(totalTable$logCCCM[indexRatio], digits = 3),  sep = " ")
     
-    text <- paste(text, paste("Number of patients", "Control", "->", "Case", ":", sep = " "), sep = "<br>")
+    text <- paste(text, "Number of Control -> Case patients:", sep = "<br>")
     text <- paste(text, numericTable[rownames(totalTable)[indexRatio], "NumPatientsCC"], sep = " ")
     
-    text <- paste(text, paste("Mean of the patients", "Control", "->", "Case", ":", sep = " "), sep = "<br>")
+    text <- paste(text, "Mean value for the Control -> Case patients:", sep = "<br>")
     text <- paste(text, round(numericTable[rownames(totalTable)[indexRatio], "MeanCC"], digits = 3), sep = " ")
 
-    text <- paste(text, paste("Number of patients", "Control", "->", "Control", ":", sep = " "), sep = "<br>")
+    text <- paste(text, "Number of Control -> Control patients:", sep = "<br>")
     text <- paste(text, numericTable[rownames(totalTable)[indexRatio], "NumPatientsCM"], sep = " ")
 
-    text <- paste(text, paste("Mean of the patients", "Control", "->", "Control", ":", sep = " "), sep = "<br>")
+    text <- paste(text, "Mean value for the Control -> Control patients:", sep = "<br>")
     text <- paste(text, round(numericTable[rownames(totalTable)[indexRatio], "MeanCM"], digits = 3), sep = " ")
 
   } else {
@@ -236,22 +236,22 @@ for(indexRatio in 1:nrow(totalTable)){
     text <- paste(strsplit(predictor, " ")[[1]][1], "=", predictorValue, "(Categoric)", "Ratio:", round(totalTable$logCCCM[indexRatio], digits = 3), sep = " ")
 
     text <- paste(text, "<br>", sep = "")
-    text <- paste(text, paste("Number of patients", "Control", "->", "Case", "", sep = " "), predictorValue, ":", sep = "")
+    text <- paste(text, "Number of Control -> Case patients in ", predictorValue, ":", sep = "")
 
     text <- paste(text, totalTable$SumCCNumerator[indexRatio], sep = " ")
     text <- paste(text, "<br>", sep = "")
 
-    text <- paste(text, paste("Number of patients", "Control", "->", "Case", "", sep = " "), vsValue, ":", sep = "")
+    text <- paste(text, "Number of Control -> Case patients in ", vsValue, ":", sep = "")
 
     text <- paste(text, totalTable$SumCCDenominator[indexRatio], sep = " ")
     text <- paste(text, "<br>", sep = "")
 
 
-    text <- paste(text, paste("Number of patients", "Control", "->", "Control", "", sep = " "), predictorValue, ":", sep = "")
+    text <- paste(text, "Number of Control -> Control patients in ", predictorValue, ":", sep = "")
     text <- paste(text, totalTable$SumCMNumerator[indexRatio], sep = " ")
 
     text <- paste(text, "<br>", sep = "")
-    text <- paste(text, paste("Number of patients", "Control", "->", "Control", "", sep = " "), vsValue, ":", sep = "")
+    text <- paste(text, "Number of Control -> Control patients in ", vsValue, ":", sep = "")
 
     text <- paste(text, totalTable$SumCMDenominator[indexRatio], sep = " ")
 
@@ -283,22 +283,22 @@ for(indexRatio in 1:nrow(totalTable)){
     text <- paste(text, "(Numeric)","Ratio:", round(totalTable$logECEM[indexRatio], digits = 3), sep = " ")
 
 
-    text <- paste(text, paste("Number of patients", "Case", "->", "Control", ":", sep = " "), sep = "<br>")
+    text <- paste(text, "Number of Case -> Control patients:", sep = "<br>")
 
     text <- paste(text, numericTable[rownames(totalTable)[indexRatio], "NumPatientsEC"], sep = " ")
 
 
-    text <- paste(text, paste("Mean of the patients", "Case", "->", "Control", ":", sep = " "), sep = "<br>")
+    text <- paste(text, "Mean value for the Case -> Control patients:", sep = "<br>")
 
     text <- paste(text, round(numericTable[rownames(totalTable)[indexRatio], "MeanEC"], digits = 3), sep = " ")
 
 
-    text <- paste(text, paste("Number of patients", "Case", "->", "Case", ":", sep = " "), sep = "<br>")
+    text <- paste(text, "Number of Case -> Case patients:", sep = "<br>")
 
     text <- paste(text, numericTable[rownames(totalTable)[indexRatio], "NumPatientsEM"], sep = " ")
 
 
-    text <- paste(text, paste("Mean of the patients", "Case", "->", "Case", ":", sep = " "), sep = "<br>")
+    text <- paste(text, "Mean value for the Case -> Case patients:", sep = "<br>")
 
     text <- paste(text, round(numericTable[rownames(totalTable)[indexRatio], "MeanEM"], digits = 3), sep = " ")
 
@@ -315,25 +315,25 @@ for(indexRatio in 1:nrow(totalTable)){
     text <- paste(strsplit(predictor, " ")[[1]][1], "=", predictorValue, "(Categoric)","Ratio:", round(totalTable$logECEM[indexRatio], digits = 3), sep = " ")
 
     text <- paste(text, "<br>", sep = "")
-    text <- paste(text, paste("Number of patients", "Case", "->", "Control", "", sep = " "), predictorValue, ":", sep = "")
+    text <- paste(text, "Number of Case -> Control patients in ", predictorValue, ":", sep = "")
 
     text <- paste(text, totalTable$SumECNumerator[indexRatio], sep = " ")
     text <- paste(text, "<br>", sep = "")
 
-    text <- paste(text, paste("Number of patients", "Case", "->", "Control", "", sep = " "), vsValue, ":", sep = "")
+    text <- paste(text, "Number of Case -> Control patients in ", vsValue, ":", sep = "")
 
     text <- paste(text, totalTable$SumECDenominator[indexRatio], sep = " ")
 
     text <- paste(text, "<br>", sep = "")
 
 
-    text <- paste(text, paste("Number of patients", "Case", "->", "Case", "", sep = " "), predictorValue, ":", sep = "")
+    text <- paste(text, "Number of Case -> Case patients in ", predictorValue, ":", sep = "")
 
     text <- paste(text, totalTable$SumEMNumerator[indexRatio], sep = " ")
 
     text <- paste(text, "<br>", sep = "")
 
-    text <- paste(text, paste("Number of patients", "Case", "->", "Case", "", sep = " "), vsValue, ":", sep = "")
+    text <- paste(text, "Number of Case -> Case patients in ", vsValue, ":", sep = "")
 
     text <- paste(text, totalTable$SumEMDenominator[indexRatio], sep = " ")
   }
@@ -365,22 +365,22 @@ for(indexRatio in 1:nrow(totalTable)){
     text <- paste(text, "(Numeric)", "Ratio:", round(totalTable$logCE[indexRatio], digits = 3), sep = " ")
 
     
-    text <- paste(text, paste("Number of patients total of", "Control", "(before genetic):", sep = " "), sep = "<br>")
+    text <- paste(text, "Number of Control patients (before genetic):", sep = "<br>")
 
     text <- paste(text, numericTable[rownames(totalTable)[indexRatio], "NumPatientsC"], sep = " ")
 
 
-    text <- paste(text, paste("Mean of the patients total of", "Control", "(before genetic):", sep = " "), sep = "<br>")
+    text <- paste(text, "Mean value for the Control patients (before genetic):", sep = "<br>")
 
     text <- paste(text, round(numericTable[rownames(totalTable)[indexRatio], "MeanC"], digits = 3), sep = " ")
 
 
-    text <- paste(text, paste("Number of patients total of", "Case", "(before genetic):", sep = " "), sep = "<br>")
+    text <- paste(text, "Number of Case patients (before genetic):", sep = "<br>")
 
     text <- paste(text, numericTable[rownames(totalTable)[indexRatio], "NumPatientsE"], sep = " ")
 
 
-    text <- paste(text, paste("Mean of the patients total of", "Case", "(before genetic):", sep = " "), sep = "<br>")
+    text <- paste(text, "Mean value for the Case patients (before genetic):", sep = "<br>")
 
     text <- paste(text, round(numericTable[rownames(totalTable)[indexRatio], "MeanE"], digits = 3), sep = " ")
 
@@ -399,26 +399,26 @@ for(indexRatio in 1:nrow(totalTable)){
 
     text <- paste(text, "<br>", sep = "")
     
-    text <- paste(text, paste("Number of patients total of", "Control", "(before genetic) ", sep = " "), predictorValue, ":", sep = "")
+    text <- paste(text, "Number of Control patients (before genetic) in ", predictorValue, ":", sep = "")
 
     text <- paste(text, totalTable$SumCNumerator[indexRatio], sep = " ")
 
     text <- paste(text, "<br>", sep = "")
 
-    text <- paste(text, paste("Number of patients total of", "Control", "(before genetic) ", sep = " "), vsValue, ":", sep = "")
+    text <- paste(text, "Number of Control patients (before genetic) in ", vsValue, ":", sep = "")
 
     text <- paste(text, totalTable$SumCDenominator[indexRatio], sep = " ")
 
     text <- paste(text, "<br>", sep = "")
 
 
-    text <- paste(text, paste("Number of patients total of", "Case", "(before genetic) ", sep = " "), predictorValue, ":", sep = "")
+    text <- paste(text, "Number of Case patients (before genetic) in ", predictorValue, ":", sep = "")
 
     text <- paste(text, totalTable$SumENumerator[indexRatio], sep = " ")
 
     text <- paste(text, "<br>", sep = "")
 
-    text <- paste(text, paste("Number of patients total of", "Case", "(before genetic) ", sep = " "), vsValue, ":", sep = "")
+    text <- paste(text, "Number of Case patients (before genetic) in ", vsValue, ":", sep = "")
 
     text <- paste(text, totalTable$SumEDenominator[indexRatio], sep = " ")
   }
