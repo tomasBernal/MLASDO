@@ -146,21 +146,27 @@ minCE <- min(totalTable$logCE)
 
 if(abs(maxCCCM) + abs(minCCCM) > 3){
   sepCCCM <- 0.5
-} else {
+} else if(abs(maxCCCM) + abs(minCCCM) > 1) {
   sepCCCM <- 0.25
+} else {
+  sepCCCM <- 0.1
 }
 
 if(abs(maxECEM) + abs(minECEM) > 3){
   sepECEM <- 0.5
-} else {
+} else if(abs(maxECEM) + abs(minECEM) > 1) {
   sepECEM <- 0.25
+} else {
+  sepECEM <- 0.1
 }
 
 
 if(abs(maxCE) + abs(minCE) > 3){
   sepCE <- 0.5
-} else {
+} else if(abs(maxCE) + abs(minCE) > 1) {
   sepCE <- 0.25
+} else {
+  sepCE <- 0.1
 }
 ```
 
@@ -423,7 +429,7 @@ plot <- plot_ly(totalTable,x=~logCCCM,y=~rownames(totalTable), type="scatter", m
 
 title <- paste("Ratio of patients who changed from", "Case", "to", "Control", "versus those who continued as", "Case", sep = " ")
 plot <- plot %>% layout(title = title,
-                        xaxis = list(title = "Ratio on a logarithmic scale (base 2)", tickvals = seq(-ceiling(-min(totalTable$logCCCM)), ceiling(max(totalTable$logCCCM)), by = sepCCCM)),
+                        xaxis = list(title = "Ratio on a logarithmic scale (base 2) <br>", tickvals = seq(-ceiling(-min(totalTable$logCCCM)), ceiling(max(totalTable$logCCCM)), by = sepCCCM)),
                         yaxis = list(title = "Predictor"))
 ```
 
@@ -437,7 +443,7 @@ plot <- plot_ly(totalTable,x=~logECEM,y=~rownames(totalTable),type="scatter", mo
 title <- paste("Ratio of patients who changed from", "Control", "to", "Case", "versus those who continued as", "Control", sep = " ")
 
 plot <- plot %>% layout(title = title,
-                        xaxis = list(title = "Ratio on a logarithmic scale (base 2)", tickvals = seq(-ceiling(-min(totalTable$logECEM)), ceiling(max(totalTable$logECEM)), by = sepECEM)),
+                        xaxis = list(title = "Ratio on a logarithmic scale (base 2) <br>", tickvals = seq(-ceiling(-min(totalTable$logECEM)), ceiling(max(totalTable$logECEM)), by = sepECEM)),
                         yaxis = list(title = "Predictor"))
 ```
 
@@ -451,7 +457,7 @@ plot <- plot_ly(totalTable,x=~logCE,y=~rownames(totalTable),type="scatter", mode
 title <- paste("Ratio between the total number of patients", "Control", "and", "Case", sep = " ")
 
 plot <- plot %>% layout(title = title,
-                        xaxis = list(title = "Ratio on a logarithmic scale (base 2)", tickvals = seq(-ceiling(-min(totalTable$logCE)), ceiling(max(totalTable$logCE)), by = sepCE)),
+                        xaxis = list(title = "Ratio on a logarithmic scale (base 2) <br>", tickvals = seq(-ceiling(-min(totalTable$logCE)), ceiling(max(totalTable$logCE)), by = sepCE)),
                         yaxis = list(title = "Predictor"))
 ```
 
