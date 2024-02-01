@@ -88,7 +88,7 @@ changedBars <- changedBars %>% layout(title = "Distribution of patient diagnoses
 
 annotations = list( 
   list( 
-    x = 0.05,  
+    x = -0.1,  
     y = 1.0,  
     text = "Before detection",  
     xref = "paper",  
@@ -98,7 +98,7 @@ annotations = list(
     showarrow = FALSE 
   ),  
   list( 
-    x = 0.9,  
+    x = 1.1,  
     y = 1,  
     text = "After detection",  
     xref = "paper",  
