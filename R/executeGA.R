@@ -144,7 +144,7 @@ executeGA <- function(
 
     # Calculating new diagnoses determined by the current solution
     # It is done through an XOR operation
-    solutionData <- bitwXor(omic[[classVariable]], genome)
+    solutionData <- bitwXor(omicTrainDiagnosis, genome)
 
     if(mlAlgorithm == "Lasso"){
 
@@ -157,13 +157,13 @@ executeGA <- function(
       for (i in 1:numLassoExecutions) {
 
         # Train the Lasso model
-        model <- cv.glmnet(as.matrix(omicTrain), as.matrix(solutionData[SubsetTrain]), alpha = 1, family = "binomial", type.measure = "class", nfolds = 10)
+        model <- cv.glmnet(as.matrix(omicTrain), as.matrix(solutionData), alpha = 1, family = "binomial", type.measure = "class", nfolds = 10)
 
         # Use the model to predict on the test set
         modelPrediction <- predict(model, newx = as.matrix(omicTest), alpha = 1, s = "lambda.min", type = "class")
 
         # Get the confusion matrix
-        cfModel <- confusionMatrix(as.factor(as.integer(modelPrediction)), as.factor(solutionData[-SubsetTrain]))
+        cfModel <- confusionMatrix(as.factor(as.integer(modelPrediction)), as.factor(omicTestDiagnosis))
 
         specificity <- ifelse(is.na(as.numeric(cfModel$byClass["Specificity"])), 0,  as.numeric(cfModel$byClass["Specificity"]))
 
@@ -183,7 +183,7 @@ executeGA <- function(
       model <- ranger(
 
         x = omicTrain,
-        y = solutionData[SubsetTrain],
+        y = solutionData,
         num.trees = numTrees,
         mtry = mtry,
         splitrule = splitrule,
@@ -200,7 +200,7 @@ executeGA <- function(
 
       # Get the confusion matrix
       cfModel <-
-        confusionMatrix(as.factor(as.integer(modelPrediction)), as.factor(solutionData[-SubsetTrain]))
+        confusionMatrix(as.factor(as.integer(modelPrediction)), as.factor(omicTestDiagnosis))
 
       specificity <- ifelse(is.na(as.numeric(cfModel$byClass["Specificity"])), 0,  as.numeric(cfModel$byClass["Specificity"]))
 
@@ -240,7 +240,7 @@ executeGA <- function(
     maxFitness = 1, # Maximum fitness value (to stop if reached)
     fitness = fitness, # Fitness function (explained above)
     seed = seed, # Seed used by the genetic algorithm in random processes (crossover and mutation)
-    nBits = nrow(omic), # Number of bits in the genome (one for each example in the dataset)
+    nBits = nrow(omicTrain), # Number of bits in the genome (one for each example in the dataset)
     popSize = populationSize, # Size of the initial population
     population = generateInitialPopulation, # Function that generates the initial population (explained above)
     selection = selectionOperator, # Selection of the best individuals through tournament
