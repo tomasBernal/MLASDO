@@ -53,10 +53,10 @@ originalDF <- data.frame(
 )
 
 changedDF <- data.frame(
-  Case = sum(params$clinicData == "Case"),
-  Control = sum(params$clinicData == "Control"),
-  Case2Control = sum(params$clinicData == "Case2Control"),
-  Control2Case = sum(params$clinicData == "Control2Case")
+  Case = sum(params$clinicData[[params$classVariable]] == "Case"),
+  Control = sum(params$clinicData[[params$classVariable]] == "Control"),
+  Case2Control = sum(params$clinicData[[params$classVariable]] == "Case2Control"),
+  Control2Case = sum(params$clinicData[[params$classVariable]] == "Control2Case")
 )
 ```
 
