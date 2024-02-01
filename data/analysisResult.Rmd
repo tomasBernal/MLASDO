@@ -67,7 +67,7 @@ originalBars <- originalBars %>% add_trace(x = "CONTROL", y = ~Control, name = '
 
 originalBars <- originalBars %>% style(hoverinfo = 'none')
 
-originalBars <- originalBars %>% layout(title = "Distribution of patient diagnoses", yaxis = list(title = "Number of patients <br> <br>")) 
+originalBars <- originalBars %>% layout(title = "Distribution of patient diagnoses (before detection)", yaxis = list(title = "Number of patients <br> <br>")) 
 ```
 
 ```{r, include = FALSE}
@@ -81,37 +81,13 @@ changedBars <- changedBars %>% add_trace(x = "CONTROL2CASE", y = ~Control2Case, 
 
 changedBars <- changedBars %>% style(hoverinfo = 'none')
 
-changedBars <- changedBars %>% layout(title = "Distribution of patient diagnoses", yaxis = list(title = "Number of patients <br> <br>")) 
+changedBars <- changedBars %>% layout(title = "Distribution of patient diagnoses (after detection)", yaxis = list(title = "Number of patients <br> <br>")) 
 ```
 
 ```{r, include = FALSE}
-
-annotations = list( 
-  list( 
-    x = 0,  
-    y = 1.0,  
-    text = "Before detection",  
-    xref = "paper",  
-    yref = "paper",  
-    xanchor = "center",  
-    yanchor = "bottom",  
-    showarrow = FALSE 
-  ),  
-  list( 
-    x = 0.95,  
-    y = 1,  
-    text = "After detection",  
-    xref = "paper",  
-    yref = "paper",  
-    xanchor = "center",  
-    yanchor = "bottom",  
-    showarrow = FALSE 
-  )
-)
-
 dashboard <- subplot(originalBars, changedBars, nrows = 1, margin = 0.1, shareX = FALSE, shareY = FALSE, titleX = TRUE, titleY = TRUE)  
 
-dashboard <- dashboard %>%  layout(title = "Distribution of patient diagnoses", showlegend = FALSE, annotations = annotations)
+dashboard <- dashboard %>%  layout(title = "Distribution of patient diagnoses", showlegend = FALSE)
 ```
 
 ```{r}
@@ -156,6 +132,36 @@ totalTable$logECEM <- log(totalTable$logECEM, base = 2)
 totalTable$logCE <- ifelse(totalTable$CE == 0, 1, totalTable$CE)
 
 totalTable$logCE <- log(totalTable$logCE, base = 2)
+```
+
+```{r, include = FALSE}
+maxCCCM <- max(totalTable$logCCCM)
+minCCCM <- min(totalTable$logCCCM)
+
+maxECEM <- max(totalTable$logECEM)
+minECEM <- min(totalTable$logECEM)
+
+maxCE <- max(totalTable$logCE)
+minCE <- min(totalTable$logCE)
+
+if(abs(maxCCCM) + abs(minCCCM) > 3){
+  sepCCCM <- 0.5
+} else {
+  sepCCCM <- 0.25
+}
+
+if(abs(maxECEM) + abs(minECEM) > 3){
+  sepECEM <- 0.5
+} else {
+  sepECEM <- 0.25
+}
+
+
+if(abs(maxCE) + abs(minCE) > 3){
+  sepCE <- 0.5
+} else {
+  sepCE <- 0.25
+}
 ```
 
 ```{r, include=FALSE}
@@ -417,7 +423,7 @@ plot <- plot_ly(totalTable,x=~logCCCM,y=~rownames(totalTable), type="scatter", m
 
 title <- paste("Ratio of patients who changed from", "Case", "to", "Control", "versus those who continued as", "Case", sep = " ")
 plot <- plot %>% layout(title = title,
-                        xaxis = list(title = "Ratio on a logarithmic scale (base 2)", tickvals = seq(-ceiling(-min(totalTable$logCCCM)), ceiling(max(totalTable$logCCCM)))),
+                        xaxis = list(title = "Ratio on a logarithmic scale (base 2)", tickvals = seq(-ceiling(-min(totalTable$logCCCM)), ceiling(max(totalTable$logCCCM)), by = sepCCCM)),
                         yaxis = list(title = "Predictor"))
 ```
 
@@ -431,7 +437,7 @@ plot <- plot_ly(totalTable,x=~logECEM,y=~rownames(totalTable),type="scatter", mo
 title <- paste("Ratio of patients who changed from", "Control", "to", "Case", "versus those who continued as", "Control", sep = " ")
 
 plot <- plot %>% layout(title = title,
-                        xaxis = list(title = "Ratio on a logarithmic scale (base 2)", tickvals = seq(-ceiling(-min(totalTable$logECEM)), ceiling(max(totalTable$logECEM)))),
+                        xaxis = list(title = "Ratio on a logarithmic scale (base 2)", tickvals = seq(-ceiling(-min(totalTable$logECEM)), ceiling(max(totalTable$logECEM)), by = sepECEM)),
                         yaxis = list(title = "Predictor"))
 ```
 
@@ -445,7 +451,7 @@ plot <- plot_ly(totalTable,x=~logCE,y=~rownames(totalTable),type="scatter", mode
 title <- paste("Ratio between the total number of patients", "Control", "and", "Case", sep = " ")
 
 plot <- plot %>% layout(title = title,
-                        xaxis = list(title = "Ratio on a logarithmic scale (base 2)", tickvals = seq(-ceiling(-min(totalTable$logCE)), ceiling(max(totalTable$logCE)))),
+                        xaxis = list(title = "Ratio on a logarithmic scale (base 2)", tickvals = seq(-ceiling(-min(totalTable$logCE)), ceiling(max(totalTable$logCE)), by = sepCE)),
                         yaxis = list(title = "Predictor"))
 ```
 
