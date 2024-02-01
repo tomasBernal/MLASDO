@@ -85,21 +85,21 @@ changedBars <- changedBars %>% layout(title = "Distribution of patient diagnoses
 ```
 
 ```{r, include = FALSE}
-dashboard <- subplot(originalBars, changedBars, nrows = 1, margin = 0.1, shareX = FALSE, shareY = FALSE, titleX = TRUE, titleY = TRUE)  
+distributionDashboard <- subplot(originalBars, changedBars, nrows = 1, margin = 0.1, shareX = FALSE, shareY = FALSE, titleX = TRUE, titleY = TRUE)  
 
-dashboard <- dashboard %>%  layout(title = "Distribution of patient diagnoses", showlegend = FALSE)
+distributionDashboard <- distributionDashboard %>%  layout(title = "Distribution of patient diagnoses", showlegend = FALSE)
 ```
 
 ```{r}
-dashboard
+distributionDashboard
 ```
 
 # PCA Analysis
 
-```{r}
+```{r, include = FALSE}
 classVariable <- params$pcaAnalisis[[params$classVariable]]
 
-ggplot(params$pcaAnalisis, aes(PC1, PC2)) + 
+pca <- ggplot(params$pcaAnalisis, aes(PC1, PC2)) + 
   modelr::geom_ref_line(h = 0) +
   modelr::geom_ref_line(v = 0) +
   geom_jitter(aes(color = classVariable)) +
@@ -107,6 +107,11 @@ ggplot(params$pcaAnalisis, aes(PC1, PC2)) +
   ylab("Second Principal Component") + 
   ggtitle("PCA Analysis of Changed Diagnostics")
 ```
+
+```{r}
+pca
+```
+
 
 # Table of clinical data for patients
 
@@ -424,43 +429,43 @@ for(indexRatio in 1:nrow(totalTable)){
 
 # Ratio Analysis
 
-```{r}
-plot <- plot_ly(totalTable,x=~logCCCM,y=~rownames(totalTable), type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCCCM ), height = 800, width = 1000, hoverinfo = "text", text =~textCCCM)
-
-title <- paste("Ratio of patients who changed from", "Case", "to", "Control", "versus those who continued as", "Case", sep = " ")
-plot <- plot %>% layout(title = title,
-                        xaxis = list(title = "Ratio on a logarithmic scale (base 2) <br>", tickvals = seq(-ceiling(-min(totalTable$logCCCM)), ceiling(max(totalTable$logCCCM)), by = sepCCCM)),
-                        yaxis = list(title = "Predictor"))
-```
-
-```{r}
-plot
-```
-
 ```{r, include = FALSE}
-plot <- plot_ly(totalTable,x=~logECEM,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsECEM ), height = 800, width = 1000, hoverinfo = "text", text =~textECEM)
+plotCE <- plot_ly(totalTable,x=~logCE,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCE ), height = 800, width = 1000, hoverinfo = "text", text =~textCE)
 
-title <- paste("Ratio of patients who changed from", "Control", "to", "Case", "versus those who continued as", "Control", sep = " ")
+title <- "Ratios between Control and Case patients before detection (genetic algorithm)"
 
-plot <- plot %>% layout(title = title,
-                        xaxis = list(title = "Ratio on a logarithmic scale (base 2) <br>", tickvals = seq(-ceiling(-min(totalTable$logECEM)), ceiling(max(totalTable$logECEM)), by = sepECEM)),
-                        yaxis = list(title = "Predictor"))
-```
-
-```{r}
-plot
-```
-
-```{r, include = FALSE}
-plot <- plot_ly(totalTable,x=~logCE,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCE ), height = 800, width = 1000, hoverinfo = "text", text =~textCE)
-
-title <- paste("Ratio between the total number of patients", "Control", "and", "Case", sep = " ")
-
-plot <- plot %>% layout(title = title,
+plotCE <- plotCE %>% layout(title = title,
                         xaxis = list(title = "Ratio on a logarithmic scale (base 2) <br>", tickvals = seq(-ceiling(-min(totalTable$logCE)), ceiling(max(totalTable$logCE)), by = sepCE)),
                         yaxis = list(title = "Predictor"))
 ```
 
 ```{r}
-plot
+plotCE
+```
+
+```{r}
+plotCCCM <- plot_ly(totalTable,x=~logCCCM,y=~rownames(totalTable), type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCCCM ), height = 800, width = 1000, hoverinfo = "text", text =~textCCCM)
+
+title <- "Evolution of the set of Control patients after detection (genetic algorithm)"
+plotCCCM <- plotCCCM %>% layout(title = title,
+                        xaxis = list(title = "Ratio on a logarithmic scale (base 2) <br>", tickvals = seq(-ceiling(-min(totalTable$logCCCM)), ceiling(max(totalTable$logCCCM)), by = sepCCCM)),
+                        yaxis = list(title = "Predictor"))
+```
+
+```{r}
+plotCCCM
+```
+
+```{r, include = FALSE}
+plotECEM <- plot_ly(totalTable,x=~logECEM,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsECEM ), height = 800, width = 1000, hoverinfo = "text", text =~textECEM)
+
+title <- "Evolution of the set of CASE patients after detection (genetic algorithm)"
+
+plotECEM <- plotECEM %>% layout(title = title,
+                        xaxis = list(title = "Ratio on a logarithmic scale (base 2) <br>", tickvals = seq(-ceiling(-min(totalTable$logECEM)), ceiling(max(totalTable$logECEM)), by = sepECEM)),
+                        yaxis = list(title = "Predictor"))
+```
+
+```{r}
+plotECEM
 ```
