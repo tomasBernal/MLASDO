@@ -346,10 +346,12 @@ detectAnomalies <- function(
 
   } else {
 
-    gaPath <- paste(name, "Solution.rds", sep="_")
+    dirPath <- paste(savingName, "geneticAlgorithm", name, sep = "/")
+
+    gaPath <- paste(dirPath, "Solution.rds", sep="_")
     solutionGA <- readRDS(gaPath)
 
-    gaPath <- paste(name, ".rds", sep="_")
+    gaPath <- paste(dirPath, ".rds", sep="")
     geneticAlgorithm <- readRDS(gaPath)
   }
 
