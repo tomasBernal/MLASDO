@@ -269,11 +269,11 @@ executeGA <- function(
   cl <- makeCluster(nCores)
   registerDoParallel(cl)
 
-  for(i in nrow(GA@solution)){
+  for(i in 1:nrow(GA@solution)){
 
     currentVal <- fitness((GA@solution[i,]))
 
-    if( currentVal > maxValue){
+    if(currentVal > maxValue){
       geneticSolution <- GA@solution[i,]
       maxValue <- currentVal
     }
@@ -285,4 +285,134 @@ executeGA <- function(
   ## Save the best solution of the genetic algorithm
   solutionPath <- paste(name, "Solution.rds", sep="_")
   saveRDS(geneticSolution, file = paste(dirPath, solutionPath, sep = "/"))
+
+
+
+  postFitness <- function(genome) {
+
+    # Substitute the NA values for 0
+    genome <- replace(genome, is.na(genome), 0)
+
+    # Calculating new diagnoses determined by the current solution
+    # It is done through an XOR operation
+    solutionData <- bitwXor(omicTrainDiagnosis, genome)
+
+    if(mlAlgorithm == "Lasso"){
+
+      # This vector will store the balanced means of the numLassoExecutions executions
+      balancedAccValues <- vector(length = numLassoExecutions)
+      numPredictors <- vector(length = numLassoExecutions)
+
+      set.seed(seed)
+
+      # Train the Lasso model numLassoExecutions times
+      for (i in 1:numLassoExecutions) {
+
+        # Train the Lasso model
+        model <- cv.glmnet(as.matrix(omicTrain), as.matrix(solutionData), alpha = 1, family = "binomial", type.measure = "class", nfolds = 10)
+
+        # Use the model to predict on the test set
+        modelPrediction <- predict(model, newx = as.matrix(omicTest), alpha = 1, s = "lambda.min", type = "class")
+
+        # Get the confusion matrix
+        cfModel <- confusionMatrix(as.factor(as.integer(modelPrediction)), as.factor(omicTestDiagnosis))
+
+        specificity <- ifelse(is.na(as.numeric(cfModel$byClass["Specificity"])), 0,  as.numeric(cfModel$byClass["Specificity"]))
+
+        sensitivity <- ifelse(is.na(as.numeric(cfModel$byClass["Sensitivity"])), 0,  as.numeric(cfModel$byClass["Sensitivity"]))
+
+        # Save the balanced mean obtained in this iteration
+        balancedAccValues[i] <- (specificity + sensitivity) / 2
+
+        numPredictors[i] <- which(coef(model) != 0)
+
+      }
+
+      # Return the mean of the numLassoExecutions balanced means obtained
+      return(c(mean(balancedAccValues), round(mean(numPredictors)), model))
+
+    } else if(mlAlgorithm == "RF"){
+
+      # Creating the ranger model
+      model <- ranger(
+
+        x = omicTrain,
+        y = solutionData,
+        num.trees = numTrees,
+        mtry = mtry,
+        splitrule = splitrule,
+        importance = "impurity", # In order to obtain the important variables in the prediction
+        sample.fraction = sampleFraction,
+        max.depth = maxDepth,
+        min.node.size = minNodeSize,
+        classification = TRUE,
+        seed = seed
+      )
+
+      # Use the model to predict on the test set
+      modelPrediction <- predict(model, omicTest)$predictions
+
+      # Get the confusion matrix
+      cfModel <-
+        confusionMatrix(as.factor(as.integer(modelPrediction)), as.factor(omicTestDiagnosis))
+
+      specificity <- ifelse(is.na(as.numeric(cfModel$byClass["Specificity"])), 0,  as.numeric(cfModel$byClass["Specificity"]))
+
+      sensitivity <- ifelse(is.na(as.numeric(cfModel$byClass["Sensitivity"])), 0,  as.numeric(cfModel$byClass["Sensitivity"]))
+
+      # Return the balanced accuracy of the ranger model
+      return((specificity + sensitivity) / 2)
+
+    }
+  }
+
+  if(mlAlgorithm == "Lasso"){
+
+    # Parallelizing
+    cl <- makeCluster(nCores)
+    registerDoParallel(cl)
+
+    numberPredictorsLasso <- c()
+
+    bestModel <- NULL
+    globalMaxValue <- 0
+
+    for(i in 1:length(GA@bestSol)){
+
+      maxValue <- 0
+      maxPredictors <- 0
+
+
+      for(j in 1:nrow(GA@bestSol[[i]])){
+
+        currentVal <- postFitness((GA@bestSol[[i]][j ,]))
+
+        if(currentVal[1] > maxValue){
+          maxValue <- currentVal[1]
+          maxPredictors <- currentVal[2]
+        }
+
+        if(currentVal[1] > globalMaxValue){
+          globalMaxValue <- currentVal[1]
+          bestModel <- currentVal[3]
+        }
+
+      }
+
+      numberPredictorsLasso <- c(numberPredictorsLasso, maxPredictors)
+
+    }
+
+    # Stop parallelization
+    stopCluster(cl)
+
+    ## Save the best solution of the genetic algorithm
+    predictorsPath <- paste(name, "Predictors.rds", sep="_")
+    saveRDS(numberPredictorsLasso, file = paste(dirPath, predictorsPath, sep = "/"))
+
+    ## Save the best solution of the genetic algorithm
+    lassoPath <- paste(name, "Lasso.rds", sep="_")
+    saveRDS(numberPredictorsLasso, file = paste(dirPath, lassoPath, sep = "/"))
+
+  }
 }

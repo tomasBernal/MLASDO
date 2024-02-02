@@ -443,7 +443,7 @@ plotCE <- plotCE %>% layout(title = title,
 plotCE
 ```
 
-```{r}
+```{r, include = FALSE}
 plotCCCM <- plot_ly(totalTable,x=~logCCCM,y=~rownames(totalTable), type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCCCM ), height = 800, width = 1000, hoverinfo = "text", text =~textCCCM)
 
 title <- "Evolution of the set of Control patients after detection (genetic algorithm)"

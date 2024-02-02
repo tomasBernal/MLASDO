@@ -168,6 +168,7 @@ Execution with reading of the GA solution with your own data:
 ```
     MLASDO::detectAnomalies(
         justAnalysis = TRUE,
+        mlAlgorithm = "Lasso",
         geneticPath = "GA.rds",
         solutionPath = "GA_solution.rds",
         savingName = "ExecutionWithOwnData",
