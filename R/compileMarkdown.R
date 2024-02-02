@@ -13,10 +13,10 @@
 #'
 #' @examples
 #'
-#' MLASDO::compileMarkdown(savingName = savingName, geneticAlgorithm = geneticAlgorithm, clinicData = clinicData, classVariable = classVariable)
+#' MLASDO::compileMarkdown(savingName = savingName, mlAlgorithm = mlAlgorithm, geneticAlgorithm = geneticAlgorithm, clinicData = clinicData, classVariable = classVariable)
 #'
 
-compileMarkdown <- function(savingName, geneticAlgorithm, originalDiagnosis, clinicData, classVariable){
+compileMarkdown <- function(savingName, mlAlgorithm, geneticAlgorithm, originalDiagnosis, clinicData, classVariable){
 
   name <- paste("GA", savingName, sep="_")
 

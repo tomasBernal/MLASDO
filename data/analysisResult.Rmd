@@ -1,5 +1,5 @@
 ---
-title: "Analysis of the solution obtained after running the genetic algorithm"
+title: "Anomalous Cases Detection Report (using `r paramas$mlAlgorithm`"
 author: ""
 date: "`r Sys.Date()`"
 output:
@@ -7,6 +7,7 @@ output:
     toc: true
     toc_float: true
 params:
+  mlAlgorithm : ""
   algorithmPrecisions : NULL
   originalDiagnosis : NULL
   clinicData : NULL
@@ -24,6 +25,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(plotly)
 library(lazyeval)
 ```
+
 
 # Evolution of precision obtained
 
