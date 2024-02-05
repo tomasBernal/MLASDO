@@ -262,32 +262,6 @@ executeGA <- function(
   modelPath <- paste(name, ".rds", sep="")
   saveRDS(GA, file = paste(dirPath, modelPath, sep = "/"))
 
-  ## Obtain the best solution obtained by the genetic algorithm and its accuracy
-  maxValue <- 0
-
-  # Parallelizing
-  cl <- makeCluster(nCores)
-  registerDoParallel(cl)
-
-  for(i in 1:nrow(GA@solution)){
-
-    currentVal <- fitness((GA@solution[i,]))
-
-    if(currentVal > maxValue){
-      geneticSolution <- GA@solution[i,]
-      maxValue <- currentVal
-    }
-  }
-
-  # Stop parallelization
-  stopCluster(cl)
-
-  ## Save the best solution of the genetic algorithm
-  solutionPath <- paste(name, "Solution.rds", sep="_")
-  saveRDS(geneticSolution, file = paste(dirPath, solutionPath, sep = "/"))
-
-
-
   postFitness <- function(genome) {
 
     # Substitute the NA values for 0
@@ -324,7 +298,7 @@ executeGA <- function(
         # Save the balanced mean obtained in this iteration
         balancedAccValues[i] <- (specificity + sensitivity) / 2
 
-        numPredictors[i] <- which(coef(model) != 0)
+        numPredictors[i] <- length(which(coef(model) != 0))
 
       }
 
@@ -366,6 +340,36 @@ executeGA <- function(
     }
   }
 
+  ## Obtain the best solution obtained by the genetic algorithm and its accuracy
+  maxValue <- 0
+
+  # Parallelizing
+  cl <- makeCluster(nCores)
+  registerDoParallel(cl)
+
+  for(i in 1:nrow(GA@solution)){
+
+    currentVal <- postFitness((GA@solution[i,]))
+
+    if(currentVal[[1]] > maxValue){
+      geneticSolution <- GA@solution[i,]
+      maxValue <- currentVal[[1]]
+      bestModel <- currentVal[[3]]
+    }
+  }
+
+  # Stop parallelization
+  stopCluster(cl)
+
+  ## Save the best solution of the genetic algorithm
+  solutionPath <- paste(name, "Solution.rds", sep="_")
+  saveRDS(geneticSolution, file = paste(dirPath, solutionPath, sep = "/"))
+
+  ## Save the best solution of the genetic algorithm
+  lassoPath <- paste(name, "Model.rds", sep="_")
+  saveRDS(bestModel, file = paste(dirPath, lassoPath, sep = "/"))
+
+
   if(mlAlgorithm == "Lasso"){
 
     # Parallelizing
@@ -373,9 +377,6 @@ executeGA <- function(
     registerDoParallel(cl)
 
     numberPredictorsLasso <- c()
-
-    bestModel <- NULL
-    globalMaxValue <- 0
 
     for(i in 1:length(GA@bestSol)){
 
@@ -387,14 +388,9 @@ executeGA <- function(
 
         currentVal <- postFitness((GA@bestSol[[i]][j ,]))
 
-        if(currentVal[1] > maxValue){
-          maxValue <- currentVal[1]
-          maxPredictors <- currentVal[2]
-        }
-
-        if(currentVal[1] > globalMaxValue){
-          globalMaxValue <- currentVal[1]
-          bestModel <- currentVal[3]
+        if(currentVal[[1]] > maxValue){
+          maxValue <- currentVal[[1]]
+          maxPredictors <- currentVal[[2]]
         }
 
       }
@@ -409,10 +405,5 @@ executeGA <- function(
     ## Save the best solution of the genetic algorithm
     predictorsPath <- paste(name, "Predictors.rds", sep="_")
     saveRDS(numberPredictorsLasso, file = paste(dirPath, predictorsPath, sep = "/"))
-
-    ## Save the best solution of the genetic algorithm
-    lassoPath <- paste(name, "Lasso.rds", sep="_")
-    saveRDS(numberPredictorsLasso, file = paste(dirPath, lassoPath, sep = "/"))
-
   }
 }
