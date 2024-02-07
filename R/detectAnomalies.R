@@ -412,5 +412,5 @@ detectAnomalies <- function(
   changedClinicData[[classVariable]] <- changedDiagnoses
 
   print("Compiling Markdown file")
-  MLASDO::compileMarkdown(savingName = savingName, mlAlgorithm = mlAlgorithm, geneticAlgorithm = geneticAlgorithm, originalDiagnosis = omicData[[classVariable]], clinicData = changedClinicData, classVariable = classVariable)
+  MLASDO::compileMarkdown(savingName = savingName, justAnalysis = justAnalysis, lassoPredictorsPath = lassoPredictorsPath, mlAlgorithm = mlAlgorithm, geneticAlgorithm = geneticAlgorithm, originalDiagnosis = omicData[[classVariable]], clinicData = changedClinicData, classVariable = classVariable)
 }

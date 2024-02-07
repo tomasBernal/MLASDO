@@ -2,6 +2,7 @@
 #'
 #' @description This function compiles the markdown file with the analysis results
 #'
+#' @param justAnalysis Bool | Indicates whether to perform the analysis directly (TRUE) or to run the genetic algorithm (FALSE). Default value: FALSE.
 #' @param lassoPredictorsPath String | Path to the mean number of predictors selected by Lasso in each generation.
 #' @param geneticAlgorithm Genetic algorithm object.
 #' @param originalDiagnosis Original diagnostics of the patients.
@@ -17,7 +18,7 @@
 #' MLASDO::compileMarkdown(savingName = savingName, mlAlgorithm = mlAlgorithm, lassoPredictorsPath = lassoPredictorsPath, geneticAlgorithm = geneticAlgorithm, clinicData = clinicData, classVariable = classVariable)
 #'
 
-compileMarkdown <- function(savingName, mlAlgorithm, lassoPredictorsPath, geneticAlgorithm, originalDiagnosis, clinicData, classVariable){
+compileMarkdown <- function(savingName, justAnalysis, lassoPredictorsPath, mlAlgorithm, geneticAlgorithm, originalDiagnosis, clinicData, classVariable){
 
   name <- paste("GA", savingName, sep="_")
 
