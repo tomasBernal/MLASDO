@@ -345,7 +345,7 @@ detectAnomalies <- function(
   # Reading the GA solution
   name <- paste("GA", savingName, sep="_")
 
-  lassoPredictos <- NULL
+  lassoPredictos <- c()
 
   if(justAnalysis){
 
