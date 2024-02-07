@@ -341,7 +341,32 @@ detectAnomalies <- function(
     dir.create(paste(savingName, "geneticAlgorithm", sep = "/"))
 
     print("Executing the genetic algorithm")
-    MLASDO::executeGA(mlAlgorithm = mlAlgorithm, numLassoExecutions = numLassoExecutions, numTrees = numTrees, mtry = mtry, splitrule = splitrule, sampleFraction = sampleFraction, maxDepth = maxDepth, minNodeSize = minNodeSize, omicData = omicData, subsetTrain = subsetTrain, savingName = savingName, classVariable = classVariable, activePredictors = activePredictors, nCores = nCores, nIterations = nIterations, nStopIter = nStopIter, populationSize = populationSize, diagnosticChangeProbability = diagnosticChangeProbability, crossoverOperator = crossoverOperator, crossoverProbability = crossoverProbability, selectionOperator = selectionOperator, mutationOperator = mutationOperator, mutationProbability = mutationProbability, seed = seed)
+    MLASDO::executeGA(
+      mlAlgorithm = mlAlgorithm,
+      numLassoExecutions = numLassoExecutions,
+      numTrees = numTrees,
+      mtry = mtry,
+      splitrule = splitrule,
+      sampleFraction = sampleFraction,
+      maxDepth = maxDepth,
+      minNodeSize = minNodeSize,
+      omicData = omicData,
+      subsetTrain = subsetTrain,
+      savingName = savingName,
+      classVariable = classVariable,
+      activePredictors = activePredictors,
+      nCores = nCores,
+      nIterations = nIterations,
+      nStopIter = nStopIter,
+      populationSize = populationSize,
+      diagnosticChangeProbability = diagnosticChangeProbability,
+      crossoverOperator = crossoverOperator,
+      crossoverProbability = crossoverProbability,
+      selectionOperator = selectionOperator,
+      mutationOperator = mutationOperator,
+      mutationProbability = mutationProbability,
+      seed = seed
+      )
   }
 
   # Reading the GA solution
@@ -368,15 +393,8 @@ detectAnomalies <- function(
 
   }
 
-  print("Performing PCA analysis")
-  MLASDO::performPCAAnalysis(solution = solutionGA, model = modelGA, idColumn = idColumn, omicData = omicData, subsetTrain = subsetTrain, savingName = savingName, classVariable = classVariable, activePredictors = activePredictors)
-
-  print("Performing ratio analysis")
-  MLASDO::performRatioAnalysis(justAnalysis = justAnalysis, solutionPath = solutionPath, clinicData = validClinicData, savingName = savingName, classVariable = classVariable, activePredictors = activePredictors)
-
-
   # Creating a copy of the original diagnosis
-  changedDiagnoses <- omicData[[classVariable]]
+  changedDiagnoses <- omicData[subsetTrain,][[classVariable]]
 
   # I create two text strings to represent the changed diagnoses
   firstGroup = paste("Case", "Control", sep = "2")
@@ -419,10 +437,46 @@ detectAnomalies <- function(
   #     2 -> Gene changed from the value 0 to the value 1
   #     3 -> Gene changed from the value 1 to the value 0
 
+  changedOmicData <- omicData
+
   changedClinicData <- validClinicData
 
-  changedClinicData[[classVariable]] <- changedDiagnoses
+  changedClinicData[subsetTrain,][[classVariable]] <- changedDiagnoses
+  changedOmicData[subsetTrain,][[classVariable]] <- changedDiagnoses
+
+  print("Performing PCA analysis")
+  MLASDO::performPCAAnalysis(
+    solution = solutionGA,
+    model = modelGA,
+    idColumn = idColumn,
+    changedOmicData = changedOmicData,
+    subsetTrain = subsetTrain,
+    savingName = savingName,
+    classVariable = classVariable,
+    activePredictors = activePredictors
+  )
+
+  print("Performing ratio analysis")
+  MLASDO::performRatioAnalysis(
+    justAnalysis = justAnalysis,
+    solutionPath = solutionPath,
+    changedClinicData = changedClinicData,
+    subsetTrain = subsetTrain,
+    savingName = savingName,
+    classVariable = classVariable,
+    activePredictors = activePredictors
+  )
 
   print("Compiling Markdown file")
-  MLASDO::compileMarkdown(savingName = savingName, justAnalysis = justAnalysis, lassoPredictorsPath = lassoPredictorsPath, modelGA = modelGA, mlAlgorithm = mlAlgorithm, geneticAlgorithm = geneticAlgorithm, originalDiagnosis = omicData[[classVariable]], clinicData = changedClinicData, classVariable = classVariable)
+  MLASDO::compileMarkdown(
+    savingName = savingName,
+    justAnalysis = justAnalysis,
+    lassoPredictorsPath = lassoPredictorsPath,
+    modelGA = modelGA,
+    mlAlgorithm = mlAlgorithm,
+    geneticAlgorithm = geneticAlgorithm,
+    originalDiagnosis = omicData[[classVariable]],
+    clinicData = changedClinicData,
+    classVariable = classVariable
+    )
 }

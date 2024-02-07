@@ -2,10 +2,7 @@
 #'
 #' @description This function performs ratio-based analysis on the active activePredictors passed as parameters.
 #'
-#' @param Bool | Indicates whether to perform the analysis directly (TRUE) or to run the genetic algorithm (FALSE). Default value: FALSE.
-#' @param solutionPath String | Path to genetic algorithm solution.
-#'
-#' @param clinicData Dataset of clinic data that will be used.
+#' @param changedClinicData Dataset of clinic data that will be used.
 #' @param activePredictors Array of Strings | Predictors on which the study of the ratios will be conducted after the genetic algorithm has been performed. Default value: All the predictors in clinic data, except classVariable and idColumn.
 #' @param classVariable String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.
 #' @param savingName String | Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.
@@ -15,83 +12,22 @@
 #'
 #' @examples
 #'
-#' MLASDO::performRatioAnalysis(justAnalysis = justAnalysis, solutionPath = solutionPath, clinicData = clinicData, activePredictors = activePredictors, classVariable = classVariable, savingName = savingName)
+#' MLASDO::performRatioAnalysis(changedClinicData = changedClinicData, subsetTrain = subsetTrain, activePredictors = activePredictors, classVariable = classVariable, savingName = savingName)
 
 
 performRatioAnalysis <- function(
-    justAnalysis,
-    solutionPath,
-    clinicData,
+    changedClinicData,
     activePredictors,
     classVariable,
     savingName
 ){
 
   #### DATA READING ####
-  clinic <- clinicData
+  clinic <- changedClinicData
 
   #### GENETIC ALGORITHM SOLUTION READING ####
-  name <- paste("GA", savingName, sep="_")
-
-  dirPath <- paste(savingName, "geneticAlgorithm", name, sep = "/")
-
-  if(justAnalysis){
-    solutionGA <- readRDS(solutionPath)
-  } else {
-    gaPath <- paste(dirPath, "Solution.rds", sep="_")
-    solutionGA <- readRDS(gaPath)
-  }
-
-  dirPath <- paste(savingName, "analysisData", name, sep = "/")
 
   #### DATA PROCESSING ####
-
-  # Creating a copy of the original diagnosis
-  changedDiagnoses <- clinic[[classVariable]]
-
-  # I create two text strings to represent the changed diagnoses
-  firstGroup = paste("Case", "Control", sep = "2")
-  secondGroup = paste("Control", "Case", sep = "2")
-
-  # Converting original diagnoses from strings to integers
-  changedDiagnoses <- ifelse(changedDiagnoses == "Case", 1, 0)
-
-  # I apply the solution from the genetic algorithm to the original diagnoses
-  # I use an XOR function for this purpose
-  changedDiagnoses <- bitwXor(changedDiagnoses, solutionGA)
-
-  # I obtain the indices where the genetic algorithm solution indicates changes in someone's diagnosis
-  changeIndices <- which(solutionGA == 1)
-
-  # Iterating through the indices that have been modified
-  for(i in changeIndices){
-
-    # If the gene, after modification, had the value 1
-    # It means it had the value 0 (Control)
-    if(changedDiagnoses[i] == 1){
-
-      # Therefore, I set it to 2
-      changedDiagnoses[i] <- secondGroup
-
-      # If not, it means it had the value 1 (Case)
-    } else{
-
-      # Therefore, I set it to 3
-      changedDiagnoses[i] <- firstGroup
-    }
-  }
-
-  changedDiagnoses <- ifelse(changedDiagnoses == 0, "Control", changedDiagnoses)
-  changedDiagnoses <- ifelse(changedDiagnoses == 1, "Case", changedDiagnoses)
-
-  # After this, I have the following values:
-  #     0 -> Gene remained with the value 0 of the variable being predicted
-  #     1 -> Gene remained with the value 1 of the variable being predicted
-  #     2 -> Gene changed from the value 0 to the value 1
-  #     3 -> Gene changed from the value 1 to the value 0
-
-  # Saving the changes
-  clinic[[classVariable]] <- changedDiagnoses
 
   # Iterating through the selected activePredictors for analysis
   for (activePredictor in activePredictors){
@@ -443,6 +379,10 @@ performRatioAnalysis <- function(
   rownames(categoricalResult) <- namesCategoricRows
   rownames(numericResult) <- namesNumericRows
   rownames(totalResult) <- namesAllRows
+
+  name <- paste("GA", savingName, sep="_")
+
+  dirPath <- paste(savingName, "analysisData", name, sep = "/")
 
   # Save the ratio analysis
   gaPathCategoric <- paste(dirPath, "CategoricTable.tsv", sep="_")
