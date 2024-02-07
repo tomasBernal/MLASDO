@@ -41,6 +41,7 @@ compileMarkdown <- function(savingName, mlAlgorithm, geneticAlgorithm, originalD
                    params = list(
                                  algorithmPrecisions = algorithmPrecisions,
                                  originalDiagnosis = originalDiagnosis,
+                                 mlAlgorithm = mlAlgorithm,
                                  clinicData = clinicData,
                                  pcaAnalisis = pca,
                                  numericTable = numeric,
