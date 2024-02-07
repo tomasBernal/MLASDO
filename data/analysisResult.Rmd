@@ -1,5 +1,5 @@
 ---
-title: "Anomalous Cases Detection Report (using `r paramas$mlAlgorithm`"
+title: "Anomalous Cases Detection Report (using `r params$mlAlgorithm`)"
 author: ""
 date: "`r Sys.Date()`"
 output:
