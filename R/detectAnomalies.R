@@ -60,7 +60,7 @@
 #'
 #' MLASDO::detectAnomalies(savingName = "ExecutionWithOwnData", mlAlgorithm = "RF", omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv", idColumn = "Patient.Id", nIterations = 3, populationSize = 10, classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"))
 #'
-#' MLASDO::detectAnomalies(justAnalysis = TRUE, mlAlgorithm = "Lasso", geneticPath = "GA.rds", solutionPath = "GA_solution.rds", savingName = "ExecutionWithOwnData", omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv",idColumn = "Patient.Id",classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"))
+#' MLASDO::detectAnomalies(justAnalysis = TRUE, mlAlgorithm = "Lasso", geneticPath = "GA.rds", solutionPath = "GA_solution.rds", lassoPredictorsPath = "Lasso_Predictors.rds", savingName = "ExecutionWithOwnData", omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv",idColumn = "Patient.Id",classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"))
 
 detectAnomalies <- function(
     justAnalysis = FALSE,
@@ -352,6 +352,8 @@ detectAnomalies <- function(
 
     if(mlAlgorithm == "Lasso"){
       lassoPredictors <- readRDS(lassoPredictorsPath)
+    } else {
+      lassoPredictos <- NULL
     }
 
   } else {
@@ -368,6 +370,8 @@ detectAnomalies <- function(
 
       gaPath <- paste(dirPath, "Predictors.rds", sep="_")
       lassoPredictors <- readRDS(gaPath)
+    } else {
+      lassoPredictors <- NULL
     }
   }
 
