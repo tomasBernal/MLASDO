@@ -345,6 +345,8 @@ detectAnomalies <- function(
   # Reading the GA solution
   name <- paste("GA", savingName, sep="_")
 
+  lassoPredictos <- NULL
+
   if(justAnalysis){
 
     geneticAlgorithm <- readRDS(geneticPath)
@@ -352,8 +354,6 @@ detectAnomalies <- function(
 
     if(mlAlgorithm == "Lasso"){
       lassoPredictors <- readRDS(lassoPredictorsPath)
-    } else {
-      lassoPredictos <- NULL
     }
 
   } else {
@@ -370,8 +370,6 @@ detectAnomalies <- function(
 
       gaPath <- paste(dirPath, "Predictors.rds", sep="_")
       lassoPredictors <- readRDS(gaPath)
-    } else {
-      lassoPredictors <- NULL
     }
   }
 
