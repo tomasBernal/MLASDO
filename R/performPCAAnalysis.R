@@ -6,8 +6,6 @@
 #'
 #' @param idColumn String | Variable that indicates the identifier of each patient in both datasets. If the user does not specify a path to his own data, the value for the sample data, Trial, will be used.
 #' @param changedOmicData Dataset of omic data that will be used.
-#' @param subsetTrain Subset of train samples.
-#' @param activePredictors Array of Strings | Predictors on which the study of the ratios will be conducted after the genetic algorithm has been performed. Default value: All the predictors in clinic data, except classVariable and idColumn.
 #' @param classVariable String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.
 #' @param savingName String | Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.
 #'
@@ -16,15 +14,13 @@
 #'
 #' @examples
 #'
-#' MLASDO::performPCAAnalysis(model = model, idColumn = idColumn, changedOmicData = changedOmicData, subsetTrain = subsetTrain, activePredictors = activePredictors, classVariable = classVariable, savingName = savingName)
+#' MLASDO::performPCAAnalysis(model = model, idColumn = idColumn, changedOmicData = changedOmicData, classVariable = classVariable, savingName = savingName)
 
 
 performPCAAnalysis <- function(
     model,
     idColumn,
     changedOmicData,
-    subsetTrain,
-    activePredictors,
     classVariable,
     savingName
 ){

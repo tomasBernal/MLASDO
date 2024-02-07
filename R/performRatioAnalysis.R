@@ -12,7 +12,7 @@
 #'
 #' @examples
 #'
-#' MLASDO::performRatioAnalysis(changedClinicData = changedClinicData, subsetTrain = subsetTrain, activePredictors = activePredictors, classVariable = classVariable, savingName = savingName)
+#' MLASDO::performRatioAnalysis(changedClinicData = changedClinicData, activePredictors = activePredictors, classVariable = classVariable, savingName = savingName)
 
 
 performRatioAnalysis <- function(

@@ -376,14 +376,14 @@ detectAnomalies <- function(
 
     geneticAlgorithm <- readRDS(geneticPath)
     solutionGA <- readRDS(solutionPath)
-    modelGA <- readRDS(modelPath)
+    model <- readRDS(modelPath)
 
   } else {
 
     dirPath <- paste(savingName, "geneticAlgorithm", name, sep = "/")
 
     modelPath <- paste(dirPath, "Model.rds", sep="_")
-    modelGA <- readRDS(modelPath)
+    model <- readRDS(modelPath)
 
     solutionPath <- paste(dirPath, "Solution.rds", sep="_")
     solutionGA <- readRDS(solutionPath)
@@ -446,22 +446,16 @@ detectAnomalies <- function(
 
   print("Performing PCA analysis")
   MLASDO::performPCAAnalysis(
-    solution = solutionGA,
-    model = modelGA,
+    model = model,
     idColumn = idColumn,
     changedOmicData = changedOmicData,
-    subsetTrain = subsetTrain,
     savingName = savingName,
-    classVariable = classVariable,
-    activePredictors = activePredictors
+    classVariable = classVariable
   )
 
   print("Performing ratio analysis")
   MLASDO::performRatioAnalysis(
-    justAnalysis = justAnalysis,
-    solutionPath = solutionPath,
     changedClinicData = changedClinicData,
-    subsetTrain = subsetTrain,
     savingName = savingName,
     classVariable = classVariable,
     activePredictors = activePredictors
@@ -472,7 +466,7 @@ detectAnomalies <- function(
     savingName = savingName,
     justAnalysis = justAnalysis,
     lassoPredictorsPath = lassoPredictorsPath,
-    modelGA = modelGA,
+    model = model,
     mlAlgorithm = mlAlgorithm,
     geneticAlgorithm = geneticAlgorithm,
     originalDiagnosis = omicData[[classVariable]],
