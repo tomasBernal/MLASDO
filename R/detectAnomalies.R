@@ -345,16 +345,10 @@ detectAnomalies <- function(
   # Reading the GA solution
   name <- paste("GA", savingName, sep="_")
 
-  lassoPredictos <- c()
-
   if(justAnalysis){
 
     geneticAlgorithm <- readRDS(geneticPath)
     solutionGA <- readRDS(solutionPath)
-
-    if(mlAlgorithm == "Lasso"){
-      lassoPredictors <- readRDS(lassoPredictorsPath)
-    }
 
   } else {
 
@@ -366,11 +360,6 @@ detectAnomalies <- function(
     gaPath <- paste(dirPath, ".rds", sep="")
     geneticAlgorithm <- readRDS(gaPath)
 
-    if(mlAlgorithm == "Lasso"){
-
-      gaPath <- paste(dirPath, "Predictors.rds", sep="_")
-      lassoPredictors <- readRDS(gaPath)
-    }
   }
 
 
@@ -423,5 +412,5 @@ detectAnomalies <- function(
   changedClinicData[[classVariable]] <- changedDiagnoses
 
   print("Compiling Markdown file")
-  MLASDO::compileMarkdown(savingName = savingName, mlAlgorithm = mlAlgorithm, lassoPredictors = lassoPredictors, geneticAlgorithm = geneticAlgorithm, originalDiagnosis = omicData[[classVariable]], clinicData = changedClinicData, classVariable = classVariable)
+  MLASDO::compileMarkdown(savingName = savingName, mlAlgorithm = mlAlgorithm, geneticAlgorithm = geneticAlgorithm, originalDiagnosis = omicData[[classVariable]], clinicData = changedClinicData, classVariable = classVariable)
 }

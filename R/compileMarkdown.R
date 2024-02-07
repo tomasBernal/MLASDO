@@ -2,7 +2,7 @@
 #'
 #' @description This function compiles the markdown file with the analysis results
 #'
-#' @param lassoPredictors Mean number of predictors selected by Lasso each generation.
+#' @param lassoPredictorsPath String | Path to the mean number of predictors selected by Lasso in each generation.
 #' @param geneticAlgorithm Genetic algorithm object.
 #' @param originalDiagnosis Original diagnostics of the patients.
 #' @param clinicData Dataset of clinic data that will be used.
@@ -14,10 +14,10 @@
 #'
 #' @examples
 #'
-#' MLASDO::compileMarkdown(savingName = savingName, mlAlgorithm = mlAlgorithm, lassoPredictors = lassoPredictors, geneticAlgorithm = geneticAlgorithm, clinicData = clinicData, classVariable = classVariable)
+#' MLASDO::compileMarkdown(savingName = savingName, mlAlgorithm = mlAlgorithm, lassoPredictorsPath = lassoPredictorsPath, geneticAlgorithm = geneticAlgorithm, clinicData = clinicData, classVariable = classVariable)
 #'
 
-compileMarkdown <- function(savingName, mlAlgorithm, lassoPredictors = lassoPredictors, geneticAlgorithm, originalDiagnosis, clinicData, classVariable){
+compileMarkdown <- function(savingName, mlAlgorithm, lassoPredictorsPath, geneticAlgorithm, originalDiagnosis, clinicData, classVariable){
 
   name <- paste("GA", savingName, sep="_")
 
@@ -37,6 +37,21 @@ compileMarkdown <- function(savingName, mlAlgorithm, lassoPredictors = lassoPred
   outputName <- paste("analysisResult_", name, ".html", sep = "")
 
   outputPath <- paste("./", savingName, "/", sep = "")
+
+  lassoPredictors <- NULL
+
+  if(mlAlgorithm == "Lasso"){
+
+    if(justAnalysis){
+      lassoPredictors <- readRDS(lassoPredictorsPath)
+    } else {
+
+      gaPath <- paste(dirPath, "Predictors.rds", sep="_")
+      lassoPredictors <- readRDS(gaPath)
+    }
+
+
+  }
 
   rmarkdown::render(input = system.file("data", "analysisResult.Rmd", package = "MLASDO"),
                    params = list(
