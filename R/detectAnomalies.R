@@ -456,6 +456,8 @@ detectAnomalies <- function(
   print("Performing ratio analysis")
   MLASDO::performRatioAnalysis(
     changedClinicData = changedClinicData,
+    firstGroup = firstGroup,
+    secondGroup = secondGroup,
     savingName = savingName,
     classVariable = classVariable,
     activePredictors = activePredictors

@@ -4,10 +4,10 @@
 #'
 #' @param justAnalysis Bool | Indicates whether to perform the analysis directly (TRUE) or to run the genetic algorithm (FALSE). Default value: FALSE.
 #' @param lassoPredictorsPath String | Path to the mean number of predictors selected by Lasso in each generation.
-#' @param model Best model obtained after the detection.
-#' @param geneticAlgorithm Genetic algorithm object.
-#' @param originalDiagnosis Original diagnostics of the patients.
-#' @param clinicData Dataset of clinic data that will be used.
+#' @param model ML Model | Best model obtained after the detection.
+#' @param geneticAlgorithm Array of Strings | Genetic algorithm object.
+#' @param originalDiagnosis Array of Strings | Original diagnostics of the patients.
+#' @param clinicData Data | Dataset of clinic data that will be used.
 #' @param classVariable String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.
 #' @param savingName String | Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.
 #'

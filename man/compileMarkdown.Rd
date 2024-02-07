@@ -6,6 +6,10 @@
 \usage{
 compileMarkdown(
   savingName,
+  justAnalysis,
+  lassoPredictorsPath,
+  model,
+  mlAlgorithm,
   geneticAlgorithm,
   originalDiagnosis,
   clinicData,
@@ -15,11 +19,17 @@ compileMarkdown(
 \arguments{
 \item{savingName}{String | Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.}
 
-\item{geneticAlgorithm}{Genetic algorithm object.}
+\item{justAnalysis}{Bool | Indicates whether to perform the analysis directly (TRUE) or to run the genetic algorithm (FALSE). Default value: FALSE.}
 
-\item{originalDiagnosis}{Original diagnostics of the patients.}
+\item{lassoPredictorsPath}{String | Path to the mean number of predictors selected by Lasso in each generation.}
 
-\item{clinicData}{Dataset of clinic data that will be used.}
+\item{model}{ML Model | Best model obtained after the detection.}
+
+\item{geneticAlgorithm}{Array of Strings | Genetic algorithm object.}
+
+\item{originalDiagnosis}{Array of Strings | Original diagnostics of the patients.}
+
+\item{clinicData}{Data | Dataset of clinic data that will be used.}
 
 \item{classVariable}{String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.}
 }
@@ -28,6 +38,6 @@ This function compiles the markdown file with the analysis results
 }
 \examples{
 
-MLASDO::compileMarkdown(savingName = savingName, geneticAlgorithm = geneticAlgorithm, clinicData = clinicData, classVariable = classVariable)
+MLASDO::compileMarkdown(savingName = savingName, mlAlgorithm = mlAlgorithm, lassoPredictorsPath = lassoPredictorsPath, model = model, geneticAlgorithm = geneticAlgorithm, clinicData = clinicData, classVariable = classVariable)
 
 }

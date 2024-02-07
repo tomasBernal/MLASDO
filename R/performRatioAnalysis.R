@@ -2,7 +2,7 @@
 #'
 #' @description This function performs ratio-based analysis on the active activePredictors passed as parameters.
 #'
-#' @param changedClinicData Dataset of clinic data that will be used.
+#' @param changedClinicData Data | Dataset of clinic data that will be used.
 #' @param activePredictors Array of Strings | Predictors on which the study of the ratios will be conducted after the genetic algorithm has been performed. Default value: All the predictors in clinic data, except classVariable and idColumn.
 #' @param classVariable String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.
 #' @param savingName String | Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.
@@ -12,11 +12,13 @@
 #'
 #' @examples
 #'
-#' MLASDO::performRatioAnalysis(changedClinicData = changedClinicData, activePredictors = activePredictors, classVariable = classVariable, savingName = savingName)
+#' MLASDO::performRatioAnalysis(changedClinicData = changedClinicData, firstGroup = firstGroup, secondGroup = secondGroup, activePredictors = activePredictors, classVariable = classVariable, savingName = savingName)
 
 
 performRatioAnalysis <- function(
     changedClinicData,
+    firstGroup,
+    secondGroup,
     activePredictors,
     classVariable,
     savingName

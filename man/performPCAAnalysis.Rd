@@ -4,26 +4,14 @@
 \alias{performPCAAnalysis}
 \title{performPCAAnalysis}
 \usage{
-performPCAAnalysis(
-  justAnalysis,
-  solutionPath,
-  idColumn,
-  omicData,
-  activePredictors,
-  classVariable,
-  savingName
-)
+performPCAAnalysis(model, idColumn, changedOmicData, classVariable, savingName)
 }
 \arguments{
-\item{justAnalysis}{Bool | Indicates whether to perform the analysis directly (TRUE) or to run the genetic algorithm (FALSE). Default value: FALSE.}
-
-\item{solutionPath}{String | Path to genetic algorithm solution.}
+\item{model}{ML Model | Best model obtained after the detection.}
 
 \item{idColumn}{String | Variable that indicates the identifier of each patient in both datasets. If the user does not specify a path to his own data, the value for the sample data, Trial, will be used.}
 
-\item{omicData}{Dataset of omic data that will be used.}
-
-\item{activePredictors}{Array of Strings | Predictors on which the study of the ratios will be conducted after the genetic algorithm has been performed. Default value: All the predictors in clinic data, except classVariable and idColumn.}
+\item{changedOmicData}{Data | Dataset of omic data that will be used.}
 
 \item{classVariable}{String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.}
 
@@ -34,5 +22,5 @@ This function performs PCA analysis on the changed diagnoses after the execution
 }
 \examples{
 
-MLASDO::performPCAAnalysis(justAnalysis = justAnalysis, solutionPath = solutionPath, idColumn = idColumn, omicData = omicData, activePredictors = activePredictors, classVariable = classVariable, savingName = savingName)
+MLASDO::performPCAAnalysis(model = model, idColumn = idColumn, changedOmicData = changedOmicData, classVariable = classVariable, savingName = savingName)
 }

@@ -14,11 +14,11 @@ executeGA(
   maxDepth,
   minNodeSize,
   omicData,
+  subsetTrain,
   activePredictors,
   classVariable,
   savingName,
   nCores,
-  partitionPercentage,
   nIterations,
   nStopIter,
   populationSize,
@@ -50,6 +50,8 @@ executeGA(
 
 \item{omicData}{Dataset of omic data that will be used.}
 
+\item{subsetTrain}{Subset of train samples.}
+
 \item{activePredictors}{Array of Strings | Predictors on which the study of the ratios will be conducted after the genetic algorithm has been performed. Default value: All the predictors in clinic data, except classVariable and idColumn.}
 
 \item{classVariable}{String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.}
@@ -57,8 +59,6 @@ executeGA(
 \item{savingName}{String | Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.}
 
 \item{nCores}{Integer | Number of cores to be used in parallelization. Default value: 6.}
-
-\item{partitionPercentage}{Decimal | Percentage (expressed as a fraction) with which the data will be split into a training and test set. Default value: 0.9 (90%).}
 
 \item{nIterations}{Integer | Number of iterations (generations) the genetic algorithm will perform. Default value: 200.}
 
@@ -115,5 +115,5 @@ and the machine learning algorithm evidences this detection, validating that the
 }
 \examples{
 
-MLASDO::executeGA(mlAlgorithm = mlAlgorithm, numLassoExecutions = numLassoExecutions, numTrees = numTrees, mtry = mtry, splitrule = splitrule, sampleFraction = sampleFraction, maxDepth = maxDepth, minNodeSize = minNodeSize, omicData = omicData, activePredictors = activePredictors, classVariable = classVariable, savingName = savingName, nCores = nCores, partitionPercentage = partitionPercentage, nIterations = nIterations, nStopIter = nStopIter, populationSize = populationSize, diagnosticChangeProbability = diagnosticChangeProbability, crossoverOperator = crossoverOperator, crossoverProbability = crossoverProbability, selectionOperator = selectionOperator, mutationOperator = mutationOperator, mutationProbability = mutationProbability, seed = seed)
+MLASDO::executeGA(mlAlgorithm = mlAlgorithm, numLassoExecutions = numLassoExecutions, numTrees = numTrees, mtry = mtry, splitrule = splitrule, sampleFraction = sampleFraction, maxDepth = maxDepth, minNodeSize = minNodeSize, omicData = omicData, subsetTrain = subsetTrain, activePredictors = activePredictors, classVariable = classVariable, savingName = savingName, nCores = nCores, nIterations = nIterations, nStopIter = nStopIter, populationSize = populationSize, diagnosticChangeProbability = diagnosticChangeProbability, crossoverOperator = crossoverOperator, crossoverProbability = crossoverProbability, selectionOperator = selectionOperator, mutationOperator = mutationOperator, mutationProbability = mutationProbability, seed = seed)
 }

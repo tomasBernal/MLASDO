@@ -8,6 +8,8 @@ detectAnomalies(
   justAnalysis = FALSE,
   solutionPath = "",
   geneticPath = "",
+  modelPath = "",
+  lassoPredictorsPath = "",
   mlAlgorithm,
   numLassoExecutions = 5,
   numTrees = 100,
@@ -44,6 +46,10 @@ detectAnomalies(
 \item{solutionPath}{String | Path to genetic algorithm solution.}
 
 \item{geneticPath}{String | Path to genetic algorithm object.}
+
+\item{modelPath}{String | Path to the best model obtained.}
+
+\item{lassoPredictorsPath}{String | Path to the mean number of predictors selected by Lasso in each generation.}
 
 \item{mlAlgorithm}{String | Machine Learning algorithm to be applied, the options are: Lasso or RF (Random Forest).}
 
@@ -121,5 +127,5 @@ MLASDO::detectAnomalies(savingName = "QuickExecution", mlAlgorithm = "Lasso", nI
 
 MLASDO::detectAnomalies(savingName = "ExecutionWithOwnData", mlAlgorithm = "RF", omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv", idColumn = "Patient.Id", nIterations = 3, populationSize = 10, classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"))
 
-MLASDO::detectAnomalies(justAnalysis = TRUE, mlAlgorithm = "Lasso", geneticPath = "GA.rds", solutionPath = "GA_solution.rds", savingName = "ExecutionWithOwnData", omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv",idColumn = "Patient.Id",classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"))
+MLASDO::detectAnomalies(justAnalysis = TRUE, mlAlgorithm = "Lasso", geneticPath = "GA.rds", solutionPath = "GA_solution.rds", modelPath = "GA_Model.rds", lassoPredictorsPath = "GA_Lasso_Predictors.rds", savingName = "ExecutionWithOwnData", omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv",idColumn = "Patient.Id",classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"))
 }
