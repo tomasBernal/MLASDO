@@ -12,6 +12,7 @@
 #' @param justAnalysis Bool | Indicates whether to perform the analysis directly (TRUE) or to run the genetic algorithm (FALSE). Default value: FALSE.
 #' @param geneticPath String | Path to genetic algorithm object.
 #' @param solutionPath String | Path to genetic algorithm solution.
+#' @param lassoPredictorsPath String | Path to the mean number of predictors selected by Lasso in each generation.
 #'
 #' @param mlAlgorithm String | Machine Learning algorithm to be applied, the options are: Lasso or RF (Random Forest).
 #'
@@ -137,6 +138,10 @@ detectAnomalies <- function(
 
   if(justAnalysis & geneticPath == ""){
     return("If you want to perform the analysis only, you must indicate the path to the genetic algorithm object.")
+  }
+
+  if(justAnalysis & mlAlgorithm == "Lasso" & lassoPredictorsPath == ""){
+    return("If you want to perform the analysis of a Lasso model, you must indicate the path to the mean number of predictors selected in each generation.")
   }
 
   #### CHECKING ML ALGORITHM ####
@@ -344,6 +349,10 @@ detectAnomalies <- function(
     geneticAlgorithm <- readRDS(geneticPath)
     solutionGA <- readRDS(solutionPath)
 
+    if(mlAlgorithm == "Lasso"){
+      lassoPredictors <- readRDS(lassoPredictorsPath)
+    }
+
   } else {
 
     dirPath <- paste(savingName, "geneticAlgorithm", name, sep = "/")
@@ -353,6 +362,12 @@ detectAnomalies <- function(
 
     gaPath <- paste(dirPath, ".rds", sep="")
     geneticAlgorithm <- readRDS(gaPath)
+
+    if(mlAlgorithm == "Lasso"){
+
+      gaPath <- paste(dirPath, "Predictors.rds", sep="_")
+      lassoPredictors <- readRDS(gaPath)
+    }
   }
 
 
@@ -405,5 +420,5 @@ detectAnomalies <- function(
   changedClinicData[[classVariable]] <- changedDiagnoses
 
   print("Compiling Markdown file")
-  MLASDO::compileMarkdown(savingName = savingName, mlAlgorithm = mlAlgorithm, geneticAlgorithm = geneticAlgorithm, originalDiagnosis = omicData[[classVariable]], clinicData = changedClinicData, classVariable = classVariable)
+  MLASDO::compileMarkdown(savingName = savingName, mlAlgorithm = mlAlgorithm, lassoPredictors = lassoPredictors, geneticAlgorithm = geneticAlgorithm, originalDiagnosis = omicData[[classVariable]], clinicData = changedClinicData, classVariable = classVariable)
 }

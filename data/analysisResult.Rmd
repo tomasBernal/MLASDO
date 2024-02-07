@@ -9,6 +9,7 @@ output:
 params:
   mlAlgorithm : ""
   algorithmPrecisions : NULL
+  lassoPredictors : NULL
   originalDiagnosis : NULL
   clinicData : NULL
   pcaAnalisis : NULL
@@ -34,21 +35,28 @@ precisionDF <- data.frame(generation = 1:length(params$algorithmPrecisions), pre
 ```
 
 ```{r, include = FALSE}
-
 precisionPlot <- plot_ly(precisionDF, x=~generation, y=~precision, hoveron = "points", hoverinfo = "text", text = paste("Maximum accuracy value obtained: ", round(precisionDF$precision, 2), "%<br>Generation: ", precisionDF$generation, sep = ""), type = 'scatter', mode = 'lines+markers', name ="Precision", color = I("cadetblue3"))
   
   precisionPlot <- precisionPlot %>% add_trace(x=~generation, y = ~meanPrecision, name='Mean', mode = 'lines+markers', color = I("brown3"), hoverinfo = "text", text = paste("Average of the accuracies obtained: ", round(precisionDF$meanPrecision, 2), "%<br>Generation: ", precisionDF$generation, sep = "")) 
     
   precisionPlot <- precisionPlot %>%  layout(title = "Evolution of the accuracy obtained during generations",
-                          xaxis = list(title = "Actual generation <br>"), yaxis = list(title = "Precision value <br> <br> <br>", ticksuffix = "%",  range = c((min(params$algorithmPrecisions) * 100) - 5, min(100, (max(params$algorithmPrecisions) * 100) + 5)), xaxis = list(range = c(0, max(precisionDF$Generation)))))
+                          xaxis = list(title = "Actual generation <br>"), yaxis = list(title = "Precision value <br> <br> <br>", ticksuffix = "%",  range = c((min(params$algorithmPrecisions) * 100) - 5, min(100, (max(params$algorithmPrecisions) * 100) + 5)), xaxis = list(range = c(0, max(precisionDF$generation)))))
   
 if(mlAlgorithm == "RF"){
   precisionDashboard <- precisionPlot
 } else {
   
-  precisionDashboard <- subplot(precisionPlot, precisionPlot, nrows = 1, margin = 0.1, shareX = FALSE, shareY = FALSE, titleX = TRUE, titleY = TRUE)  
+  predictorsDF <- data.frame(generation = 1:length(params$lassoPredictors), predictors = params$lassoPredictors)
+  
+  predictorsPlot <- plot_ly(predictorsDF, x=~generation, y=~predictors, hoveron = "points", hoverinfo = "text", text = paste("Mean number of predictors selected: ", round(predictorsDF$predictors, 2), "%<br>Generation: ", precisionDF$generation, sep = ""), type = 'scatter', mode = 'lines+markers', name ="Number of predictors", color = I("cadetblue3"))
+  
+  
+  predictorsPlot <- predictorsPlot %>%  layout(title = "Evolution of the number of predictors selected during generations",
+                          xaxis = list(title = "Actual generation <br>"), yaxis = list(title = "Number of predictors <br> <br> <br>", ticksuffix = "%",  range = c(min(params$lassoPredictors) - 5, max(params$lassoPredictors) + 5), xaxis = list(range = c(0, max(predictorsDF$generation)))))
+  
+  precisionDashboard <- subplot(precisionPlot, predictorsPlot, nrows = 1, margin = 0.1, shareX = FALSE, shareY = FALSE, titleX = TRUE, titleY = TRUE)  
 
-precisionDashboard <- precisionDashboard %>%  layout(showlegend = FALSE)
+precisionDashboard <- precisionDashboard %>%  layout(title = "Evolution of the Lasso Model during generations",showlegend = FALSE)
 }
 
 ```

@@ -2,6 +2,7 @@
 #'
 #' @description This function compiles the markdown file with the analysis results
 #'
+#' @param lassoPredictors Mean number of predictors selected by Lasso each generation.
 #' @param geneticAlgorithm Genetic algorithm object.
 #' @param originalDiagnosis Original diagnostics of the patients.
 #' @param clinicData Dataset of clinic data that will be used.
@@ -16,7 +17,7 @@
 #' MLASDO::compileMarkdown(savingName = savingName, mlAlgorithm = mlAlgorithm, geneticAlgorithm = geneticAlgorithm, clinicData = clinicData, classVariable = classVariable)
 #'
 
-compileMarkdown <- function(savingName, mlAlgorithm, geneticAlgorithm, originalDiagnosis, clinicData, classVariable){
+compileMarkdown <- function(savingName, mlAlgorithm, lassoPredictors = NULL, geneticAlgorithm, originalDiagnosis, clinicData, classVariable){
 
   name <- paste("GA", savingName, sep="_")
 
@@ -40,6 +41,7 @@ compileMarkdown <- function(savingName, mlAlgorithm, geneticAlgorithm, originalD
   rmarkdown::render(input = system.file("data", "analysisResult.Rmd", package = "MLASDO"),
                    params = list(
                                  algorithmPrecisions = algorithmPrecisions,
+                                 lassoPredictors = lassoPredictors,
                                  originalDiagnosis = originalDiagnosis,
                                  mlAlgorithm = mlAlgorithm,
                                  clinicData = clinicData,
