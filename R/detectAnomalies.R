@@ -66,6 +66,7 @@ detectAnomalies <- function(
     justAnalysis = FALSE,
     solutionPath = "",
     geneticPath = "",
+    lassoPredictorsPath = "",
     mlAlgorithm,
     numLassoExecutions = 5,
     numTrees = 100,
