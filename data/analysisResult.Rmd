@@ -10,6 +10,7 @@ params:
   mlAlgorithm : ""
   algorithmPrecisions : NULL
   lassoPredictors : NULL
+  model : NULL
   originalDiagnosis : NULL
   clinicData : NULL
   pcaAnalisis : NULL

@@ -4,6 +4,7 @@
 #'
 #' @param justAnalysis Bool | Indicates whether to perform the analysis directly (TRUE) or to run the genetic algorithm (FALSE). Default value: FALSE.
 #' @param lassoPredictorsPath String | Path to the mean number of predictors selected by Lasso in each generation.
+#' @param modelGA Best model obtained after the detection.
 #' @param geneticAlgorithm Genetic algorithm object.
 #' @param originalDiagnosis Original diagnostics of the patients.
 #' @param clinicData Dataset of clinic data that will be used.
@@ -15,10 +16,10 @@
 #'
 #' @examples
 #'
-#' MLASDO::compileMarkdown(savingName = savingName, mlAlgorithm = mlAlgorithm, lassoPredictorsPath = lassoPredictorsPath, geneticAlgorithm = geneticAlgorithm, clinicData = clinicData, classVariable = classVariable)
+#' MLASDO::compileMarkdown(savingName = savingName, mlAlgorithm = mlAlgorithm, lassoPredictorsPath = lassoPredictorsPath, modelGA = modelGA, geneticAlgorithm = geneticAlgorithm, clinicData = clinicData, classVariable = classVariable)
 #'
 
-compileMarkdown <- function(savingName, justAnalysis, lassoPredictorsPath, mlAlgorithm, geneticAlgorithm, originalDiagnosis, clinicData, classVariable){
+compileMarkdown <- function(savingName, justAnalysis, lassoPredictorsPath, modelGA, mlAlgorithm, geneticAlgorithm, originalDiagnosis, clinicData, classVariable){
 
   name <- paste("GA", savingName, sep="_")
 
@@ -58,6 +59,7 @@ compileMarkdown <- function(savingName, justAnalysis, lassoPredictorsPath, mlAlg
                    params = list(
                                  algorithmPrecisions = algorithmPrecisions,
                                  lassoPredictors = lassoPredictors,
+                                 model = modelGA,
                                  originalDiagnosis = originalDiagnosis,
                                  mlAlgorithm = mlAlgorithm,
                                  clinicData = clinicData,

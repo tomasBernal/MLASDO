@@ -54,12 +54,12 @@
 #' @param minNodeSize Integer | Minimum number of observations required in a node to be able to split it. Default value: 30.
 #'
 #' @param omicData Dataset of omic data that will be used.
+#' @param subsetTrain Subset of train samples.
 #' @param activePredictors Array of Strings | Predictors on which the study of the ratios will be conducted after the genetic algorithm has been performed. Default value: All the predictors in clinic data, except classVariable and idColumn.
 #' @param classVariable String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.
 #' @param savingName String | Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.
 #'
 #' @param nCores Integer | Number of cores to be used in parallelization. Default value: 6.
-#' @param partitionPercentage Decimal | Percentage (expressed as a fraction) with which the data will be split into a training and test set. Default value: 0.9 (90%).
 #' @param nIterations Integer | Number of iterations (generations) the genetic algorithm will perform. Default value: 200.
 #' @param nStopIter Integer | Number of iterations after which the algorithm will stop if all of them have the same fitness value. Default value: 25.
 #' @param populationSize Integer | Number of solutions that will be part of the initial population. Default value: 150.
@@ -76,7 +76,7 @@
 #'
 #' @examples
 #'
-#' MLASDO::executeGA(mlAlgorithm = mlAlgorithm, numLassoExecutions = numLassoExecutions, numTrees = numTrees, mtry = mtry, splitrule = splitrule, sampleFraction = sampleFraction, maxDepth = maxDepth, minNodeSize = minNodeSize, omicData = omicData, activePredictors = activePredictors, classVariable = classVariable, savingName = savingName, nCores = nCores, partitionPercentage = partitionPercentage, nIterations = nIterations, nStopIter = nStopIter, populationSize = populationSize, diagnosticChangeProbability = diagnosticChangeProbability, crossoverOperator = crossoverOperator, crossoverProbability = crossoverProbability, selectionOperator = selectionOperator, mutationOperator = mutationOperator, mutationProbability = mutationProbability, seed = seed)
+#' MLASDO::executeGA(mlAlgorithm = mlAlgorithm, numLassoExecutions = numLassoExecutions, numTrees = numTrees, mtry = mtry, splitrule = splitrule, sampleFraction = sampleFraction, maxDepth = maxDepth, minNodeSize = minNodeSize, omicData = omicData, subsetTrain = subsetTrain, activePredictors = activePredictors, classVariable = classVariable, savingName = savingName, nCores = nCores, nIterations = nIterations, nStopIter = nStopIter, populationSize = populationSize, diagnosticChangeProbability = diagnosticChangeProbability, crossoverOperator = crossoverOperator, crossoverProbability = crossoverProbability, selectionOperator = selectionOperator, mutationOperator = mutationOperator, mutationProbability = mutationProbability, seed = seed)
 
 executeGA <- function(
                       mlAlgorithm,
@@ -88,11 +88,11 @@ executeGA <- function(
                       maxDepth,
                       minNodeSize,
                       omicData,
+                      subsetTrain,
                       activePredictors,
                       classVariable,
                       savingName,
                       nCores,
-                      partitionPercentage,
                       nIterations,
                       nStopIter,
                       populationSize,
@@ -119,15 +119,12 @@ executeGA <- function(
   omic[[classVariable]] <- ifelse(omic[[classVariable]] == "Case", 1, 0)
 
   #### CREATION OF TRAIN AND TEST SETS ####
-  set.seed(seed)
-  SubsetTrain <- sample(1:nrow(omic), nrow(omic) * partitionPercentage)
-
-  omicTrain <- omic[SubsetTrain,]
+  omicTrain <- omic[subsetTrain,]
 
   omicTrainDiagnosis <- omicTrain[[classVariable]]
   omicTrain[[classVariable]] <- NULL
 
-  omicTest <- omic[-SubsetTrain,]
+  omicTest <- omic[-subsetTrain,]
 
   omicTestDiagnosis <- omicTest[[classVariable]]
   omicTest[[classVariable]] <- NULL
@@ -303,7 +300,7 @@ executeGA <- function(
       }
 
       # Return the mean of the numLassoExecutions balanced means obtained
-      return(c(mean(balancedAccValues), round(mean(numPredictors)), model))
+      return(c(mean(balancedAccValues), round(mean(numPredictors))))
 
     } else if(mlAlgorithm == "RF"){
 
@@ -354,7 +351,6 @@ executeGA <- function(
     if(currentVal[[1]] > maxValue){
       geneticSolution <- GA@solution[i,]
       maxValue <- currentVal[[1]]
-      bestModel <- currentVal[[3]]
     }
   }
 
@@ -365,9 +361,31 @@ executeGA <- function(
   solutionPath <- paste(name, "Solution.rds", sep="_")
   saveRDS(geneticSolution, file = paste(dirPath, solutionPath, sep = "/"))
 
+  if(mlAlgorithm == "Lasso"){
+
+    model <- cv.glmnet(as.matrix(omicTrain), as.matrix(geneticSolution), alpha = 1, family = "binomial", type.measure = "class", nfolds = 10)
+
+  } else if(mlAlgorithm == "RF"){
+
+    model <- ranger(
+
+      x = omicTrain,
+      y = geneticSolution,
+      num.trees = numTrees,
+      mtry = mtry,
+      splitrule = splitrule,
+      importance = "impurity", # In order to obtain the important variables in the prediction
+      sample.fraction = sampleFraction,
+      max.depth = maxDepth,
+      min.node.size = minNodeSize,
+      classification = TRUE,
+      seed = seed
+    )
+  }
+
   ## Save the best solution of the genetic algorithm
-  lassoPath <- paste(name, "Model.rds", sep="_")
-  saveRDS(bestModel, file = paste(dirPath, lassoPath, sep = "/"))
+  modelPath <- paste(name, "Model.rds", sep="_")
+  saveRDS(model, file = paste(dirPath, modelPath, sep = "/"))
 
 
   if(mlAlgorithm == "Lasso"){
