@@ -47,15 +47,9 @@ performPCAAnalysis <- function(
 
   omic <- omic[, !uselessColumns]
 
-  if (mlAlgorithm = "Lasso"){
+  if (mlAlgorithm == "Lasso"){
 
-    omicLasso <- omic
-
-    lassoCoefs <- coef(model)
-
-    selectedFeatures <- colnames(lassoCoefs)[lassoCoefs != 0]
-
-    omicLasso <- omicLasso[, selectedFeatures]
+    print("PCA Lasso")
   }
   # Performing prcomp which gives us the deviations of the principal components
   omicResult <- prcomp(omic, scale. = TRUE)
