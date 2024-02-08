@@ -4,10 +4,19 @@
 \alias{performPCAAnalysis}
 \title{performPCAAnalysis}
 \usage{
-performPCAAnalysis(model, idColumn, changedOmicData, classVariable, savingName)
+performPCAAnalysis(
+  model,
+  mlAlgorithm,
+  idColumn,
+  changedOmicData,
+  classVariable,
+  savingName
+)
 }
 \arguments{
 \item{model}{ML Model | Best model obtained after the detection.}
+
+\item{mlAlgorithm}{String | Machine Learning algorithm to be applied, the options are: Lasso or RF (Random Forest).}
 
 \item{idColumn}{String | Variable that indicates the identifier of each patient in both datasets. If the user does not specify a path to his own data, the value for the sample data, Trial, will be used.}
 
@@ -22,5 +31,5 @@ This function performs PCA analysis on the changed diagnoses after the execution
 }
 \examples{
 
-MLASDO::performPCAAnalysis(model = model, idColumn = idColumn, changedOmicData = changedOmicData, classVariable = classVariable, savingName = savingName)
+MLASDO::performPCAAnalysis(model = model, mlAlgorithm = mlAlgorithm, idColumn = idColumn, changedOmicData = changedOmicData, classVariable = classVariable, savingName = savingName)
 }

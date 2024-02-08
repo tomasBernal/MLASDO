@@ -225,6 +225,14 @@ detectAnomalies <- function(
     return("The variable that identifies the patients cannot be included in the variables chosen for analysis")
   }
 
+  if (idColumn %in% omicPredictorsToIgnore) {
+    return("The variable that identifies the patients cannot be included in the variables chosen to ignore")
+  }
+
+  if (idColumn %in% clinicPredictorsToIgnore) {
+    return("The variable that identifies the patients cannot be included in the variables chosen to ignore")
+  }
+
   # After this, check if the selected variable as the class variable for prediction is valid
   if (!classVariable %in% names(omicData)) {
     return("The selected variable for prediction does not exist in the omic dataframe")
@@ -293,6 +301,7 @@ detectAnomalies <- function(
 
   }
 
+
   # Checking if the coding of the class variable in the clinic dataset is correct
   if (1 %in% unique(clinicData[[classVariable]])) {
 
@@ -354,6 +363,7 @@ detectAnomalies <- function(
       subsetTrain = subsetTrain,
       savingName = savingName,
       classVariable = classVariable,
+      idColumn = idColumn,
       activePredictors = activePredictors,
       nCores = nCores,
       nIterations = nIterations,

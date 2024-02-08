@@ -38,6 +38,14 @@ compileMarkdown <- function(
   pcaPath <- paste(dirPath, "PCA.tsv", sep="_")
   pca <- read.table(pcaPath, header = TRUE, sep = "\t", row.names = 1)
 
+  pcaLasso <- NULL
+
+  if(mlAlgorithm == "Lasso"){
+
+    pcaPath <- paste(dirPath, "PCA_Lasso.tsv", sep="_")
+    pcaLasso <- read.table(pcaPath, header = TRUE, sep = "\t", row.names = 1)
+  }
+
   gaPathNumeric <- paste(dirPath, "NumericTable.tsv", sep="_")
   gaPathTotal <- paste(dirPath, "TotalTable.tsv", sep="_")
 
@@ -74,9 +82,11 @@ compileMarkdown <- function(
                                  mlAlgorithm = mlAlgorithm,
                                  clinicData = clinicData,
                                  pcaAnalisis = pca,
+                                 pcaAnalisisLasso = pcaLasso,
                                  numericTable = numeric,
                                  totalTable = total,
-                                 classVariable = classVariable),
+                                 classVariable = classVariable
+                                 ),
                    output_file = outputName,
                    output_dir = outputPath
                    )

@@ -14,6 +14,7 @@ params:
   originalDiagnosis : NULL
   clinicData : NULL
   pcaAnalisis : NULL
+  pcaAnalisisLasso : NULL
   numericTable : NULL
   totalTable : NULL
   classVariable: NULL
@@ -119,19 +120,47 @@ distributionDashboard
 # PCA Analysis
 
 ```{r, include = FALSE}
+pcaDashboard <- NULL
+
 classVariable <- params$pcaAnalisis[[params$classVariable]]
 
-pca <- ggplot(params$pcaAnalisis, aes(PC1, PC2)) + 
-  modelr::geom_ref_line(h = 0) +
-  modelr::geom_ref_line(v = 0) +
-  geom_jitter(aes(color = classVariable)) +
-   xlab("First Principal Component") + 
-  ylab("Second Principal Component") + 
-  ggtitle("PCA Analysis of Changed Diagnostics")
+if(mlAlgorithm == "Lasso"){
+
+  pca <- ggplot(params$pcaAnalisis, aes(PC1, PC2)) + 
+    modelr::geom_ref_line(h = 0) +
+    modelr::geom_ref_line(v = 0) +
+    geom_jitter(aes(color = classVariable)) +
+     xlab("First Principal Component") + 
+    ylab("Second Principal Component") + 
+    ggtitle("PCA Analysis of Changed Diagnostics")
+  
+  
+  pcaLasso <- ggplot(params$pcaAnalisisLasso, aes(PC1, PC2)) + 
+    modelr::geom_ref_line(h = 0) +
+    modelr::geom_ref_line(v = 0) +
+    geom_jitter(aes(color = classVariable)) +
+     xlab("First Principal Component") + 
+    ylab("Second Principal Component") + 
+    ggtitle("PCA Analysis of Changed Diagnostics (Lasso)")
+  
+  pcaDashboard <- subplot(pca, pcaLasso, nrows = 1, margin = 0.1, shareX = FALSE, shareY = FALSE, titleX = TRUE, titleY = TRUE)  
+
+pcaDashboard <- pcaDashboard %>%  layout(title = "PCA Analysis", showlegend = FALSE)
+  
+} else {
+
+  pcaDashboard <- ggplot(params$pcaAnalisis, aes(PC1, PC2)) + 
+    modelr::geom_ref_line(h = 0) +
+    modelr::geom_ref_line(v = 0) +
+    geom_jitter(aes(color = classVariable)) +
+     xlab("First Principal Component") + 
+    ylab("Second Principal Component") + 
+    ggtitle("PCA Analysis of Changed Diagnostics")
+}
 ```
 
 ```{r}
-pca
+pcaDashboard
 ```
 
 
