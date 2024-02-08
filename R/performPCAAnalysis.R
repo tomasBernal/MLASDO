@@ -3,6 +3,7 @@
 #' @description This function performs PCA analysis on the changed diagnoses after the execution of the genetic algorithm.
 #'
 #' @param model ML Model | Best model obtained after the detection.
+#' @param mlAlgorithm String | Machine Learning algorithm to be applied, the options are: Lasso or RF (Random Forest).
 #' @param idColumn String | Variable that indicates the identifier of each patient in both datasets. If the user does not specify a path to his own data, the value for the sample data, Trial, will be used.
 #' @param changedOmicData Data | Dataset of omic data that will be used.
 #' @param classVariable String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.
@@ -13,11 +14,12 @@
 #'
 #' @examples
 #'
-#' MLASDO::performPCAAnalysis(model = model, idColumn = idColumn, changedOmicData = changedOmicData, classVariable = classVariable, savingName = savingName)
+#' MLASDO::performPCAAnalysis(model = model, mlAlgorithm = mlAlgorithm, idColumn = idColumn, changedOmicData = changedOmicData, classVariable = classVariable, savingName = savingName)
 
 
 performPCAAnalysis <- function(
     model,
+    mlAlgorithm,
     idColumn,
     changedOmicData,
     classVariable,
@@ -45,6 +47,16 @@ performPCAAnalysis <- function(
 
   omic <- omic[, !uselessColumns]
 
+  if (mlAlgorithm = "Lasso"){
+
+    omicLasso <- omic
+
+    lassoCoefs <- coef(model)
+
+    selectedFeatures <- colnames(lassoCoefs)[lassoCoefs != 0]
+
+    omicLasso <- omicLasso[, selectedFeatures]
+  }
   # Performing prcomp which gives us the deviations of the principal components
   omicResult <- prcomp(omic, scale. = TRUE)
 
