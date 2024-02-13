@@ -121,6 +121,8 @@ distributionDashboard
 
 ```{r, include = FALSE}
 
+classVariable <- params$pcaAnalisis[[params$classVariable]]
+
   pcaDashboard <- ggplot(params$pcaAnalisis, aes(PC1, PC2)) + 
     modelr::geom_ref_line(h = 0) +
     modelr::geom_ref_line(v = 0) +
