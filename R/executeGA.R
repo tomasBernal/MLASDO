@@ -300,11 +300,11 @@ executeGA <- function(
         # Save the balanced mean obtained in this iteration
         balancedAccValues[i] <- (specificity + sensitivity) / 2
 
-        coeficients <- coef(model$glmnet.fit)
+        coeficientes <- coef(model$glmnet.fit, s = model$lambda.min)
 
-        selected <- colnames(omicTrain[, coeficients@i])
+        inds <- which(coeficientes != 0)
 
-        numPredictors[i] <- length(selected)
+        numPredictors[i] <- length(inds)
 
       }
 

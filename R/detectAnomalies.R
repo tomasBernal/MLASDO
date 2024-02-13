@@ -121,6 +121,18 @@ detectAnomalies <- function(
     return("The package doParallel is not installed")
   }
 
+  if (!require("parallel", character.only = TRUE)) {
+    return("The package parallel is not installed")
+  }
+
+  if (!require("iterators", character.only = TRUE)) {
+    return("The package iterators is not installed")
+  }
+
+  if (!require("foreach", character.only = TRUE)) {
+    return("The package foreach is not installed")
+  }
+
   if (!require("dplyr", character.only = TRUE)) {
     return("The package dplyr is not installed")
   }

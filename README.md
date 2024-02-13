@@ -107,6 +107,9 @@ Once the solution of the genetic algorithm (anomalous cases) has been obtained, 
 - glmnet
 - ranger
 - caret
+- parallel
+- foreach
+- iterators
 - doParallel
 - plotly
 - lazyeval
