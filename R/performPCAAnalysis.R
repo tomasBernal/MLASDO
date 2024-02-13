@@ -66,32 +66,32 @@ performPCAAnalysis <- function(
   gaPath <- paste(dirPath, "PCA.tsv", sep="_")
   write.table(pca, gaPath, row.names = T, col.names = T, sep =  '\t')
 
-  if (mlAlgorithm == "Lasso"){
+  #if (mlAlgorithm == "Lasso"){
 
-    coeficients <- coef(model$glmnet.fit)
+  #coeficients <- coef(model$glmnet.fit)
 
-    selected <- colnames(changedOmicData[, coeficients@i])
+  #selected <- colnames(changedOmicData[, coeficients@i])
 
-    omic <- omic[, selected]
+  #omic <- omic[, selected]
 
     # Performing prcomp which gives us the deviations of the principal components
-    omicResult <- prcomp(omic, scale. = TRUE)
+  #omicResult <- prcomp(omic, scale. = TRUE)
 
     # I convert the PCA analysis into a data frame and add the column indicating the diagnosis.
-    pca <- as.data.frame(omicResult$x, stringsAsFactors=F)
+  #pca <- as.data.frame(omicResult$x, stringsAsFactors=F)
 
     # I add the changed diagnoses to the PCA data frame.
-    pca <- cbind(classVariable = omicShow[[classVariable]], pca)
+  #pca <- cbind(classVariable = omicShow[[classVariable]], pca)
 
     # Changing the column name
-    colnames(pca)[colnames(pca) == "classVariable"] <- classVariable
+  #colnames(pca)[colnames(pca) == "classVariable"] <- classVariable
 
-    name <- paste("GA", savingName, sep="_")
-    dirPath <- paste(savingName, "analysisData", name, sep = "/")
+  # name <- paste("GA", savingName, sep="_")
+  #dirPath <- paste(savingName, "analysisData", name, sep = "/")
 
     # Save the pca analysis
-    gaPath <- paste(dirPath, "PCA_Lasso.tsv", sep="_")
-    write.table(pca, gaPath, row.names = T, col.names = T, sep =  '\t')
+  #gaPath <- paste(dirPath, "PCA_Lasso.tsv", sep="_")
+  #write.table(pca, gaPath, row.names = T, col.names = T, sep =  '\t')
 
   }
 

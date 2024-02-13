@@ -120,6 +120,18 @@ distributionDashboard
 # PCA Analysis
 
 ```{r, include = FALSE}
+
+  pcaDashboard <- ggplot(params$pcaAnalisis, aes(PC1, PC2)) + 
+    modelr::geom_ref_line(h = 0) +
+    modelr::geom_ref_line(v = 0) +
+    geom_jitter(aes(color = classVariable)) +
+     xlab("First Principal Component") + 
+    ylab("Second Principal Component") + 
+    ggtitle("PCA Analysis of Changed Diagnostics")
+
+```
+
+```{r, include = FALSE, eval = FALSE}
 pcaDashboard <- NULL
 
 classVariable <- params$pcaAnalisis[[params$classVariable]]
