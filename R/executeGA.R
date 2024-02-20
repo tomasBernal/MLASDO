@@ -325,79 +325,44 @@ executeGA <- function(
     # It is done through an XOR operation
     solutionData <- bitwXor(omicTrainDiagnosis, genome)
 
-    if(mlAlgorithm == "Lasso"){
+    # This vector will store the balanced means of the numLassoExecutions executions
+    balancedAccValues <- vector(length = numLassoExecutions)
+    numPredictors <- vector(length = numLassoExecutions)
 
-      # This vector will store the balanced means of the numLassoExecutions executions
-      balancedAccValues <- vector(length = numLassoExecutions)
-      numPredictors <- vector(length = numLassoExecutions)
+    set.seed(seed)
 
-      set.seed(seed)
+    # Train the Lasso model numLassoExecutions times
+    for (i in 1:numLassoExecutions) {
 
-      # Train the Lasso model numLassoExecutions times
-      for (i in 1:numLassoExecutions) {
+      # Train the Lasso model
+      model <- cv.glmnet(as.matrix(omicTrain), as.matrix(solutionData), alpha = 1, family = "binomial", type.measure = "class", nfolds = 10)
 
-        # Train the Lasso model
-        model <- cv.glmnet(as.matrix(omicTrain), as.matrix(solutionData), alpha = 1, family = "binomial", type.measure = "class", nfolds = 10)
+      coeficientes <- coef(model$glmnet.fit, s = model$lambda.min)
 
-        coeficientes <- coef(model$glmnet.fit, s = model$lambda.min)
+      inds <- which(coeficientes != 0)
 
-        inds <- which(coeficientes != 0)
+      numPredictors[i] <- length(inds)
 
-        numPredictors[i] <- length(inds)
-
-
-        # Use the model to predict on the test set
-        modelPrediction <- predict(model, newx = as.matrix(omicTest), alpha = 1, s = "lambda.min", type = "class")
-
-        # Get the confusion matrix
-        cfModel <- confusionMatrix(as.factor(as.integer(modelPrediction)), as.factor(omicTestDiagnosis))
-
-        specificity <- ifelse(is.na(as.numeric(cfModel$byClass["Specificity"])), 0,  as.numeric(cfModel$byClass["Specificity"]))
-
-        sensitivity <- ifelse(is.na(as.numeric(cfModel$byClass["Sensitivity"])), 0,  as.numeric(cfModel$byClass["Sensitivity"]))
-
-        # Save the balanced mean obtained in this iteration
-        balancedAccValues[i] <- (specificity + sensitivity) / 2
-
-      }
-
-      # Return the mean of the numLassoExecutions balanced means obtained
-      return(c(mean(balancedAccValues), round(mean(numPredictors))))
-
-    } else if(mlAlgorithm == "RF"){
-
-      # Creating the ranger model
-      model <- ranger(
-
-        x = omicTrain,
-        y = solutionData,
-        num.trees = numTrees,
-        mtry = mtry,
-        splitrule = splitrule,
-        importance = "impurity", # In order to obtain the important variables in the prediction
-        sample.fraction = sampleFraction,
-        max.depth = maxDepth,
-        min.node.size = minNodeSize,
-        classification = TRUE,
-        seed = seed
-      )
 
       # Use the model to predict on the test set
-      modelPrediction <- predict(model, omicTest)$predictions
+      modelPrediction <- predict(model, newx = as.matrix(omicTest), alpha = 1, s = "lambda.min", type = "class")
 
       # Get the confusion matrix
-      cfModel <-
-        confusionMatrix(as.factor(as.integer(modelPrediction)), as.factor(omicTestDiagnosis))
+      cfModel <- confusionMatrix(as.factor(as.integer(modelPrediction)), as.factor(omicTestDiagnosis))
 
       specificity <- ifelse(is.na(as.numeric(cfModel$byClass["Specificity"])), 0,  as.numeric(cfModel$byClass["Specificity"]))
 
       sensitivity <- ifelse(is.na(as.numeric(cfModel$byClass["Sensitivity"])), 0,  as.numeric(cfModel$byClass["Sensitivity"]))
 
-      # Return the balanced accuracy of the ranger model
-      return((specificity + sensitivity) / 2)
+      # Save the balanced mean obtained in this iteration
+      balancedAccValues[i] <- (specificity + sensitivity) / 2
 
     }
+
+    # Return the mean of the numLassoExecutions balanced means obtained
+    return(c(mean(balancedAccValues), round(mean(numPredictors))))
   }
+
 
   if(mlAlgorithm == "Lasso"){
 
