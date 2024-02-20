@@ -264,6 +264,58 @@ executeGA <- function(
   modelPath <- paste(name, ".rds", sep="")
   saveRDS(GA, file = paste(dirPath, modelPath, sep = "/"))
 
+  ## Obtain the best solution obtained by the genetic algorithm and its accuracy
+  maxValue <- 0
+
+  # Parallelizing
+  cl <- makeCluster(nCores)
+  registerDoParallel(cl)
+
+  for(i in 1:nrow(GA@solution)){
+
+    currentVal <- fitness((GA@solution[i,]))
+
+    if(currentVal > maxValue){
+      geneticSolution <- GA@solution[i,]
+      maxValue <- currentVal
+    }
+  }
+
+  # Stop parallelization
+  stopCluster(cl)
+
+  ## Save the best solution of the genetic algorithm
+  solutionPath <- paste(name, "Solution.rds", sep="_")
+  saveRDS(geneticSolution, file = paste(dirPath, solutionPath, sep = "/"))
+
+
+  if(mlAlgorithm == "Lasso"){
+
+    model <- cv.glmnet(as.matrix(omicTrain), as.matrix(geneticSolution), alpha = 1, family = "binomial", type.measure = "class", nfolds = 10)
+
+  } else if(mlAlgorithm == "RF"){
+
+    model <- ranger(
+
+      x = omicTrain,
+      y = geneticSolution,
+      num.trees = numTrees,
+      mtry = mtry,
+      splitrule = splitrule,
+      importance = "impurity", # In order to obtain the important variables in the prediction
+      sample.fraction = sampleFraction,
+      max.depth = maxDepth,
+      min.node.size = minNodeSize,
+      classification = TRUE,
+      seed = seed
+    )
+  }
+
+  ## Save the best solution of the genetic algorithm
+  modelPath <- paste(name, "Model.rds", sep="_")
+  saveRDS(model, file = paste(dirPath, modelPath, sep = "/"))
+
+
   postFitness <- function(genome) {
 
     # Substitute the NA values for 0
@@ -287,6 +339,13 @@ executeGA <- function(
         # Train the Lasso model
         model <- cv.glmnet(as.matrix(omicTrain), as.matrix(solutionData), alpha = 1, family = "binomial", type.measure = "class", nfolds = 10)
 
+        coeficientes <- coef(model$glmnet.fit, s = model$lambda.min)
+
+        inds <- which(coeficientes != 0)
+
+        numPredictors[i] <- length(inds)
+
+
         # Use the model to predict on the test set
         modelPrediction <- predict(model, newx = as.matrix(omicTest), alpha = 1, s = "lambda.min", type = "class")
 
@@ -299,12 +358,6 @@ executeGA <- function(
 
         # Save the balanced mean obtained in this iteration
         balancedAccValues[i] <- (specificity + sensitivity) / 2
-
-        coeficientes <- coef(model$glmnet.fit, s = model$lambda.min)
-
-        inds <- which(coeficientes != 0)
-
-        numPredictors[i] <- length(inds)
 
       }
 
@@ -345,57 +398,6 @@ executeGA <- function(
 
     }
   }
-
-  ## Obtain the best solution obtained by the genetic algorithm and its accuracy
-  maxValue <- 0
-
-  # Parallelizing
-  cl <- makeCluster(nCores)
-  registerDoParallel(cl)
-
-  for(i in 1:nrow(GA@solution)){
-
-    currentVal <- postFitness((GA@solution[i,]))
-
-    if(currentVal[[1]] > maxValue){
-      geneticSolution <- GA@solution[i,]
-      maxValue <- currentVal[[1]]
-    }
-  }
-
-  # Stop parallelization
-  stopCluster(cl)
-
-  ## Save the best solution of the genetic algorithm
-  solutionPath <- paste(name, "Solution.rds", sep="_")
-  saveRDS(geneticSolution, file = paste(dirPath, solutionPath, sep = "/"))
-
-  if(mlAlgorithm == "Lasso"){
-
-    model <- cv.glmnet(as.matrix(omicTrain), as.matrix(geneticSolution), alpha = 1, family = "binomial", type.measure = "class", nfolds = 10)
-
-  } else if(mlAlgorithm == "RF"){
-
-    model <- ranger(
-
-      x = omicTrain,
-      y = geneticSolution,
-      num.trees = numTrees,
-      mtry = mtry,
-      splitrule = splitrule,
-      importance = "impurity", # In order to obtain the important variables in the prediction
-      sample.fraction = sampleFraction,
-      max.depth = maxDepth,
-      min.node.size = minNodeSize,
-      classification = TRUE,
-      seed = seed
-    )
-  }
-
-  ## Save the best solution of the genetic algorithm
-  modelPath <- paste(name, "Model.rds", sep="_")
-  saveRDS(model, file = paste(dirPath, modelPath, sep = "/"))
-
 
   if(mlAlgorithm == "Lasso"){
 
