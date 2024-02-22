@@ -63,11 +63,15 @@ compileMarkdown <- function(
   if(mlAlgorithm == "Lasso"){
 
     if(justAnalysis){
+
       lassoPredictors <- readRDS(lassoPredictorsPath)
+
     } else {
 
+      dirPath <- paste(savingName, "geneticAlgorithm", name, sep = "/")
       gaPath <- paste(dirPath, "Predictors.rds", sep="_")
       lassoPredictors <- readRDS(gaPath)
+
     }
 
 
