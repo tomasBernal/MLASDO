@@ -337,7 +337,7 @@ executeGA <- function(
       # Train the Lasso model
       model <- cv.glmnet(as.matrix(omicTrain), as.matrix(solutionData), alpha = 1, family = "binomial", type.measure = "class", nfolds = 10)
 
-      coeficientes <- coef(model$glmnet.fit, s = model$lambda.min)
+      coeficientes <- coef(model, s = model$lambda.min)
 
       inds <- which(coeficientes != 0)
 
