@@ -339,10 +339,7 @@ executeGA <- function(
 
       coeficientes <- coef(model, s = model$lambda.min)
 
-      inds <- which(coeficientes != 0)
-
-      numPredictors[i] <- length(inds)
-
+      numPredictors[i] <- length(coeficientes@i)
 
       # Use the model to predict on the test set
       modelPrediction <- predict(model, newx = as.matrix(omicTest), alpha = 1, s = "lambda.min", type = "class")
