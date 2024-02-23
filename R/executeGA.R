@@ -288,17 +288,18 @@ executeGA <- function(
   solutionPath <- paste(name, "Solution.rds", sep="_")
   saveRDS(geneticSolution, file = paste(dirPath, solutionPath, sep = "/"))
 
+  solutionData <- bitwXor(omicTrainDiagnosis, geneticSolution)
 
   if(mlAlgorithm == "Lasso"){
 
-    model <- cv.glmnet(as.matrix(omicTrain), as.matrix(geneticSolution), alpha = 1, family = "binomial", type.measure = "class", nfolds = 10)
+    model <- cv.glmnet(as.matrix(omicTrain), as.matrix(solutionData), alpha = 1, family = "binomial", type.measure = "class", nfolds = 10)
 
   } else if(mlAlgorithm == "RF"){
 
     model <- ranger(
 
       x = omicTrain,
-      y = geneticSolution,
+      y = solutionData,
       num.trees = numTrees,
       mtry = mtry,
       splitrule = splitrule,
