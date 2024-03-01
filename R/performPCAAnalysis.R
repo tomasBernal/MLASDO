@@ -2,10 +2,10 @@
 #'
 #' @description This function performs PCA analysis on the changed diagnoses after the execution of the genetic algorithm.
 #'
-#' @param bestModel ML Model | Best model obtained after the detection.
 #' @param mlAlgorithm String | Machine Learning algorithm to be applied, the options are: Lasso or RF (Random Forest).
 #' @param idColumn String | Variable that indicates the identifier of each patient in both datasets. If the user does not specify a path to his own data, the value for the sample data, Trial, will be used.
 #' @param changedOmicData Data | Dataset of omic data that will be used.
+#' @param selectedData Data | Dataset of omic data with only the predictors selected by the Lasso model.
 #' @param classVariable String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.
 #' @param savingName String | Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.
 #'
@@ -14,14 +14,14 @@
 #'
 #' @examples
 #'
-#' MLASDO::performPCAAnalysis(bestModel = bestModel, mlAlgorithm = mlAlgorithm, idColumn = idColumn, changedOmicData = changedOmicData, classVariable = classVariable, savingName = savingName)
+#' MLASDO::performPCAAnalysis(mlAlgorithm = mlAlgorithm, idColumn = idColumn, changedOmicData = changedOmicData, selectedData = selectedData, classVariable = classVariable, savingName = savingName)
 
 
 performPCAAnalysis <- function(
-    bestModel,
     mlAlgorithm,
     idColumn,
     changedOmicData,
+    selectedData
     classVariable,
     savingName
 ){
@@ -69,7 +69,7 @@ performPCAAnalysis <- function(
   if (mlAlgorithm == "Lasso"){
 
     # Performing prcomp which gives us the deviations of the principal components
-    omicResult <- prcomp(omic, scale. = TRUE)
+    omicResult <- prcomp(selectedData, scale. = TRUE)
 
     # I convert the PCA analysis into a data frame and add the column indicating the diagnosis.
     pca <- as.data.frame(omicResult$x, stringsAsFactors=F)

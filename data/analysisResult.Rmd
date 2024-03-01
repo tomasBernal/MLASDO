@@ -10,13 +10,13 @@ params:
   mlAlgorithm : ""
   geneticAlgorithm : NULL
   lassoPredictors : NULL
-  bestModel : NULL
   baselinePrecision : NULL
   baselinePredictors : NULL
   originalDiagnosis : NULL
   clinicData : NULL
-  pcaAnalisis : NULL
-  pcaAnalisisLasso : NULL
+  selectedData : NULL
+  pcaAnalysis : NULL
+  pcaAnalysisLasso : NULL
   numericTable : NULL
   totalTable : NULL
   classVariable: NULL
@@ -168,10 +168,9 @@ distributionDashboard
 # PCA Analysis
 
 ```{r, include = FALSE}
+classVariable <- params$pcaAnalysis[[params$classVariable]]
 
-classVariable <- params$pcaAnalisis[[params$classVariable]]
-
-  pcaDashboard <- ggplot(params$pcaAnalisis, aes(PC1, PC2)) + 
+pcaAnalysis <- ggplot(params$pcaAnalysis, aes(PC1, PC2)) + 
     modelr::geom_ref_line(h = 0) +
     modelr::geom_ref_line(v = 0) +
     geom_jitter(aes(color = classVariable)) +
@@ -179,52 +178,30 @@ classVariable <- params$pcaAnalisis[[params$classVariable]]
     ylab("Second Principal Component") + 
     ggtitle("PCA Analysis of Changed Diagnostics")
 
-```
-
-```{r, include = FALSE, eval = FALSE}
-pcaDashboard <- NULL
-
-classVariable <- params$pcaAnalisis[[params$classVariable]]
-
-if(mlAlgorithm == "Lasso"){
-
-  pca <- ggplot(params$pcaAnalisis, aes(PC1, PC2)) + 
-    modelr::geom_ref_line(h = 0) +
-    modelr::geom_ref_line(v = 0) +
-    geom_jitter(aes(color = classVariable)) +
-     xlab("First Principal Component") + 
-    ylab("Second Principal Component") + 
-    ggtitle("PCA Analysis of Changed Diagnostics")
-  
-  
-  pcaLasso <- ggplot(params$pcaAnalisisLasso, aes(PC1, PC2)) + 
-    modelr::geom_ref_line(h = 0) +
-    modelr::geom_ref_line(v = 0) +
-    geom_jitter(aes(color = classVariable)) +
-     xlab("First Principal Component") + 
-    ylab("Second Principal Component") + 
-    ggtitle("PCA Analysis of Changed Diagnostics (Lasso)")
-  
-  pcaDashboard <- subplot(pca, pcaLasso, nrows = 1, margin = 0.1, shareX = FALSE, shareY = FALSE, titleX = TRUE, titleY = TRUE)  
-
-pcaDashboard <- pcaDashboard %>%  layout(title = "PCA Analysis", showlegend = FALSE)
-  
-} else {
-
-  pcaDashboard <- ggplot(params$pcaAnalisis, aes(PC1, PC2)) + 
-    modelr::geom_ref_line(h = 0) +
-    modelr::geom_ref_line(v = 0) +
-    geom_jitter(aes(color = classVariable)) +
-     xlab("First Principal Component") + 
-    ylab("Second Principal Component") + 
-    ggtitle("PCA Analysis of Changed Diagnostics")
-}
 ```
 
 ```{r}
-pcaDashboard
+pcaAnalysis
 ```
 
+```{r, include = FALSE, eval = executeLasso}
+pcaLasso <- ggplot(params$pcaAnalysisLasso, aes(PC1, PC2)) + 
+    modelr::geom_ref_line(h = 0) +
+    modelr::geom_ref_line(v = 0) +
+    geom_jitter(aes(color = classVariable)) +
+     xlab("First Principal Component") + 
+    ylab("Second Principal Component") + 
+    ggtitle("PCA Analysis of Changed Diagnostics (Lasso selected predictors)")
+```
+
+```{r}
+pcaLasso
+```
+
+`r if(executeLasso){# Table of selected predictors in omical data}`
+```{r, include = FALSE, eval = executeLasso}
+DT::datatable(params$selectedData, class = 'cell-border stripe', options = list(scrollX = TRUE))
+```
 
 # Table of clinical data for patients
 

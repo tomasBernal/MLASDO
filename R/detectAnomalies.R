@@ -577,7 +577,7 @@ detectAnomalies <- function(
 
   print("Performing PCA analysis")
   MLASDO::performPCAAnalysis(
-    bestModel = bestModel,
+    selectedData = selectedOmicPredictors,
     mlAlgorithm = mlAlgorithm,
     idColumn = idColumn,
     changedOmicData = changedOmicData,
