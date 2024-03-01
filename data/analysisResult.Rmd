@@ -198,7 +198,6 @@ pcaLasso <- ggplot(params$pcaAnalysisLasso, aes(PC1, PC2)) +
 pcaLasso
 ```
 
-`r if(executeLasso){# Table of selected predictors in omical data}`
 ```{r, include = FALSE, eval = executeLasso}
 DT::datatable(params$selectedData, class = 'cell-border stripe', options = list(scrollX = TRUE))
 ```
