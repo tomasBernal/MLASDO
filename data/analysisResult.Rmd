@@ -57,14 +57,14 @@ A `r modelName` model has been used to detect anomalous cases. In the anomalous 
 During this process, the accuracy has gone from `r baselinePrecision` percent to `r maxPrecision` percent.
 
 
-# Evolution of precision obtained
+# Evolution of the `r modelName` model during generations
 
 ```{r, include = FALSE}
 algorithmPrecisions <- params$geneticAlgorithm@summary[,1]
 
 precisionDF <- data.frame(generation = 1:length(algorithmPrecisions), precision = algorithmPrecisions * 100, meanPrecision = cummean(algorithmPrecisions * 100))
 
-hline <- function(y = 0, color = "black") {
+hline <- function(y = 0, color = "#CAFF70") {
   list(
     type = "line",
     x0 = 0,
@@ -77,41 +77,34 @@ hline <- function(y = 0, color = "black") {
 }
 ```
 
-```{r, include = FALSE, eval = executeLasso}
+
+```{r, include = FALSE}
 precisionPlot <- plot_ly(precisionDF, x=~generation, y=~precision, hoveron = "points", hoverinfo = "text", text = paste("Maximum accuracy value obtained: ", round(precisionDF$precision, 2), "%<br>Generation: ", precisionDF$generation, sep = ""), type = 'scatter', mode = 'lines+markers', name ="Precision", color = I("cadetblue3"))
   
 precisionPlot <- precisionPlot %>% add_trace(x=~generation, y = ~meanPrecision, name='Mean', mode = 'lines+markers', color = I("brown3"), hoverinfo = "text", text = paste("Average of the accuracies obtained: ", round(precisionDF$meanPrecision, 2), "%<br>Generation: ", precisionDF$generation, sep = "")) 
     
-precisionPlot <- precisionPlot %>%  layout(title = "Evolution of the accuracy obtained during generations",
-                          xaxis = list(title = "Actual generation <br>"), yaxis = list(title = "Precision value <br> <br> <br>", ticksuffix = "%",  range = c(precisionLine - 5, min(100, (max(algorithmPrecisions) * 100) + 5)), xaxis = list(range = c(0, max(precisionDF$generation)))))
+precisionPlot <- precisionPlot %>%  layout(title = "Evolution of the accuracy obtained during generations", xaxis = list(title = "Actual generation <br>"), yaxis = list(title = "Precision value <br> <br> <br>", ticksuffix = "%",  range = c(precisionLine - 5, min(100, (max(algorithmPrecisions) * 100) + 5)), xaxis = list(range = c(0, max(precisionDF$generation)))))
 
-precisionPlot <- precisionPlot %>% layout(shapes = list(hline(precisionLine)), plot_bgcolor = "#e5ecf6")
-  
+precisionPlot <- precisionPlot %>% layout(shapes = list(hline(precisionLine)))
+```
 
+```{r}
+precisionPlot
+```
+
+```{r, include = FALSE, eval = executeLasso}
 predictorsDF <- data.frame(generation = 1:length(params$lassoPredictors), predictors = params$lassoPredictors)
   
 predictorsPlot <- plot_ly(predictorsDF, x=~generation, y=~predictors, hoveron = "points", hoverinfo = "text", text = paste("Mean number of predictors selected: ", round(predictorsDF$predictors, 2), "<br>Generation: ", precisionDF$generation, sep = ""), type = 'scatter', mode = 'lines+markers', name ="Number of predictors", color = I("#FF7256"))
   
 predictorsPlot <- predictorsPlot %>%  layout(title = "Evolution of the number of predictors selected during generations", xaxis = list(title = "Actual generation <br>"), yaxis = list(title = "Number of predictors <br> <br> <br>", range = c(min(params$lassoPredictors) - 5, max(params$lassoPredictors) + 5), xaxis = list(range = c(0, max(predictorsDF$generation)))))
-  
-precisionDashboard <- subplot(precisionPlot, predictorsPlot, nrows = 1, margin = 0.1, shareX = FALSE, shareY = FALSE, titleX = TRUE, titleY = TRUE)  
-
-precisionDashboard <- precisionDashboard %>%  layout(title = "Evolution of the Lasso Model during generations",showlegend = FALSE)
-```
-
-```{r, include = FALSE, eval = executeRF}
-precisionDashboard <- plot_ly(precisionDF, x=~generation, y=~precision, hoveron = "points", hoverinfo = "text", text = paste("Maximum accuracy value obtained: ", round(precisionDF$precision, 2), "%<br>Generation: ", precisionDF$generation, sep = ""), type = 'scatter', mode = 'lines+markers', name ="Precision", color = I("cadetblue3"))
-  
-precisionDashboard <- precisionDashboard %>% add_trace(x=~generation, y = ~meanPrecision, name='Mean', mode = 'lines+markers', color = I("brown3"), hoverinfo = "text", text = paste("Average of the accuracies obtained: ", round(precisionDF$meanPrecision, 2), "%<br>Generation: ", precisionDF$generation, sep = "")) 
-    
-precisionDashboard <- precisionDashboard %>%  layout(title = "Evolution of the accuracy obtained during generations", xaxis = list(title = "Actual generation <br>"), yaxis = list(title = "Precision value <br> <br> <br>", ticksuffix = "%",  range = c(precisionLine - 5, min(100, (max(algorithmPrecisions) * 100) + 5)), xaxis = list(range = c(0, max(precisionDF$generation)))))
-
-precisionDashboard <- precisionDashboard %>% layout(shapes = list(hline(precisionLine)), plot_bgcolor = "#e5ecf6")
 ```
 
 ```{r}
-precisionDashboard
+predictorsPlot
 ```
+
+
 
 # Diagnostics distribution
 
