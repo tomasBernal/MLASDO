@@ -83,7 +83,7 @@ precisionPlot <- plot_ly(precisionDF, x=~generation, y=~precision, hoveron = "po
 precisionPlot <- precisionPlot %>% add_trace(x=~generation, y = ~meanPrecision, name='Mean', mode = 'lines+markers', color = I("brown3"), hoverinfo = "text", text = paste("Average of the accuracies obtained: ", round(precisionDF$meanPrecision, 2), "%<br>Generation: ", precisionDF$generation, sep = "")) 
     
 precisionPlot <- precisionPlot %>%  layout(title = "Evolution of the accuracy obtained during generations",
-                          xaxis = list(title = "Actual generation <br>"), yaxis = list(title = "Precision value <br> <br> <br>", ticksuffix = "%",  range = c((min(algorithmPrecisions) * 100) - 5, min(100, (max(algorithmPrecisions) * 100) + 5)), xaxis = list(range = c(0, max(precisionDF$generation)))))
+                          xaxis = list(title = "Actual generation <br>"), yaxis = list(title = "Precision value <br> <br> <br>", ticksuffix = "%",  range = c(precisionLine - 5, min(100, (max(algorithmPrecisions) * 100) + 5)), xaxis = list(range = c(0, max(precisionDF$generation)))))
 
 precisionPlot <- precisionPlot %>% layout(shapes = list(hline(precisionLine)), plot_bgcolor = "#e5ecf6")
   
@@ -104,7 +104,7 @@ precisionDashboard <- plot_ly(precisionDF, x=~generation, y=~precision, hoveron 
   
 precisionDashboard <- precisionDashboard %>% add_trace(x=~generation, y = ~meanPrecision, name='Mean', mode = 'lines+markers', color = I("brown3"), hoverinfo = "text", text = paste("Average of the accuracies obtained: ", round(precisionDF$meanPrecision, 2), "%<br>Generation: ", precisionDF$generation, sep = "")) 
     
-precisionDashboard <- precisionDashboard %>%  layout(title = "Evolution of the accuracy obtained during generations", xaxis = list(title = "Actual generation <br>"), yaxis = list(title = "Precision value <br> <br> <br>", ticksuffix = "%",  range = c((min(algorithmPrecisions) * 100) - 5, min(100, (max(algorithmPrecisions) * 100) + 5)), xaxis = list(range = c(0, max(precisionDF$generation)))))
+precisionDashboard <- precisionDashboard %>%  layout(title = "Evolution of the accuracy obtained during generations", xaxis = list(title = "Actual generation <br>"), yaxis = list(title = "Precision value <br> <br> <br>", ticksuffix = "%",  range = c(precisionLine - 5, min(100, (max(algorithmPrecisions) * 100) + 5)), xaxis = list(range = c(0, max(precisionDF$generation)))))
 
 precisionDashboard <- precisionDashboard %>% layout(shapes = list(hline(precisionLine)), plot_bgcolor = "#e5ecf6")
 ```
