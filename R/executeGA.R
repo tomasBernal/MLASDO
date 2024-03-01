@@ -45,7 +45,7 @@
 #'
 #' @param mlAlgorithm String | Machine Learning algorithm to be applied, the options are: Lasso or RF (Random Forest). Default value: RF.
 #'
-#' @param numLassoExecutions Integer | Number of times the Lasso algorithm is executed. Default value: 5.
+#' @param numModelExecutions Integer | Number of times the Lasso algorithm is executed. Default value: 5.
 #' @param numTrees Integer | Number of trees of the Random Forest model. Default value: 100.
 #' @param mtry Integer | Number of predictors that are evaluated at each partition (node) of each tree. Default value: 225.
 #' @param splitrule String | This is the rule used by the algorithm to select the predictor and the optimal value to separate a node into two branches during the tree construction. Default value: gini.
@@ -77,11 +77,11 @@
 #'
 #' @examples
 #'
-#' MLASDO::executeGA(mlAlgorithm = mlAlgorithm, numLassoExecutions = numLassoExecutions, numTrees = numTrees, mtry = mtry, splitrule = splitrule, sampleFraction = sampleFraction, maxDepth = maxDepth, minNodeSize = minNodeSize, omicData = omicData, subsetTrain = subsetTrain, activePredictors = activePredictors, classVariable = classVariable, idColumn = idColumn, savingName = savingName, nCores = nCores, nIterations = nIterations, nStopIter = nStopIter, populationSize = populationSize, diagnosticChangeProbability = diagnosticChangeProbability, crossoverOperator = crossoverOperator, crossoverProbability = crossoverProbability, selectionOperator = selectionOperator, mutationOperator = mutationOperator, mutationProbability = mutationProbability, seed = seed)
+#' MLASDO::executeGA(mlAlgorithm = mlAlgorithm, numModelExecutions = numModelExecutions, numTrees = numTrees, mtry = mtry, splitrule = splitrule, sampleFraction = sampleFraction, maxDepth = maxDepth, minNodeSize = minNodeSize, omicData = omicData, subsetTrain = subsetTrain, activePredictors = activePredictors, classVariable = classVariable, idColumn = idColumn, savingName = savingName, nCores = nCores, nIterations = nIterations, nStopIter = nStopIter, populationSize = populationSize, diagnosticChangeProbability = diagnosticChangeProbability, crossoverOperator = crossoverOperator, crossoverProbability = crossoverProbability, selectionOperator = selectionOperator, mutationOperator = mutationOperator, mutationProbability = mutationProbability, seed = seed)
 
 executeGA <- function(
                       mlAlgorithm,
-                      numLassoExecutions,
+                      numModelExecutions,
                       numTrees,
                       mtry,
                       splitrule,
@@ -148,21 +148,42 @@ executeGA <- function(
     # It is done through an XOR operation
     solutionData <- bitwXor(omicTrainDiagnosis, genome)
 
-    if(mlAlgorithm == "Lasso"){
+    # This vector will store the balanced means of the numModelExecutions executions
+    balancedAccValues <- vector(length=numModelExecutions)
 
-      # This vector will store the balanced means of the numLassoExecutions executions
-      balancedAccValues <- vector(length=numLassoExecutions)
+    # Train the Lasso model numModelExecutions times
+    for (i in 1:numModelExecutions) {
 
-      set.seed(seed)
+        if(mlAlgorithm == "Lasso"){
 
-      # Train the Lasso model numLassoExecutions times
-      for (i in 1:numLassoExecutions) {
+          set.seed(seed)
 
-        # Train the Lasso model
-        model <- cv.glmnet(as.matrix(omicTrain), as.matrix(solutionData), alpha = 1, family = "binomial", type.measure = "class", nfolds = 10)
+          # Train the Lasso model
+          model <- cv.glmnet(as.matrix(omicTrain), as.matrix(solutionData), alpha = 1, family = "binomial", type.measure = "class", nfolds = 10)
 
-        # Use the model to predict on the test set
-        modelPrediction <- predict(model, newx = as.matrix(omicTest), alpha = 1, s = "lambda.min", type = "class")
+          # Use the model to predict on the test set
+          modelPrediction <- predict(model, newx = as.matrix(omicTest), alpha = 1, s = "lambda.min", type = "class")
+
+        } else if(mlAlgorithm == "RF"){
+
+          # Creating the ranger model
+          model <- ranger(
+            x = omicTrain,
+            y = solutionData,
+            num.trees = numTrees,
+            mtry = mtry,
+            splitrule = splitrule,
+            importance = "impurity", # In order to obtain the important variables in the prediction
+            sample.fraction = sampleFraction,
+            max.depth = maxDepth,
+            min.node.size = minNodeSize,
+            classification = TRUE,
+            seed = seed
+          )
+
+          # Use the model to predict on the test set
+          modelPrediction <- predict(model, omicTest)$predictions
+        }
 
         # Get the confusion matrix
         cfModel <- confusionMatrix(as.factor(as.integer(modelPrediction)), as.factor(omicTestDiagnosis))
@@ -176,41 +197,8 @@ executeGA <- function(
 
       }
 
-      # Return the mean of the numLassoExecutions balanced means obtained
-      return(mean(balancedAccValues))
-
-    } else if(mlAlgorithm == "RF"){
-
-      # Creating the ranger model
-      model <- ranger(
-
-        x = omicTrain,
-        y = solutionData,
-        num.trees = numTrees,
-        mtry = mtry,
-        splitrule = splitrule,
-        importance = "impurity", # In order to obtain the important variables in the prediction
-        sample.fraction = sampleFraction,
-        max.depth = maxDepth,
-        min.node.size = minNodeSize,
-        classification = TRUE,
-        seed = seed
-      )
-
-      # Use the model to predict on the test set
-      modelPrediction <- predict(model, omicTest)$predictions
-
-      # Get the confusion matrix
-      cfModel <-
-        confusionMatrix(as.factor(as.integer(modelPrediction)), as.factor(omicTestDiagnosis))
-
-      specificity <- ifelse(is.na(as.numeric(cfModel$byClass["Specificity"])), 0,  as.numeric(cfModel$byClass["Specificity"]))
-
-      sensitivity <- ifelse(is.na(as.numeric(cfModel$byClass["Sensitivity"])), 0,  as.numeric(cfModel$byClass["Sensitivity"]))
-
       # Return the balanced accuracy of the ranger model
-      return((specificity + sensitivity) / 2)
-
+      return(mean(balancedAccValues))
     }
   }
 
@@ -257,7 +245,6 @@ executeGA <- function(
 
 
   ## Save the result of the genetic algorithm
-
   dirPath <- paste(savingName, "geneticAlgorithm", sep = "/")
 
   name <- paste("GA", savingName, sep="_")
@@ -288,33 +275,81 @@ executeGA <- function(
   solutionPath <- paste(name, "Solution.rds", sep="_")
   saveRDS(geneticSolution, file = paste(dirPath, solutionPath, sep = "/"))
 
+  # Obtaining the worst and the best model with the final solution
   solutionData <- bitwXor(omicTrainDiagnosis, geneticSolution)
 
-  if(mlAlgorithm == "Lasso"){
+  models <- vector(length = numModelExecutions)
 
-    model <- cv.glmnet(as.matrix(omicTrain), as.matrix(solutionData), alpha = 1, family = "binomial", type.measure = "class", nfolds = 10)
+  bestModelIndex <- 1
+  worstModelIndex <- 1
 
-  } else if(mlAlgorithm == "RF"){
+  bestModelBA <- 0
+  worstModelBA <- 1
 
-    model <- ranger(
-      x = omicTrain,
-      y = solutionData,
-      num.trees = numTrees,
-      mtry = mtry,
-      splitrule = splitrule,
-      importance = "impurity", # In order to obtain the important variables in the prediction
-      sample.fraction = sampleFraction,
-      max.depth = maxDepth,
-      min.node.size = minNodeSize,
-      classification = TRUE,
-      seed = seed
-    )
+  for (i in 1:numModelExecutions) {
+
+    if(mlAlgorithm == "Lasso"){
+
+      set.seed(seed)
+
+      # Train the Lasso model
+      model <- cv.glmnet(as.matrix(omicTrain), as.matrix(solutionData), alpha = 1, family = "binomial", type.measure = "class", nfolds = 10)
+
+      # Use the model to predict on the test set
+      modelPrediction <- predict(model, newx = as.matrix(omicTest), alpha = 1, s = "lambda.min", type = "class")
+
+    } else if(mlAlgorithm == "RF"){
+
+      # Creating the ranger model
+      model <- ranger(
+        x = omicTrain,
+        y = solutionData,
+        num.trees = numTrees,
+        mtry = mtry,
+        splitrule = splitrule,
+        importance = "impurity", # In order to obtain the important variables in the prediction
+        sample.fraction = sampleFraction,
+        max.depth = maxDepth,
+        min.node.size = minNodeSize,
+        classification = TRUE,
+        seed = seed
+      )
+
+      # Use the model to predict on the test set
+      modelPrediction <- predict(model, omicTest)$predictions
+    }
+
+
+    # Get the confusion matrix
+    cfModel <- confusionMatrix(as.factor(as.integer(modelPrediction)), as.factor(omicTestDiagnosis))
+
+    specificity <- ifelse(is.na(as.numeric(cfModel$byClass["Specificity"])), 0,  as.numeric(cfModel$byClass["Specificity"]))
+
+    sensitivity <- ifelse(is.na(as.numeric(cfModel$byClass["Sensitivity"])), 0,  as.numeric(cfModel$byClass["Sensitivity"]))
+
+    # Save the balanced mean obtained in this iteration
+    actualBA <- (specificity + sensitivity) / 2
+
+    if(actualBA > bestModelBA){
+
+      bestModelBA <- actualBA
+      bestModelIndex <- i
+    }
+
+    if(actualBA < worstModelBA){
+      worstModelBA <- actualBA
+      worstModelIndex <- i
+    }
+
   }
 
-  ## Save the best solution of the genetic algorithm
-  modelPath <- paste(name, "Model.rds", sep="_")
-  saveRDS(model, file = paste(dirPath, modelPath, sep = "/"))
 
+  ## Save the best solution of the genetic algorithm
+  modelPath <- paste(name, "Best_Model.rds", sep="_")
+  saveRDS(models[bestModelIndex], file = paste(dirPath, modelPath, sep = "/"))
+
+  modelPath <- paste(name, "Worst_Model.rds", sep="_")
+  saveRDS(models[worstModelIndex], file = paste(dirPath, modelPath, sep = "/"))
 
   postFitness <- function(genome) {
 
@@ -325,14 +360,14 @@ executeGA <- function(
     # It is done through an XOR operation
     solutionData <- bitwXor(omicTrainDiagnosis, genome)
 
-    # This vector will store the balanced means of the numLassoExecutions executions
-    balancedAccValues <- vector(length = numLassoExecutions)
-    numPredictors <- vector(length = numLassoExecutions)
+    # This vector will store the balanced means of the numModelExecutions executions
+    balancedAccValues <- vector(length = numModelExecutions)
+    numPredictors <- vector(length = numModelExecutions)
 
     set.seed(seed)
 
-    # Train the Lasso model numLassoExecutions times
-    for (i in 1:numLassoExecutions) {
+    # Train the Lasso model numModelExecutions times
+    for (i in 1:numModelExecutions) {
 
       # Train the Lasso model
       model <- cv.glmnet(as.matrix(omicTrain), as.matrix(solutionData), alpha = 1, family = "binomial", type.measure = "class", nfolds = 10)
@@ -340,6 +375,8 @@ executeGA <- function(
       coeficientes <- coef(model, s = model$lambda.min)
 
       numPredictors[i] <- length(coeficientes@i)
+
+      models[i] <- model
 
       # Use the model to predict on the test set
       modelPrediction <- predict(model, newx = as.matrix(omicTest), alpha = 1, s = "lambda.min", type = "class")
@@ -352,11 +389,14 @@ executeGA <- function(
       sensitivity <- ifelse(is.na(as.numeric(cfModel$byClass["Sensitivity"])), 0,  as.numeric(cfModel$byClass["Sensitivity"]))
 
       # Save the balanced mean obtained in this iteration
-      balancedAccValues[i] <- (specificity + sensitivity) / 2
+
+      actualBA <- (specificity + sensitivity) / 2
+
+      balancedAccValues[i] <- actualBA
 
     }
 
-    # Return the mean of the numLassoExecutions balanced means obtained
+    # Return the mean of the numModelExecutions balanced means obtained
     return(c(mean(balancedAccValues), round(mean(numPredictors))))
   }
 
@@ -373,7 +413,6 @@ executeGA <- function(
 
       maxValue <- 0
       maxPredictors <- 0
-
 
       for(j in 1:nrow(GA@bestSol[[i]])){
 
@@ -396,5 +435,6 @@ executeGA <- function(
     ## Save the best solution of the genetic algorithm
     predictorsPath <- paste(name, "Predictors.rds", sep="_")
     saveRDS(numberPredictorsLasso, file = paste(dirPath, predictorsPath, sep = "/"))
+
   }
 }

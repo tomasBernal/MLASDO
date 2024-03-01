@@ -17,7 +17,7 @@
 #'
 #' @param mlAlgorithm String | Machine Learning algorithm to be applied, the options are: Lasso or RF (Random Forest).
 #'
-#' @param numLassoExecutions Integer | Number of times the Lasso algorithm is executed. Default value: 5.
+#' @param numModelExecutions Integer | Number of times the Lasso algorithm is executed. Default value: 5.
 #' @param numTrees Integer | Number of trees of the Random Forest model. Default value: 100.
 #' @param mtry Integer | Number of predictors that are evaluated at each partition (node) of each tree. Default value: 225.
 #' @param splitrule String | This is the rule used by the algorithm to select the predictor and the optimal value to separate a node into two branches during the tree construction. Default value: gini.
@@ -70,7 +70,7 @@ detectAnomalies <- function(
     modelPath = "",
     lassoPredictorsPath = "",
     mlAlgorithm,
-    numLassoExecutions = 5,
+    numModelExecutions = 5,
     numTrees = 100,
     mtry = 225,
     splitrule = "gini",
@@ -364,7 +364,7 @@ detectAnomalies <- function(
     print("Executing the genetic algorithm")
     MLASDO::executeGA(
       mlAlgorithm = mlAlgorithm,
-      numLassoExecutions = numLassoExecutions,
+      numModelExecutions = numModelExecutions,
       numTrees = numTrees,
       mtry = mtry,
       splitrule = splitrule,
@@ -490,15 +490,15 @@ detectAnomalies <- function(
 
   if(mlAlgorithm == "Lasso"){
 
-    # This vector will store the balanced means of the numLassoExecutions executions
-    balancedAccValues <- vector(length=numLassoExecutions)
+    # This vector will store the balanced means of the numModelExecutions executions
+    balancedAccValues <- vector(length=numModelExecutions)
 
-    numPredictors <- vector(length = numLassoExecutions)
+    numPredictors <- vector(length = numModelExecutions)
 
     set.seed(seed)
 
-    # Train the Lasso model numLassoExecutions times
-    for (i in 1:numLassoExecutions) {
+    # Train the Lasso model numModelExecutions times
+    for (i in 1:numModelExecutions) {
 
       # Train the Lasso model
       model <- cv.glmnet(as.matrix(omicTrain), as.matrix(omicTrainDiagnosis), alpha = 1, family = "binomial", type.measure = "class", nfolds = 10)
@@ -522,7 +522,7 @@ detectAnomalies <- function(
 
     }
 
-    # Return the mean of the numLassoExecutions balanced means obtained
+    # Return the mean of the numModelExecutions balanced means obtained
     baselinePrecision <- mean(balancedAccValues)
 
     baselinePredictors <- round(mean(numPredictors))
