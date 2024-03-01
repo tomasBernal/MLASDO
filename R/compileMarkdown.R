@@ -4,7 +4,7 @@
 #'
 #' @param justAnalysis Bool | Indicates whether to perform the analysis directly (TRUE) or to run the genetic algorithm (FALSE). Default value: FALSE.
 #' @param lassoPredictorsPath String | Path to the mean number of predictors selected by Lasso in each generation.
-#' @param model ML Model | Best model obtained after the detection.
+#' @param bestModel ML Model | Best model obtained after the detection.
 #' @param baselinePrecision Decimal | Baseline precision obtained with the model before the detection.
 #' @param baselinePredictors Integer | Baseline predictors selected with the model before the detection.
 #' @param geneticAlgorithm Array of Strings | Genetic algorithm object.
@@ -18,14 +18,14 @@
 #'
 #' @examples
 #'
-#' MLASDO::compileMarkdown(savingName = savingName, mlAlgorithm = mlAlgorithm, lassoPredictorsPath = lassoPredictorsPath, model = model, baselinePrecision = baselinePrecision, baselinePredictors = baselinePredictors, geneticAlgorithm = geneticAlgorithm, clinicData = clinicData, classVariable = classVariable)
+#' MLASDO::compileMarkdown(savingName = savingName, mlAlgorithm = mlAlgorithm, lassoPredictorsPath = lassoPredictorsPath, bestModel = bestModel, baselinePrecision = baselinePrecision, baselinePredictors = baselinePredictors, geneticAlgorithm = geneticAlgorithm, clinicData = clinicData, classVariable = classVariable)
 #'
 
 compileMarkdown <- function(
     savingName,
     justAnalysis,
     lassoPredictorsPath,
-    model,
+    bestModel,
     baselinePrecision,
     baselinePredictors,
     mlAlgorithm,
@@ -80,7 +80,7 @@ compileMarkdown <- function(
                    params = list(
                                  geneticAlgorithm = geneticAlgorithm,
                                  lassoPredictors = lassoPredictors,
-                                 model = model,
+                                 bestModel = bestModel,
                                  baselinePrecision = baselinePrecision,
                                  baselinePredictors = baselinePredictors,
                                  originalDiagnosis = originalDiagnosis,

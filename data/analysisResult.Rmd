@@ -10,7 +10,7 @@ params:
   mlAlgorithm : ""
   geneticAlgorithm : NULL
   lassoPredictors : NULL
-  model : NULL
+  bestModel : NULL
   baselinePrecision : NULL
   baselinePredictors : NULL
   originalDiagnosis : NULL
@@ -31,7 +31,7 @@ library(plotly)
 library(lazyeval)
 ```
 
-```{r}
+```{r, include=FALSE}
 modelName <- ""
 
 if (mlAlgorithm == "Lasso"){
@@ -54,13 +54,10 @@ precisionLine <- round(params$baselinePrecision * 100, 0)
 
 predictorsLine <- params$baselinePredictors
 
-lassoText <- paste(paste("During this process, the mean number of selected predictors has gone from", predictorsLine, "to", tail(params$lassoPredictors, n=1),  sep = " "), ".", sep = "")
+lassoText <- paste(paste("Also, the mean number of selected predictors has gone from", predictorsLine, "to", tail(params$lassoPredictors, n=1),  sep = " "), ".", sep = "")
 ```
 
-A `r modelName` model has been used to detect anomalous cases. In the anomalous sample detection process, `r numExecutions` iterations have been performed.
-
-During this process, the accuracy has gone from `r baselinePrecision` percent to `r maxPrecision` percent.
-
+A `r modelName` model has been used to detect anomalous cases. In the anomalous sample detection process, `r numExecutions` iterations have been performed. During this process, the accuracy has gone from `r baselinePrecision` percent to `r maxPrecision` percent.
 `r if(executeLasso){lassoText}`
 
 # Evolution of the `r modelName` model during generations
@@ -92,8 +89,8 @@ precisionPlot <- precisionPlot %>% add_trace(x=~generation, y = ~meanPrecision, 
 precisionPlot <- precisionPlot %>%  layout(title = "Evolution of the accuracy obtained during generations", xaxis = list(title = "Actual generation <br>"), yaxis = list(title = "Precision value <br> <br> <br>", ticksuffix = "%",  range = c(precisionLine - 5, min(100, (max(algorithmPrecisions) * 100) + 5)), xaxis = list(range = c(0, max(precisionDF$generation)))))
 
 precisionPlot <- precisionPlot %>% layout(shapes = list(hline(precisionLine))) %>%
-  add_text(showlegend = FALSE, x = c(length(algorithmPrecisions) - 1), y = c(precisionLine + 1),
-           text = c("Baseline precision"))
+  add_annotations(x = length(algorithmPrecisions) - 3, y = precisionLine + 1, showarrow = F,
+           text = "Baseline precision")
 ```
 
 ```{r}
@@ -108,8 +105,8 @@ predictorsPlot <- plot_ly(predictorsDF, x=~generation, y=~predictors, hoveron = 
 predictorsPlot <- predictorsPlot %>%  layout(title = "Evolution of the number of predictors selected during generations", xaxis = list(title = "Actual generation <br>"), yaxis = list(title = "Number of predictors <br> <br> <br>", range = c(min(params$lassoPredictors) - 5, max(params$lassoPredictors) + 5), xaxis = list(range = c(0, max(predictorsDF$generation)))))
 
 predictorsPlot <- predictorsPlot %>% layout(shapes = list(hline(predictorsLine))) %>%
-  add_text(showlegend = FALSE, x = c(length(algorithmPrecisions) - 1), y = c(predictorsLine + 1),
-           text = c("Baseline selected predictors"))
+  add_annotations(x = length(algorithmPrecisions) - 3, y = predictorsLine + 1, showarrow = F,
+           text = "Baseline selected predictors")
 ```
 
 ```{r}

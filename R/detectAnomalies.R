@@ -398,14 +398,14 @@ detectAnomalies <- function(
 
     geneticAlgorithm <- readRDS(geneticPath)
     solutionGA <- readRDS(solutionPath)
-    model <- readRDS(modelPath)
+    bestModel <- readRDS(modelPath)
 
   } else {
 
     dirPath <- paste(savingName, "geneticAlgorithm", name, sep = "/")
 
     modelPath <- paste(dirPath, "Model.rds", sep="_")
-    model <- readRDS(modelPath)
+    bestModel <- readRDS(modelPath)
 
     solutionPath <- paste(dirPath, "Solution.rds", sep="_")
     solutionGA <- readRDS(solutionPath)
@@ -527,11 +527,25 @@ detectAnomalies <- function(
 
     baselinePredictors <- round(mean(numPredictors))
 
+    # Obtaining the selected predictors of the best model
+    coeficients <- coef(bestModel, s = bestModel$lambda.min)
+
+    selected <- colnames(changedOmicData[, coeficients@i])
+
+    selectedOmicPredictors <- omic[, selected]
+
+    name <- paste("GA", savingName, sep="_")
+    dirPath <- paste(savingName, "analysisData", name, sep = "/")
+
+    # Save the selected data
+    selectedDataPath <- paste(dirPath, "Selected_Predictors.tsv", sep="_")
+
+    write.table(selectedOmicPredictors, selectedDataPath, row.names = T, col.names = T, sep =  '\t')
+
   } else if(mlAlgorithm == "RF"){
 
     # Creating the ranger model
     model <- ranger(
-
       x = omicTrain,
       y = omicTrainDiagnosis,
       num.trees = numTrees,
@@ -563,7 +577,7 @@ detectAnomalies <- function(
 
   print("Performing PCA analysis")
   MLASDO::performPCAAnalysis(
-    model = model,
+    bestModel = bestModel,
     mlAlgorithm = mlAlgorithm,
     idColumn = idColumn,
     changedOmicData = changedOmicData,
@@ -586,7 +600,7 @@ detectAnomalies <- function(
     savingName = savingName,
     justAnalysis = justAnalysis,
     lassoPredictorsPath = lassoPredictorsPath,
-    model = model,
+    bestModel = bestModel,
     baselinePrecision = baselinePrecision,
     baselinePredictors = baselinePredictors,
     mlAlgorithm = mlAlgorithm,

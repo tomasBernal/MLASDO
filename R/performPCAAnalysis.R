@@ -2,7 +2,7 @@
 #'
 #' @description This function performs PCA analysis on the changed diagnoses after the execution of the genetic algorithm.
 #'
-#' @param model ML Model | Best model obtained after the detection.
+#' @param bestModel ML Model | Best model obtained after the detection.
 #' @param mlAlgorithm String | Machine Learning algorithm to be applied, the options are: Lasso or RF (Random Forest).
 #' @param idColumn String | Variable that indicates the identifier of each patient in both datasets. If the user does not specify a path to his own data, the value for the sample data, Trial, will be used.
 #' @param changedOmicData Data | Dataset of omic data that will be used.
@@ -14,11 +14,11 @@
 #'
 #' @examples
 #'
-#' MLASDO::performPCAAnalysis(model = model, mlAlgorithm = mlAlgorithm, idColumn = idColumn, changedOmicData = changedOmicData, classVariable = classVariable, savingName = savingName)
+#' MLASDO::performPCAAnalysis(bestModel = bestModel, mlAlgorithm = mlAlgorithm, idColumn = idColumn, changedOmicData = changedOmicData, classVariable = classVariable, savingName = savingName)
 
 
 performPCAAnalysis <- function(
-    model,
+    bestModel,
     mlAlgorithm,
     idColumn,
     changedOmicData,
@@ -66,33 +66,27 @@ performPCAAnalysis <- function(
   gaPath <- paste(dirPath, "PCA.tsv", sep="_")
   write.table(pca, gaPath, row.names = T, col.names = T, sep =  '\t')
 
-  #if (mlAlgorithm == "Lasso"){
-
-  #coeficients <- coef(model$glmnet.fit)
-
-  #selected <- colnames(changedOmicData[, coeficients@i])
-
-  #omic <- omic[, selected]
+  if (mlAlgorithm == "Lasso"){
 
     # Performing prcomp which gives us the deviations of the principal components
-  #omicResult <- prcomp(omic, scale. = TRUE)
+    omicResult <- prcomp(omic, scale. = TRUE)
 
     # I convert the PCA analysis into a data frame and add the column indicating the diagnosis.
-  #pca <- as.data.frame(omicResult$x, stringsAsFactors=F)
+    pca <- as.data.frame(omicResult$x, stringsAsFactors=F)
 
     # I add the changed diagnoses to the PCA data frame.
-  #pca <- cbind(classVariable = omicShow[[classVariable]], pca)
+    pca <- cbind(classVariable = omicShow[[classVariable]], pca)
 
     # Changing the column name
-  #colnames(pca)[colnames(pca) == "classVariable"] <- classVariable
+    colnames(pca)[colnames(pca) == "classVariable"] <- classVariable
 
-  # name <- paste("GA", savingName, sep="_")
-  #dirPath <- paste(savingName, "analysisData", name, sep = "/")
+    name <- paste("GA", savingName, sep="_")
+    dirPath <- paste(savingName, "analysisData", name, sep = "/")
 
     # Save the pca analysis
-  #gaPath <- paste(dirPath, "PCA_Lasso.tsv", sep="_")
-  #write.table(pca, gaPath, row.names = T, col.names = T, sep =  '\t')
+    gaPath <- paste(dirPath, "PCA_Lasso.tsv", sep="_")
+    write.table(pca, gaPath, row.names = T, col.names = T, sep =  '\t')
 
-  #}
+  }
 
 }
