@@ -45,12 +45,16 @@ if (mlAlgorithm == "Lasso"){
 
 numExecutions <- params$geneticAlgorithm@iter
 
-maxPrecision <- params$geneticAlgorithm@fitnessValue * 100
+maxPrecision <- round(params$geneticAlgorithm@fitnessValue * 100, 2)
+
+baselinePrecision <- round(params$baselinePrecision * 100, 2)
+
+precisionLine <- round(params$baselinePrecision * 100, 0)
 ```
 
 A `r modelName` model has been used to detect anomalous cases. In the anomalous sample detection process, `r numExecutions` iterations have been performed.
 
-During this process, the accuracy has gone from X percent to `r maxPrecision` percent.
+During this process, the accuracy has gone from `r baselinePrecision` percent to `r maxPrecision` percent.
 
 
 # Evolution of precision obtained
@@ -81,7 +85,7 @@ precisionPlot <- precisionPlot %>% add_trace(x=~generation, y = ~meanPrecision, 
 precisionPlot <- precisionPlot %>%  layout(title = "Evolution of the accuracy obtained during generations",
                           xaxis = list(title = "Actual generation <br>"), yaxis = list(title = "Precision value <br> <br> <br>", ticksuffix = "%",  range = c((min(algorithmPrecisions) * 100) - 5, min(100, (max(algorithmPrecisions) * 100) + 5)), xaxis = list(range = c(0, max(precisionDF$generation)))))
 
-precisionPlot <- precisionPlot %>% layout(shapes = list(hline(params$baselinePrecision)), plot_bgcolor = "#e5ecf6")
+precisionPlot <- precisionPlot %>% layout(shapes = list(hline(precisionLine)), plot_bgcolor = "#e5ecf6")
   
 
 predictorsDF <- data.frame(generation = 1:length(params$lassoPredictors), predictors = params$lassoPredictors)
@@ -102,7 +106,7 @@ precisionDashboard <- precisionDashboard %>% add_trace(x=~generation, y = ~meanP
     
 precisionDashboard <- precisionDashboard %>%  layout(title = "Evolution of the accuracy obtained during generations", xaxis = list(title = "Actual generation <br>"), yaxis = list(title = "Precision value <br> <br> <br>", ticksuffix = "%",  range = c((min(algorithmPrecisions) * 100) - 5, min(100, (max(algorithmPrecisions) * 100) + 5)), xaxis = list(range = c(0, max(precisionDF$generation)))))
 
-precisionDashboard <- precisionDashboard %>% layout(shapes = list(hline(params$baselinePrecision)), plot_bgcolor = "#e5ecf6")
+precisionDashboard <- precisionDashboard %>% layout(shapes = list(hline(precisionLine)), plot_bgcolor = "#e5ecf6")
 ```
 
 ```{r}
