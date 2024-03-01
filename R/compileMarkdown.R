@@ -86,8 +86,8 @@ compileMarkdown <- function(
                                  mlAlgorithm = mlAlgorithm,
                                  clinicData = clinicData,
                                  selectedData = selectedData,
-                                 pcaAnalisis = pca,
-                                 pcaAnalisisLasso = pcaLasso,
+                                 pcaAnalysis = pca,
+                                 pcaAnalysisLasso = pcaLasso,
                                  numericTable = numeric,
                                  totalTable = total,
                                  classVariable = classVariable
