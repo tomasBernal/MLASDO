@@ -191,14 +191,16 @@ pcaLasso <- ggplot(params$pcaAnalysisLasso, aes(PC1, PC2)) +
     geom_jitter(aes(color = classVariable)) +
      xlab("First Principal Component") + 
     ylab("Second Principal Component") + 
-    ggtitle("PCA Analysis of Changed Diagnostics (Lasso selected predictors)")
+    ggtitle("PCA Analysis of Changed Diagnostics in Lasso selected predictors")
 ```
 
 ```{r}
 pcaLasso
 ```
 
-```{r, include = FALSE, eval = executeLasso}
+`r if(executeLasso){"# hola"}`
+
+```{r, eval = executeLasso}
 DT::datatable(params$selectedData, class = 'cell-border stripe', options = list(scrollX = TRUE))
 ```
 

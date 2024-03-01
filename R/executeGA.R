@@ -297,7 +297,6 @@ executeGA <- function(
   } else if(mlAlgorithm == "RF"){
 
     model <- ranger(
-
       x = omicTrain,
       y = solutionData,
       num.trees = numTrees,
