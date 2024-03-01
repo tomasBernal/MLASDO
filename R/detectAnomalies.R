@@ -466,6 +466,92 @@ detectAnomalies <- function(
   changedClinicData[subsetTrain,][[classVariable]] <- changedDiagnoses
   changedOmicData[subsetTrain,][[classVariable]] <- changedDiagnoses
 
+  # Generating Baseline model
+  omic <- omicData
+
+  # We need to remove the column that indicates the patient id
+  omic[[idColumn]] <- NULL
+
+  omic[[classVariable]] <- ifelse(omic[[classVariable]] == "Case", 1, 0)
+
+  #### CREATION OF TRAIN AND TEST SETS ####
+  omicTrain <- omic[subsetTrain,]
+
+  omicTrainDiagnosis <- omicTrain[[classVariable]]
+  omicTrain[[classVariable]] <- NULL
+
+  omicTest <- omic[-subsetTrain,]
+
+  omicTestDiagnosis <- omicTest[[classVariable]]
+  omicTest[[classVariable]] <- NULL
+
+  baselinePrecision <- 0
+
+  if(mlAlgorithm == "Lasso"){
+
+    # This vector will store the balanced means of the numLassoExecutions executions
+    balancedAccValues <- vector(length=numLassoExecutions)
+
+    set.seed(seed)
+
+    # Train the Lasso model numLassoExecutions times
+    for (i in 1:numLassoExecutions) {
+
+      # Train the Lasso model
+      model <- cv.glmnet(as.matrix(omicTrain), as.matrix(omicTrainDiagnosis), alpha = 1, family = "binomial", type.measure = "class", nfolds = 10)
+
+      # Use the model to predict on the test set
+      modelPrediction <- predict(model, newx = as.matrix(omicTest), alpha = 1, s = "lambda.min", type = "class")
+
+      # Get the confusion matrix
+      cfModel <- confusionMatrix(as.factor(as.integer(modelPrediction)), as.factor(omicTestDiagnosis))
+
+      specificity <- ifelse(is.na(as.numeric(cfModel$byClass["Specificity"])), 0,  as.numeric(cfModel$byClass["Specificity"]))
+
+      sensitivity <- ifelse(is.na(as.numeric(cfModel$byClass["Sensitivity"])), 0,  as.numeric(cfModel$byClass["Sensitivity"]))
+
+      # Save the balanced mean obtained in this iteration
+      balancedAccValues[i] <- (specificity + sensitivity) / 2
+
+    }
+
+    # Return the mean of the numLassoExecutions balanced means obtained
+    baselinePrecision <- mean(balancedAccValues)
+
+  } else if(mlAlgorithm == "RF"){
+
+    # Creating the ranger model
+    model <- ranger(
+
+      x = omicTrain,
+      y = omicTrainDiagnosis,
+      num.trees = numTrees,
+      mtry = mtry,
+      splitrule = splitrule,
+      importance = "impurity", # In order to obtain the important variables in the prediction
+      sample.fraction = sampleFraction,
+      max.depth = maxDepth,
+      min.node.size = minNodeSize,
+      classification = TRUE,
+      seed = seed
+    )
+
+    # Use the model to predict on the test set
+    modelPrediction <- predict(model, omicTest)$predictions
+
+    # Get the confusion matrix
+    cfModel <-
+      confusionMatrix(as.factor(as.integer(modelPrediction)), as.factor(omicTestDiagnosis))
+
+    specificity <- ifelse(is.na(as.numeric(cfModel$byClass["Specificity"])), 0,  as.numeric(cfModel$byClass["Specificity"]))
+
+    sensitivity <- ifelse(is.na(as.numeric(cfModel$byClass["Sensitivity"])), 0,  as.numeric(cfModel$byClass["Sensitivity"]))
+
+    # Return the balanced accuracy of the ranger model
+    baselinePrecision <- ((specificity + sensitivity) / 2)
+
+  }
+
   print("Performing PCA analysis")
   MLASDO::performPCAAnalysis(
     model = model,
@@ -492,6 +578,7 @@ detectAnomalies <- function(
     justAnalysis = justAnalysis,
     lassoPredictorsPath = lassoPredictorsPath,
     model = model,
+    baselinePrecision = baselinePrecision,
     mlAlgorithm = mlAlgorithm,
     geneticAlgorithm = geneticAlgorithm,
     originalDiagnosis = omicData[[classVariable]],

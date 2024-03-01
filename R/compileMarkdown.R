@@ -5,6 +5,7 @@
 #' @param justAnalysis Bool | Indicates whether to perform the analysis directly (TRUE) or to run the genetic algorithm (FALSE). Default value: FALSE.
 #' @param lassoPredictorsPath String | Path to the mean number of predictors selected by Lasso in each generation.
 #' @param model ML Model | Best model obtained after the detection.
+#' @param baselinePrecision Decimal | Baseline precision obtained with the model before the detection.
 #' @param geneticAlgorithm Array of Strings | Genetic algorithm object.
 #' @param originalDiagnosis Array of Strings | Original diagnostics of the patients.
 #' @param clinicData Data | Dataset of clinic data that will be used.
@@ -24,6 +25,7 @@ compileMarkdown <- function(
     justAnalysis,
     lassoPredictorsPath,
     model,
+    baselinePrecision,
     mlAlgorithm,
     geneticAlgorithm,
     originalDiagnosis,
@@ -52,8 +54,6 @@ compileMarkdown <- function(
   numeric <- read.table(gaPathNumeric, header = TRUE, sep = "\t", row.names = 1)
   total <- read.table(gaPathTotal, header = TRUE, sep = "\t", row.names = 1)
 
-  algorithmPrecisions <- geneticAlgorithm@summary[,1]
-
   outputName <- paste("analysisResult_", name, ".html", sep = "")
 
   outputPath <- paste("./", savingName, "/", sep = "")
@@ -71,17 +71,15 @@ compileMarkdown <- function(
       dirPath <- paste(savingName, "geneticAlgorithm", name, sep = "/")
       gaPath <- paste(dirPath, "Predictors.rds", sep="_")
       lassoPredictors <- readRDS(gaPath)
-
     }
-
-
   }
 
   rmarkdown::render(input = system.file("data", "analysisResult.Rmd", package = "MLASDO"),
                    params = list(
-                                 algorithmPrecisions = algorithmPrecisions,
+                                 geneticAlgorithm = geneticAlgorithm,
                                  lassoPredictors = lassoPredictors,
                                  model = model,
+                                 baselinePrecision = baselinePrecision,
                                  originalDiagnosis = originalDiagnosis,
                                  mlAlgorithm = mlAlgorithm,
                                  clinicData = clinicData,
