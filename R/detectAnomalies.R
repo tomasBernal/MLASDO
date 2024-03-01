@@ -600,13 +600,13 @@ detectAnomalies <- function(
     savingName = savingName,
     justAnalysis = justAnalysis,
     lassoPredictorsPath = lassoPredictorsPath,
-    bestModel = bestModel,
     baselinePrecision = baselinePrecision,
     baselinePredictors = baselinePredictors,
     mlAlgorithm = mlAlgorithm,
     geneticAlgorithm = geneticAlgorithm,
     originalDiagnosis = omicData[[classVariable]],
     clinicData = changedClinicData,
+    selectedData = selectedOmicPredictors,
     classVariable = classVariable
     )
 }
