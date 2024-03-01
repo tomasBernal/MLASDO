@@ -199,7 +199,7 @@ executeGA <- function(
 
       # Return the balanced accuracy of the ranger model
       return(mean(balancedAccValues))
-    }
+
   }
 
 
