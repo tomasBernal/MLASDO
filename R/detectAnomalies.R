@@ -486,11 +486,14 @@ detectAnomalies <- function(
   omicTest[[classVariable]] <- NULL
 
   baselinePrecision <- 0
+  baselinePredictors <- 0
 
   if(mlAlgorithm == "Lasso"){
 
     # This vector will store the balanced means of the numLassoExecutions executions
     balancedAccValues <- vector(length=numLassoExecutions)
+
+    numPredictors <- vector(length = numLassoExecutions)
 
     set.seed(seed)
 
@@ -499,6 +502,10 @@ detectAnomalies <- function(
 
       # Train the Lasso model
       model <- cv.glmnet(as.matrix(omicTrain), as.matrix(omicTrainDiagnosis), alpha = 1, family = "binomial", type.measure = "class", nfolds = 10)
+
+      coeficientes <- coef(model, s = model$lambda.min)
+
+      numPredictors[i] <- length(coeficientes@i)
 
       # Use the model to predict on the test set
       modelPrediction <- predict(model, newx = as.matrix(omicTest), alpha = 1, s = "lambda.min", type = "class")
@@ -517,6 +524,8 @@ detectAnomalies <- function(
 
     # Return the mean of the numLassoExecutions balanced means obtained
     baselinePrecision <- mean(balancedAccValues)
+
+    baselinePredictors <- round(mean(numPredictors))
 
   } else if(mlAlgorithm == "RF"){
 
@@ -579,6 +588,7 @@ detectAnomalies <- function(
     lassoPredictorsPath = lassoPredictorsPath,
     model = model,
     baselinePrecision = baselinePrecision,
+    baselinePredictors = baselinePredictors,
     mlAlgorithm = mlAlgorithm,
     geneticAlgorithm = geneticAlgorithm,
     originalDiagnosis = omicData[[classVariable]],

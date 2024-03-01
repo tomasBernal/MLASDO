@@ -6,6 +6,7 @@
 #' @param lassoPredictorsPath String | Path to the mean number of predictors selected by Lasso in each generation.
 #' @param model ML Model | Best model obtained after the detection.
 #' @param baselinePrecision Decimal | Baseline precision obtained with the model before the detection.
+#' @param baselinePredictors Integer | Baseline predictors selected with the model before the detection.
 #' @param geneticAlgorithm Array of Strings | Genetic algorithm object.
 #' @param originalDiagnosis Array of Strings | Original diagnostics of the patients.
 #' @param clinicData Data | Dataset of clinic data that will be used.
@@ -17,7 +18,7 @@
 #'
 #' @examples
 #'
-#' MLASDO::compileMarkdown(savingName = savingName, mlAlgorithm = mlAlgorithm, lassoPredictorsPath = lassoPredictorsPath, model = model, geneticAlgorithm = geneticAlgorithm, clinicData = clinicData, classVariable = classVariable)
+#' MLASDO::compileMarkdown(savingName = savingName, mlAlgorithm = mlAlgorithm, lassoPredictorsPath = lassoPredictorsPath, model = model, baselinePrecision = baselinePrecision, baselinePredictors = baselinePredictors, geneticAlgorithm = geneticAlgorithm, clinicData = clinicData, classVariable = classVariable)
 #'
 
 compileMarkdown <- function(
@@ -26,6 +27,7 @@ compileMarkdown <- function(
     lassoPredictorsPath,
     model,
     baselinePrecision,
+    baselinePredictors,
     mlAlgorithm,
     geneticAlgorithm,
     originalDiagnosis,
@@ -80,6 +82,7 @@ compileMarkdown <- function(
                                  lassoPredictors = lassoPredictors,
                                  model = model,
                                  baselinePrecision = baselinePrecision,
+                                 baselinePredictors = baselinePredictors,
                                  originalDiagnosis = originalDiagnosis,
                                  mlAlgorithm = mlAlgorithm,
                                  clinicData = clinicData,
