@@ -21,7 +21,7 @@ performPCAAnalysis <- function(
     mlAlgorithm,
     idColumn,
     changedOmicData,
-    selectedData
+    selectedData,
     classVariable,
     savingName
 ){
