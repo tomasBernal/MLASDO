@@ -278,7 +278,7 @@ executeGA <- function(
   # Obtaining the worst and the best model with the final solution
   solutionData <- bitwXor(omicTrainDiagnosis, geneticSolution)
 
-  models <- vector(length = numModelExecutions)
+  models <- vector(mode = "list", length = numModelExecutions)
 
   bestModelIndex <- 1
   worstModelIndex <- 1
@@ -294,8 +294,6 @@ executeGA <- function(
 
       # Train the Lasso model
       model <- cv.glmnet(as.matrix(omicTrain), as.matrix(solutionData), alpha = 1, family = "binomial", type.measure = "class", nfolds = 10)
-
-      models[i] <- model
 
       # Use the model to predict on the test set
       modelPrediction <- predict(model, newx = as.matrix(omicTest), alpha = 1, s = "lambda.min", type = "class")
@@ -317,11 +315,11 @@ executeGA <- function(
         seed = seed
       )
 
-      models[i] <- model
-
       # Use the model to predict on the test set
       modelPrediction <- predict(model, omicTest)$predictions
     }
+
+    models[[i]] <- model
 
     # Get the confusion matrix
     cfModel <- confusionMatrix(as.factor(as.integer(modelPrediction)), as.factor(omicTestDiagnosis))
