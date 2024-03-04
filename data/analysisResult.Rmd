@@ -109,7 +109,7 @@ predictorsPlot <- predictorsPlot %>% layout(shapes = list(hline(predictorsLine))
            text = "Baseline selected predictors")
 ```
 
-```{r}
+```{r, eval = executeLasso}
 predictorsPlot
 ```
 
@@ -194,7 +194,7 @@ pcaLasso <- ggplot(params$pcaAnalysisLasso, aes(PC1, PC2)) +
     ggtitle("PCA Analysis of Changed Diagnostics in Lasso selected predictors")
 ```
 
-```{r}
+```{r, eval = executeLasso}
 pcaLasso
 ```
 

@@ -319,6 +319,7 @@ executeGA <- function(
       modelPrediction <- predict(model, omicTest)$predictions
     }
 
+    models <- c(models, model)
 
     # Get the confusion matrix
     cfModel <- confusionMatrix(as.factor(as.integer(modelPrediction)), as.factor(omicTestDiagnosis))
