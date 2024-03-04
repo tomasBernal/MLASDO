@@ -488,6 +488,8 @@ detectAnomalies <- function(
   baselinePrecision <- 0
   baselinePredictors <- 0
 
+  selectedOmicPredictors <- NULL
+
   if(mlAlgorithm == "Lasso"){
 
     # This vector will store the balanced means of the numModelExecutions executions
