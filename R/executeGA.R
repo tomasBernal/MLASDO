@@ -348,15 +348,12 @@ executeGA <- function(
 
   }
 
-  modelPath <- paste(name, "info.rds", sep="_")
-  saveRDS(info, file = paste(dirPath, modelPath, sep = "/"))
-
   ## Save the best solution of the genetic algorithm
   modelPath <- paste(name, "Best_Model.rds", sep="_")
-  saveRDS(models[bestModelIndex], file = paste(dirPath, modelPath, sep = "/"))
+  saveRDS(models[[bestModelIndex]], file = paste(dirPath, modelPath, sep = "/"))
 
   modelPath <- paste(name, "Worst_Model.rds", sep="_")
-  saveRDS(models[worstModelIndex], file = paste(dirPath, modelPath, sep = "/"))
+  saveRDS(models[[worstModelIndex]], file = paste(dirPath, modelPath, sep = "/"))
 
   postFitness <- function(genome) {
 

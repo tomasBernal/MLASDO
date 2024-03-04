@@ -20,6 +20,8 @@ params:
   numericTable : NULL
   totalTable : NULL
   classVariable: NULL
+  bestModelCM : NULL
+  worstModelCM : NULL
 ---
 
 ```{r setup, include=FALSE}
@@ -60,7 +62,7 @@ lassoText <- paste(paste("Also, the mean number of selected predictors has gone 
 A `r modelName` model has been used to detect anomalous cases. In the anomalous sample detection process, `r numExecutions` iterations have been performed. During this process, the accuracy has gone from `r baselinePrecision` percent to `r maxPrecision` percent.
 `r if(executeLasso){lassoText}`
 
-# Evolution of the `r modelName` model during generations
+# Evolution of the `r modelName` model during the detection
 
 ```{r, include = FALSE}
 algorithmPrecisions <- params$geneticAlgorithm@summary[,1]
@@ -109,13 +111,26 @@ predictorsPlot <- predictorsPlot %>% layout(shapes = list(hline(predictorsLine))
            text = "Baseline selected predictors")
 ```
 
-```{r, eval = executeLasso}
+```{r, include = executeLasso, eval = executeLasso}
 predictorsPlot
 ```
 
 
+# Precision obtained by the `r modelName` model before the detection
 
-# Diagnostics distribution
+```{r, include = FALSE}
+bestCM <- params$bestModelCM
+worstCM <- params$worstModelCM
+```
+
+```{r}
+bestCM
+```
+
+```{r}
+worstCM
+```
+# Diagnostics distribution after and before the detection
 
 ```{r, include = FALSE}
 originalDF <- data.frame(
@@ -194,12 +209,12 @@ pcaLasso <- ggplot(params$pcaAnalysisLasso, aes(PC1, PC2)) +
     ggtitle("PCA Analysis of Changed Diagnostics in Lasso selected predictors")
 ```
 
-```{r, eval = executeLasso}
+```{r, include = executeLasso, eval = executeLasso}
 pcaLasso
 ```
 
 `r if(executeLasso){"# Table of selected predictors in omical data"}`
-```{r, eval = executeLasso}
+```{r, include = executeLasso, eval = executeLasso}
 DT::datatable(params$selectedData, class = 'cell-border stripe', options = list(scrollX = TRUE))
 ```
 

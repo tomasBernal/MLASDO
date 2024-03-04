@@ -12,13 +12,14 @@
 #' @param selectedData Data | Dataset of omic data with only the predictors selected by the Lasso model.
 #' @param classVariable String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.
 #' @param savingName String | Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.
-#'
+#' @param bestModelCM Confusion Matrix | Confusion matrix of the best model obtained before the detection.
+#' @param worstModelCM Confusion Matrix | Confusion matrix of the worst model obtained before the detection.
 #'
 #' @export
 #'
 #' @examples
 #'
-#' MLASDO::compileMarkdown(savingName = savingName, mlAlgorithm = mlAlgorithm, lassoPredictorsPath = lassoPredictorsPath, baselinePrecision = baselinePrecision, baselinePredictors = baselinePredictors, geneticAlgorithm = geneticAlgorithm, clinicData = clinicData, selectedData = selectedData, classVariable = classVariable)
+#' MLASDO::compileMarkdown(savingName = savingName, mlAlgorithm = mlAlgorithm, lassoPredictorsPath = lassoPredictorsPath, baselinePrecision = baselinePrecision, baselinePredictors = baselinePredictors, geneticAlgorithm = geneticAlgorithm, clinicData = clinicData, selectedData = selectedData, classVariable = classVariable, bestModelCM = bestModelCM, worstModelCM = worstModelCM)
 #'
 
 compileMarkdown <- function(
@@ -32,7 +33,9 @@ compileMarkdown <- function(
     originalDiagnosis,
     clinicData,
     selectedData,
-    classVariable
+    classVariable,
+    bestModelCM,
+    worstModelCM
     ){
 
   name <- paste("GA", savingName, sep="_")
@@ -90,7 +93,9 @@ compileMarkdown <- function(
                                  pcaAnalysisLasso = pcaLasso,
                                  numericTable = numeric,
                                  totalTable = total,
-                                 classVariable = classVariable
+                                 classVariable = classVariable,
+                                 bestModelCM = bestModelCM,
+                                 worstModelCM = worstModelCM
                                  ),
                    output_file = outputName,
                    output_dir = outputPath
