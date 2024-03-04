@@ -279,6 +279,7 @@ executeGA <- function(
   solutionData <- bitwXor(omicTrainDiagnosis, geneticSolution)
 
   models <- vector(mode = "list", length = numModelExecutions)
+  info <- vector(length = numModelExecutions)
 
   bestModelIndex <- 1
   worstModelIndex <- 1
@@ -321,6 +322,7 @@ executeGA <- function(
 
     models[[i]] <- model
 
+
     # Get the confusion matrix
     cfModel <- confusionMatrix(as.factor(as.integer(modelPrediction)), as.factor(omicTestDiagnosis))
 
@@ -331,20 +333,21 @@ executeGA <- function(
     # Save the balanced mean obtained in this iteration
     actualBA <- (specificity + sensitivity) / 2
 
-    if(actualBA >= bestModelBA){
+    info[i] <- actualBA
+
+    if(actualBA > bestModelBA){
 
       bestModelBA <- actualBA
       bestModelIndex <- i
     }
 
-    if(actualBA <= worstModelBA){
+    if(actualBA < worstModelBA){
       worstModelBA <- actualBA
       worstModelIndex <- i
     }
 
   }
 
-  info <- c(bestModelBA, bestModelIndex, worstModelBA, worstModelIndex)
   modelPath <- paste(name, "info.rds", sep="_")
   saveRDS(info, file = paste(dirPath, modelPath, sep = "/"))
 
