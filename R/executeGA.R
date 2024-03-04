@@ -319,7 +319,7 @@ executeGA <- function(
       modelPrediction <- predict(model, omicTest)$predictions
     }
 
-    models <- c(models, model)
+    models[i] <- model
 
     # Get the confusion matrix
     cfModel <- confusionMatrix(as.factor(as.integer(modelPrediction)), as.factor(omicTestDiagnosis))
@@ -378,8 +378,6 @@ executeGA <- function(
       coeficientes <- coef(model, s = model$lambda.min)
 
       numPredictors[i] <- length(coeficientes@i)
-
-      models[i] <- model
 
       # Use the model to predict on the test set
       modelPrediction <- predict(model, newx = as.matrix(omicTest), alpha = 1, s = "lambda.min", type = "class")
