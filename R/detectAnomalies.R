@@ -404,7 +404,7 @@ detectAnomalies <- function(
 
     dirPath <- paste(savingName, "geneticAlgorithm", name, sep = "/")
 
-    modelPath <- paste(dirPath, "Model.rds", sep="_")
+    modelPath <- paste(dirPath, "Best_Model.rds", sep="_")
     bestModel <- readRDS(modelPath)
 
     solutionPath <- paste(dirPath, "Solution.rds", sep="_")

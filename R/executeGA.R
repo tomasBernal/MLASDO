@@ -248,8 +248,8 @@ executeGA <- function(
   dirPath <- paste(savingName, "geneticAlgorithm", sep = "/")
 
   name <- paste("GA", savingName, sep="_")
-  modelPath <- paste(name, ".rds", sep="")
-  saveRDS(GA, file = paste(dirPath, modelPath, sep = "/"))
+  gaPath <- paste(name, ".rds", sep="")
+  saveRDS(GA, file = paste(dirPath, gaPath, sep = "/"))
 
   ## Obtain the best solution obtained by the genetic algorithm and its accuracy
   maxValue <- 0
