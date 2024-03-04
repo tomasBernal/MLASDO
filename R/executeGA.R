@@ -331,21 +331,22 @@ executeGA <- function(
     # Save the balanced mean obtained in this iteration
     actualBA <- (specificity + sensitivity) / 2
 
-    if(actualBA > bestModelBA){
+    if(actualBA >= bestModelBA){
 
       bestModelBA <- actualBA
       bestModelIndex <- i
     }
 
-    if(actualBA < worstModelBA){
+    if(actualBA <= worstModelBA){
       worstModelBA <- actualBA
       worstModelIndex <- i
     }
 
   }
 
-  modelPath <- paste(name, "Models.rds", sep="_")
-  saveRDS(models, file = paste(dirPath, modelPath, sep = "/"))
+  info <- c(bestModelBA, bestModelIndex, worstModelBA, worstModelIndex)
+  modelPath <- paste(name, "info.rds", sep="_")
+  saveRDS(info, file = paste(dirPath, modelPath, sep = "/"))
 
   ## Save the best solution of the genetic algorithm
   modelPath <- paste(name, "Best_Model.rds", sep="_")
