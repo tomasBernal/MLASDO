@@ -35,6 +35,7 @@ compileMarkdown <- function(
     clinicData,
     selectedData,
     classVariable,
+    numModelExecutions,
     bestModelCM,
     worstModelCM
     ){
