@@ -220,7 +220,7 @@ pcaSelected
 ```
 
 # Table of selected predictors in omical data
-```{r, include = executeLasso, eval = executeLasso}
+```{r}
 DT::datatable(params$selectedData, class = 'cell-border stripe', options = list(scrollX = TRUE))
 ```
 
