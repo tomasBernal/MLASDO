@@ -57,9 +57,14 @@ precisionLine <- round(params$baselinePrecision * 100, 0)
 predictorsLine <- params$baselinePredictors
 
 lassoText <- paste(paste("Also, the mean number of selected predictors has gone from", predictorsLine, "to", tail(params$lassoPredictors, n=1),  sep = " "), ".", sep = "")
+
+bestCM <- params$bestModelCM
+worstCM <- params$worstModelCM
 ```
 
-A `r modelName` model has been used to detect anomalous cases. In the anomalous sample detection process, `r numExecutions` iterations have been performed. During this process, the accuracy has gone from `r baselinePrecision` percent to `r maxPrecision` percent.
+A `r modelName` model has been used to detect anomalous cases. 
+
+In the anomalous sample detection process, `r numExecutions` iterations have been performed. During this process, the accuracy has gone from `r baselinePrecision` percent to `r maxPrecision` percent.
 `r if(executeLasso){lassoText}`
 
 # Evolution of the `r modelName` model during the detection
@@ -92,7 +97,7 @@ precisionPlot <- precisionPlot %>%  layout(title = "Evolution of the accuracy ob
 
 precisionPlot <- precisionPlot %>% layout(shapes = list(hline(precisionLine))) %>%
   add_annotations(x = length(algorithmPrecisions) - 3, y = precisionLine + 1, showarrow = F,
-           text = "Baseline precision")
+           text = paste("Baseline precision: ", precisionLine, "%", sep = ""))
 ```
 
 ```{r}
@@ -104,11 +109,11 @@ predictorsDF <- data.frame(generation = 1:length(params$lassoPredictors), predic
   
 predictorsPlot <- plot_ly(predictorsDF, x=~generation, y=~predictors, hoveron = "points", hoverinfo = "text", text = paste("Mean number of predictors selected: ", round(predictorsDF$predictors, 2), "<br>Generation: ", precisionDF$generation, sep = ""), type = 'scatter', mode = 'lines+markers', name ="Number of predictors", color = I("#FF7256"))
   
-predictorsPlot <- predictorsPlot %>%  layout(title = "Evolution of the number of predictors selected during generations", xaxis = list(title = "Actual generation <br>"), yaxis = list(title = "Number of predictors <br> <br> <br>", range = c(min(params$lassoPredictors) - 5, max(params$lassoPredictors) + 5), xaxis = list(range = c(0, max(predictorsDF$generation)))))
+predictorsPlot <- predictorsPlot %>%  layout(title = "Evolution of the number of predictors selected during generations", xaxis = list(title = "Actual generation <br>"), yaxis = list(title = "Number of predictors <br> <br> <br>", range = c(min(c(predictorsLine, min(params$lassoPredictors))) - 5, max(c(predictorsLine, max(params$lassoPredictors))) + 5), xaxis = list(range = c(0, max(predictorsDF$generation)))))
 
 predictorsPlot <- predictorsPlot %>% layout(shapes = list(hline(predictorsLine))) %>%
-  add_annotations(x = length(algorithmPrecisions) - 3, y = predictorsLine + 1, showarrow = F,
-           text = "Baseline selected predictors")
+  add_annotations(x = length(algorithmPrecisions) - 3, y = predictorsLine + 0.5, showarrow = F,
+           text = paste("Baseline selected predictors: ", predictorsLine, sep = ""))
 ```
 
 ```{r, include = executeLasso, eval = executeLasso}
@@ -117,11 +122,6 @@ predictorsPlot
 
 
 # Precision obtained by the `r modelName` model before the detection
-
-```{r, include = FALSE}
-bestCM <- params$bestModelCM
-worstCM <- params$worstModelCM
-```
 
 ```{r}
 bestCM
