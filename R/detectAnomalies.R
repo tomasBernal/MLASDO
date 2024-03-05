@@ -18,7 +18,7 @@
 #'
 #' @param mlAlgorithm String | Machine Learning algorithm to be applied, the options are: Lasso or RF (Random Forest).
 #'
-#' @param predictorsToSelect Decimal | Percentage of predictor to be selected from the most important predictors ranked by the RF model. This parameter is a decimal number between 0 and 1, representing the percentage over the total number of predictors. Default value: 0.2.
+#' @param predictorsToSelect Integer | Number of predictors to be selected from the most important predictors ranked by the RF model. This parameter is a integer number between 1 and the total number of predictors in the data. Default value: 15.
 #' @param numModelExecutions Integer | Number of times the Lasso algorithm is executed. Default value: 5.
 #' @param numTrees Integer | Number of trees of the Random Forest model. Default value: 100.
 #' @param mtry Integer | Number of predictors that are evaluated at each partition (node) of each tree. Default value: 225.
@@ -73,7 +73,7 @@ detectAnomalies <- function(
     worstModelPath = "",
     lassoPredictorsPath = "",
     mlAlgorithm,
-    predictorsToSelect = 0.2,
+    predictorsToSelect = 15,
     numModelExecutions = 5,
     numTrees = 100,
     mtry = 225,
@@ -234,6 +234,10 @@ detectAnomalies <- function(
 
   if(!identical(omicIds, clinicIDs)){
     return("The IDs of the patients don't match in both datasets")
+  }
+
+  if(predictorsToSelect == 0 | predictorsToSelect > ncol(omicData)){
+    return("The number of predictors to select must be a number between 1 and the total number of predictors")
   }
 
   # First, check if the selected variable as a predictor is included in the variables to be studied
@@ -597,8 +601,8 @@ detectAnomalies <- function(
     # Ordenamos las variables por importancia
     selectedData <- selectedData[order(-selectedData$Importance), ]
 
-    # Obtenemos las primeras predictorsToSelect % variables más importantes
-    selectedData <- head(selectedData, ncol(omicTrain) * predictorsToSelect)
+    # Obtenemos las primeras predictorsToSelect variables más importantes
+    selectedData <- head(selectedData, predictorsToSelect)
 
     selectedOmicPredictors <- omic[, selectedData$Variable]
 
