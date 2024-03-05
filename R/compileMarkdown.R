@@ -12,6 +12,7 @@
 #' @param selectedData Data | Dataset of omic data with only the predictors selected by the Lasso model.
 #' @param classVariable String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.
 #' @param savingName String | Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.
+#' @param numModelExecutions Integer | Number of times the Lasso algorithm is executed. Default value: 5.
 #' @param bestModelCM Confusion Matrix | Confusion matrix of the best model obtained before the detection.
 #' @param worstModelCM Confusion Matrix | Confusion matrix of the worst model obtained before the detection.
 #'
@@ -45,13 +46,8 @@ compileMarkdown <- function(
   pcaPath <- paste(dirPath, "PCA.tsv", sep="_")
   pca <- read.table(pcaPath, header = TRUE, sep = "\t", row.names = 1)
 
-  pcaLasso <- NULL
-
-  if(mlAlgorithm == "Lasso"){
-
-    pcaPath <- paste(dirPath, "PCA_Lasso.tsv", sep="_")
-    pcaLasso <- read.table(pcaPath, header = TRUE, sep = "\t", row.names = 1)
-  }
+  pcaPath <- paste(dirPath, "PCA_Selected.tsv", sep="_")
+  pcaSelected <- read.table(pcaPath, header = TRUE, sep = "\t", row.names = 1)
 
   gaPathNumeric <- paste(dirPath, "NumericTable.tsv", sep="_")
   gaPathTotal <- paste(dirPath, "TotalTable.tsv", sep="_")
@@ -90,10 +86,11 @@ compileMarkdown <- function(
                                  clinicData = clinicData,
                                  selectedData = selectedData,
                                  pcaAnalysis = pca,
-                                 pcaAnalysisLasso = pcaLasso,
+                                 pcaAnalysisSelected = pcaSelected,
                                  numericTable = numeric,
                                  totalTable = total,
                                  classVariable = classVariable,
+                                 numModelExecutions = numModelExecutions,
                                  bestModelCM = bestModelCM,
                                  worstModelCM = worstModelCM
                                  ),

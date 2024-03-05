@@ -18,6 +18,7 @@
 #'
 #' @param mlAlgorithm String | Machine Learning algorithm to be applied, the options are: Lasso or RF (Random Forest).
 #'
+#' @param predictorsToSelect Decimal | Percentage of predictor to be selected from the most important predictors ranked by the RF model. This parameter is a decimal number between 0 and 1, representing the percentage over the total number of predictors. Default value: 0.2.
 #' @param numModelExecutions Integer | Number of times the Lasso algorithm is executed. Default value: 5.
 #' @param numTrees Integer | Number of trees of the Random Forest model. Default value: 100.
 #' @param mtry Integer | Number of predictors that are evaluated at each partition (node) of each tree. Default value: 225.
@@ -60,7 +61,7 @@
 #'
 #' MLASDO::detectAnomalies(savingName = "QuickExecution", mlAlgorithm = "Lasso", nIterations = 3, nStopIter = 2, populationSize = 20, activePredictors = c("sex", "age", "Mutation", "Ethnicity"))
 #'
-#' MLASDO::detectAnomalies(savingName = "ExecutionWithOwnData", mlAlgorithm = "RF", omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv", idColumn = "Patient.Id", nIterations = 3, populationSize = 10, classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"))
+#' MLASDO::detectAnomalies(savingName = "ExecutionWithOwnData", mlAlgorithm = "RF", predictorsToSelect = 0.3, omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv", idColumn = "Patient.Id", nIterations = 3, populationSize = 10, classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"))
 #'
 #' MLASDO::detectAnomalies(justAnalysis = TRUE, mlAlgorithm = "Lasso", geneticPath = "GA.rds", solutionPath = "GA_solution.rds", bestModelPath = "GA_Best_Model.rds", worstModelPath = "GA_Worst_Model.rds", lassoPredictorsPath = "GA_Lasso_Predictors.rds", savingName = "ExecutionWithOwnData", omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv",idColumn = "Patient.Id",classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"))
 
@@ -72,6 +73,7 @@ detectAnomalies <- function(
     worstModelPath = "",
     lassoPredictorsPath = "",
     mlAlgorithm,
+    predictorsToSelect = 0.2,
     numModelExecutions = 5,
     numTrees = 100,
     mtry = 225,
@@ -585,6 +587,29 @@ detectAnomalies <- function(
     # Return the balanced accuracy of the ranger model
     baselinePrecision <- ((specificity + sensitivity) / 2)
 
+
+    # Obtenemos las variables junto a su importancia
+    impVariables <- bestModel$variable.importance
+
+    # Creamos un dataframe con el nombre de las variables y su importancia
+    selectedData <- data.frame(Variable = names(impVariables), Importance = as.numeric(impVariables))
+
+    # Ordenamos las variables por importancia
+    selectedData <- selectedData[order(-selectedData$Importance), ]
+
+    # Obtenemos las primeras predictorsToSelect % variables más importantes
+    selectedData <- head(selectedData, ncol(omicTrain) * predictorsToSelect)
+
+    selectedOmicPredictors <- omic[, selectedData$Variable]
+
+    name <- paste("GA", savingName, sep="_")
+    dirPath <- paste(savingName, "analysisData", name, sep = "/")
+
+    # Save the selected data
+    selectedDataPath <- paste(dirPath, "Selected_Predictors.tsv", sep="_")
+
+    write.table(selectedOmicPredictors, selectedDataPath, row.names = T, col.names = T, sep =  '\t')
+
   }
 
   print("Performing PCA analysis")
@@ -645,6 +670,7 @@ detectAnomalies <- function(
     clinicData = changedClinicData,
     selectedData = selectedOmicPredictors,
     classVariable = classVariable,
+    numModelExecutions = numModelExecutions,
     bestModelCM = bestCM,
     worstModelCM = worstCM
     )
