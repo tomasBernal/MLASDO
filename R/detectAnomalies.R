@@ -377,6 +377,7 @@ detectAnomalies <- function(
     MLASDO::executeGA(
       mlAlgorithm = mlAlgorithm,
       numModelExecutions = numModelExecutions,
+      predictorsToSelect = predictorsToSelect,
       numTrees = numTrees,
       mtry = mtry,
       splitrule = splitrule,
