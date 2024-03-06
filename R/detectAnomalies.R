@@ -354,7 +354,6 @@ detectAnomalies <- function(
 
 
   #### DATA PROCESSING ####
-
   omicData <- omicData[,!(names(omicData) %in% activePredictors)]
 
   omicsFiltered <- omicData[,!(names(omicData) %in% classVariable)]
@@ -367,7 +366,8 @@ detectAnomalies <- function(
   dir.create(paste(savingName, "analysisData", sep = "/"))
 
   set.seed(seed)
-  subsetTrain <- sample(1:nrow(omicData), nrow(omicData) * partitionPercentage)
+
+  subsetTrain <- createDataPartition(y = omicData[[classVariable]], p = partitionPercentage, list = FALSE)[,1]
 
   if(!justAnalysis){
 
@@ -544,6 +544,7 @@ detectAnomalies <- function(
     baselinePrecision <- mean(balancedAccValues)
 
     baselinePredictors <- round(mean(numPredictors))
+
 
     # Obtaining the selected predictors of the best model
     coeficients <- coef(bestModel, s = bestModel$lambda.min)

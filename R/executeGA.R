@@ -46,6 +46,8 @@
 #' @param mlAlgorithm String | Machine Learning algorithm to be applied, the options are: Lasso or RF (Random Forest). Default value: RF.
 #'
 #' @param numModelExecutions Integer | Number of times the Lasso algorithm is executed. Default value: 5.
+#'
+#' @param predictorsToSelect Integer | Number of predictors to be selected from the most important predictors ranked by the RF model. This parameter is a integer number between 1 and the total number of predictors in the data. Default value: 15.
 #' @param numTrees Integer | Number of trees of the Random Forest model. Default value: 100.
 #' @param mtry Integer | Number of predictors that are evaluated at each partition (node) of each tree. Default value: 225.
 #' @param splitrule String | This is the rule used by the algorithm to select the predictor and the optimal value to separate a node into two branches during the tree construction. Default value: gini.
@@ -82,6 +84,7 @@
 executeGA <- function(
                       mlAlgorithm,
                       numModelExecutions,
+                      predictorsToSelect,
                       numTrees,
                       mtry,
                       splitrule,
@@ -279,7 +282,8 @@ executeGA <- function(
   solutionData <- bitwXor(omicTrainDiagnosis, geneticSolution)
 
   models <- vector(mode = "list", length = numModelExecutions)
-  info <- vector(length = numModelExecutions)
+
+  predictorsInfo <- vector(mode = "list", length = numModelExecutions)
 
   bestModelIndex <- 1
   worstModelIndex <- 1
@@ -298,6 +302,8 @@ executeGA <- function(
 
       # Use the model to predict on the test set
       modelPrediction <- predict(model, newx = as.matrix(omicTest), alpha = 1, s = "lambda.min", type = "class")
+
+      predInfo <- coef(model, s = model$lambda.min)
 
     } else if(mlAlgorithm == "RF"){
 
@@ -318,10 +324,13 @@ executeGA <- function(
 
       # Use the model to predict on the test set
       modelPrediction <- predict(model, omicTest)$predictions
+
+      predInfo <- model$variable.importance
     }
 
-    models[[i]] <- model
+    predictorsInfo[[i]] <- predInfo
 
+    models[[i]] <- model
 
     # Get the confusion matrix
     cfModel <- confusionMatrix(as.factor(as.integer(modelPrediction)), as.factor(omicTestDiagnosis))
@@ -332,8 +341,6 @@ executeGA <- function(
 
     # Save the balanced mean obtained in this iteration
     actualBA <- (specificity + sensitivity) / 2
-
-    info[i] <- actualBA
 
     if(actualBA > bestModelBA){
 
@@ -348,12 +355,61 @@ executeGA <- function(
 
   }
 
+
+  predictorsDF <- data.frame(
+    numAparitions = rep(0, numModelExecutions),
+    meanValue = rep(0, numModelExecutions),
+    name = rep("", numModelExecutions)
+  )
+
+  if(mlAlgorithm == "Lasso"){
+
+    for (i in 1:numModelExecutions) {
+
+      predInfo <- predictorsInfo[[i]]
+
+      indexes <- predInfo@i
+
+      invalidPreds <- which(indexes == 0)
+
+      indexes <- indexes[-invalidPreds]
+
+      names <- names(omicTest[[indexes]])
+
+      modelPath <- paste(name, i, "info.rds", sep="_")
+      saveRDS(names, file = paste(dirPath, modelPath, sep = "/"))
+    }
+
+  } else if (mlalgorithm == "RF"){
+
+    for (i in 1:numModelExecutions) {
+
+      predInfo <- predictorsInfo[[i]]
+
+      selectedData <- data.frame(Variable = names(predInfo), Importance = as.numeric(predInfo))
+
+      # Ordenamos las variables por importancia
+      selectedData <- selectedData[order(-selectedData$Importance), ]
+
+      # Obtenemos las primeras predictorsToSelect variables más importantes
+      selectedData <- head(selectedData, predictorsToSelect)
+
+      modelPath <- paste(name, i, "info.rds", sep="_")
+      saveRDS(selectedData, file = paste(dirPath, modelPath, sep = "/"))
+
+    }
+
+  }
+
+
   ## Save the best solution of the genetic algorithm
   modelPath <- paste(name, "Best_Model.rds", sep="_")
   saveRDS(models[[bestModelIndex]], file = paste(dirPath, modelPath, sep = "/"))
 
   modelPath <- paste(name, "Worst_Model.rds", sep="_")
   saveRDS(models[[worstModelIndex]], file = paste(dirPath, modelPath, sep = "/"))
+
+
 
   postFitness <- function(genome) {
 
@@ -401,7 +457,6 @@ executeGA <- function(
     # Return the mean of the numModelExecutions balanced means obtained
     return(c(mean(balancedAccValues), round(mean(numPredictors))))
   }
-
 
   if(mlAlgorithm == "Lasso"){
 
