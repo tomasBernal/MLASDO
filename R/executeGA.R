@@ -380,7 +380,7 @@ executeGA <- function(
       saveRDS(names, file = paste(dirPath, modelPath, sep = "/"))
     }
 
-  } else if (mlalgorithm == "RF"){
+  } else if (mlAlgorithm == "RF"){
 
     for (i in 1:numModelExecutions) {
 
