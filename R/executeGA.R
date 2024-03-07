@@ -433,7 +433,13 @@ executeGA <- function(
 
   print(modelCols)
 
-  predictorsInfo$meanImportance <- rowMeans(subset(predictorsInfo, select = modelCols), na.rm = TRUE)
+  write.table(predictorsInfo, paste(dirPath, predictorsImportancePath, sep = "/"), row.names = T, col.names = T, sep =  '\t')
+
+  mean <- rowMeans(subset(predictorsInfo, select = modelCols), na.rm = TRUE)
+
+  print(mean)
+
+  predictorsInfo$meanImportance <- mean
 
   predictorsImportancePath <- paste(name, "Predictors_Importance.tsv", sep="_")
 
