@@ -354,10 +354,9 @@ executeGA <- function(
       # Use the model to predict on the test set
       modelPrediction <- predict(model, omicTest)$predictions
 
-      predInfo <- model$variable.importance
+      varImportance <- model$variable.importance
 
-      modelPath <- paste(name, "info.rds", sep="_")
-      saveRDS(predInfo, file = paste(dirPath, modelPath, sep = "/"))
+      predInfo <- data.frame(Variable = names(varImportance), Importance = as.numeric(varImportance))
 
       for(i in 1:predictorsToSelect){
 
