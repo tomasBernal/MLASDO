@@ -433,7 +433,7 @@ executeGA <- function(
 
   predictorsImportancePath <- paste(name, "Predictors_Importance.tsv", sep="_")
 
-  write.table(predictorsInfo, predictorsImportancePath, row.names = T, col.names = T, sep =  '\t')
+  write.table(predictorsInfo, paste(dirPath, predictorsImportancePath, sep = "/"), row.names = T, col.names = T, sep =  '\t')
 
   postFitness <- function(genome) {
 
