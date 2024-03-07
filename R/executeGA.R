@@ -438,7 +438,7 @@ executeGA <- function(
   print(modelCols)
   print(unname(rowMeans(predictorsInfo[, modelCols])))
 
-  predictorsInfo$meanImportance <- unname(rowMeans(predictorsInfo[, modelCols]))
+  predictorsInfo$meanImportance <- unlist(unname(rowMeans(predictorsInfo[, modelCols])))
 
   predictorsImportancePath <- paste(name, "Predictors_Importance.tsv", sep="_")
 
