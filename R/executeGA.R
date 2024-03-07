@@ -364,7 +364,7 @@ executeGA <- function(
 
       predInfo <- predInfo[order(predInfo$Importance), ]
 
-      for(i in 1:length(predInfo)){
+      for(i in 1:predictorsToSelect){
 
         if (exists(predInfo$Variable[[i]], where = predictorsInfo)) {
 

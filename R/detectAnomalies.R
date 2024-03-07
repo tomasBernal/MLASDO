@@ -552,7 +552,7 @@ detectAnomalies <- function(
 
     selected <- colnames(changedOmicData[, coeficients@i])
 
-    selectedOmicPredictors <- omic[, selected]
+    selectedOmicPredictors <- omic[, c(selected, classVariable)]
 
     name <- paste("GA", savingName, sep="_")
     dirPath <- paste(savingName, "analysisData", name, sep = "/")
@@ -606,7 +606,7 @@ detectAnomalies <- function(
     # Obtenemos las primeras predictorsToSelect variables más importantes
     selectedData <- head(selectedData, predictorsToSelect)
 
-    selectedOmicPredictors <- omic[, selectedData$Variable]
+    selectedOmicPredictors <- omic[, c(selectedData$Variable, classVariable)]
 
     name <- paste("GA", savingName, sep="_")
     dirPath <- paste(savingName, "analysisData", name, sep = "/")
