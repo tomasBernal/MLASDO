@@ -283,13 +283,14 @@ executeGA <- function(
 
   models <- vector(mode = "list", length = numModelExecutions)
 
-  predictorsInfo <- vector(mode = "list", length = numModelExecutions)
+  predictorsInfo <- list()
 
   bestModelIndex <- 1
   worstModelIndex <- 1
 
   bestModelBA <- 0
   worstModelBA <- 1
+
 
   for (i in 1:numModelExecutions) {
 
@@ -304,6 +305,34 @@ executeGA <- function(
       modelPrediction <- predict(model, newx = as.matrix(omicTest), alpha = 1, s = "lambda.min", type = "class")
 
       predInfo <- coef(model, s = model$lambda.min)
+
+      indexes <- predInfo@i
+
+      posZero <- which(indexes == 0)
+
+      indexes <- indexes[-posZero]
+
+      for(i in 1:length(indexes)){
+
+        predName <- names(omicTrain)[[indexes[[i]]]]
+
+        predImp <- predInfo@x[[i]]
+
+        if (exists(predName, where = predictorsInfo)) {
+
+          actualAparitions <- predictorsInfo[[predName]][1]
+
+          importance <- predictorsInfo[[predName]][2:length(predictorsInfo[[predName]])]
+
+          predictorsInfo[[predName]] <- c(actualAparitions + 1, importance, predImp)
+
+        } else {
+
+          predictorsInfo[[predName]] <- c(1, predImp)
+
+        }
+
+      }
 
     } else if(mlAlgorithm == "RF"){
 
@@ -326,9 +355,24 @@ executeGA <- function(
       modelPrediction <- predict(model, omicTest)$predictions
 
       predInfo <- model$variable.importance
-    }
 
-    predictorsInfo[[i]] <- predInfo
+      for(i in 1:predictorsToSelect){
+
+        if (exists(predInfo$Variable[[i]], where = predictorsInfo)) {
+
+          actualAparitions <- predictorsInfo[[predInfo$Variable[[i]]]][1]
+
+          importance <- predictorsInfo[[predInfo$Variable[[i]]]][2:length(predictorsInfo[[predInfo$Variable[[i]]]])]
+
+          predictorsInfo[[predInfo$Variable[[i]]]] <- c(actualAparitions + 1, importance, predInfo$Importance[[i]])
+
+        } else {
+
+          predictorsInfo[[predInfo$Variable[[i]]]] <- c(1, predInfo$Importance[[i]])
+
+        }
+      }
+    }
 
     models[[i]] <- model
 
@@ -356,52 +400,6 @@ executeGA <- function(
   }
 
 
-  predictorsDF <- data.frame(
-    numAparitions = rep(0, numModelExecutions),
-    meanValue = rep(0, numModelExecutions),
-    name = rep("", numModelExecutions)
-  )
-
-  if(mlAlgorithm == "Lasso"){
-
-    for (i in 1:numModelExecutions) {
-
-      predInfo <- predictorsInfo[[i]]
-
-      indexes <- predInfo@i
-
-      invalidPreds <- which(indexes == 0)
-
-      indexes <- indexes[-invalidPreds]
-
-      names <- names(omicTest[[indexes]])
-
-      modelPath <- paste(name, i, "info.rds", sep="_")
-      saveRDS(names, file = paste(dirPath, modelPath, sep = "/"))
-    }
-
-  } else if (mlAlgorithm == "RF"){
-
-    for (i in 1:numModelExecutions) {
-
-      predInfo <- predictorsInfo[[i]]
-
-      selectedData <- data.frame(Variable = names(predInfo), Importance = as.numeric(predInfo))
-
-      # Ordenamos las variables por importancia
-      selectedData <- selectedData[order(-selectedData$Importance), ]
-
-      # Obtenemos las primeras predictorsToSelect variables más importantes
-      selectedData <- head(selectedData, predictorsToSelect)
-
-      modelPath <- paste(name, i, "info.rds", sep="_")
-      saveRDS(selectedData, file = paste(dirPath, modelPath, sep = "/"))
-
-    }
-
-  }
-
-
   ## Save the best solution of the genetic algorithm
   modelPath <- paste(name, "Best_Model.rds", sep="_")
   saveRDS(models[[bestModelIndex]], file = paste(dirPath, modelPath, sep = "/"))
@@ -409,7 +407,8 @@ executeGA <- function(
   modelPath <- paste(name, "Worst_Model.rds", sep="_")
   saveRDS(models[[worstModelIndex]], file = paste(dirPath, modelPath, sep = "/"))
 
-
+  predictorsImportancePath <- paste(name, "Predictors_Importance.rds", sep="_")
+  saveRDS(predictorsInfo, file = paste(dirPath, predictorsImportancePath, sep = "/"))
 
   postFitness <- function(genome) {
 
