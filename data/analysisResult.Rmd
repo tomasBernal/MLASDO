@@ -23,6 +23,7 @@ params:
   numModelExecutions : NULL
   bestModelCM : NULL
   worstModelCM : NULL
+  predictorsImp : NULL
 ---
 
 ```{r setup, include=FALSE}
@@ -219,7 +220,12 @@ pcaSelected <- ggplot(params$pcaAnalysisSelected, aes(PC1, PC2)) +
 pcaSelected
 ```
 
-# Table of selected predictors in omical data
+# Table with information about the selected predictors
+```{r}
+DT::datatable(params$predictorsImp, class = 'cell-border stripe', options = list(scrollX = TRUE))
+```
+
+# Omical data with only the selected predictors
 ```{r}
 DT::datatable(params$selectedData, class = 'cell-border stripe', options = list(scrollX = TRUE))
 ```

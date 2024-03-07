@@ -63,7 +63,7 @@ compileMarkdown <- function(
 
   dirPath <- paste(savingName, "geneticAlgorithm", name, sep = "/")
 
-  impPath <- paste(dirPath, "Predictors_Importance.rds", sep="_")
+  impPath <- paste(dirPath, "Predictors_Importance.tsv", sep="_")
   predictorsImp <- read.table(impPath, header = TRUE, sep = "\t", row.names = 1)
 
   lassoPredictors <- NULL

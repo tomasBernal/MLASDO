@@ -431,7 +431,7 @@ executeGA <- function(
 
   colnames(predictorsInfo) <- newColnames
 
-  predictorsImportancePath <- paste(name, "Predictors_Importance.rds", sep="_")
+  predictorsImportancePath <- paste(name, "Predictors_Importance.tsv", sep="_")
 
   write.table(predictorsInfo, predictorsImportancePath, row.names = T, col.names = T, sep =  '\t')
 
