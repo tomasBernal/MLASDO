@@ -60,6 +60,12 @@ compileMarkdown <- function(
 
   outputPath <- paste("./", savingName, "/", sep = "")
 
+
+  dirPath <- paste(savingName, "geneticAlgorithm", name, sep = "/")
+
+  impPath <- paste(dirPath, "Predictors_Importance.rds", sep="_")
+  predictorsImp <- read.table(impPath, header = TRUE, sep = "\t", row.names = 1)
+
   lassoPredictors <- NULL
 
   if(mlAlgorithm == "Lasso"){
@@ -70,7 +76,6 @@ compileMarkdown <- function(
 
     } else {
 
-      dirPath <- paste(savingName, "geneticAlgorithm", name, sep = "/")
       gaPath <- paste(dirPath, "Predictors.rds", sep="_")
       lassoPredictors <- readRDS(gaPath)
     }
@@ -93,7 +98,8 @@ compileMarkdown <- function(
                                  classVariable = classVariable,
                                  numModelExecutions = numModelExecutions,
                                  bestModelCM = bestModelCM,
-                                 worstModelCM = worstModelCM
+                                 worstModelCM = worstModelCM,
+                                 predictorsImp = predictorsImp
                                  ),
                    output_file = outputName,
                    output_dir = outputPath

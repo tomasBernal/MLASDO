@@ -415,8 +415,25 @@ executeGA <- function(
   modelPath <- paste(name, "Worst_Model.rds", sep="_")
   saveRDS(models[[worstModelIndex]], file = paste(dirPath, modelPath, sep = "/"))
 
+
+  predictorsInfo <- as.data.frame(predictorsInfo)
+
+  modelCols <- vector("character", numModelExecutions)
+
+  for(i in 1:numModelExecutions){
+
+    modelCols[[i]] <- paste("model", i, sep = "_")
+  }
+
+  newColnames <- c("numAparitions", modelCols)
+
+  predictorsInfo <- t(predictorsInfo)
+
+  colnames(predictorsInfo) <- newColnames
+
   predictorsImportancePath <- paste(name, "Predictors_Importance.rds", sep="_")
-  saveRDS(predictorsInfo, file = paste(dirPath, predictorsImportancePath, sep = "/"))
+
+  write.table(predictorsInfo, predictorsImportancePath, row.names = T, col.names = T, sep =  '\t')
 
   postFitness <- function(genome) {
 
