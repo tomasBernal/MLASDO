@@ -431,20 +431,11 @@ executeGA <- function(
 
   colnames(predictorsInfo) <- newColnames
 
-  meanImportance <- vector(mode = "list", length = nrow(predictorsInfo))
-
-  for(i in 1:nrow(predictorsInfo)){
-
-    meanImportance[[i]] <- mean(predictorsInfo[i, 2:ncol(predictorsInfo)])
-  }
-
   predictorsImportancePath <- paste(name, "Predictors_Importance_a.tsv", sep="_")
 
   write.table(predictorsInfo, paste(dirPath, predictorsImportancePath, sep = "/"), row.names = T, col.names = T, sep =  '\t')
 
-  print(unlist(meanImportance))
-
-  predictorsInfo$meanImportance <- unlist(meanImportance)
+  predictorsInfo$meanImportance <- unname(rowMeans(imp[, modelCols]))
 
   predictorsImportancePath <- paste(name, "Predictors_Importance.tsv", sep="_")
 
