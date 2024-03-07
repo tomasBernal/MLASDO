@@ -433,9 +433,7 @@ executeGA <- function(
 
   print(modelCols)
 
-  mean <- rowMeans(abs(predictorsInfo[, c("model_1", "model_2")]))
-
-  predictorsInfo$meanImportance <- mean
+  predictorsInfo$meanImportance <- rowMeans(subset(predictorsInfo, select = modelCols), na.rm = TRUE)
 
   predictorsImportancePath <- paste(name, "Predictors_Importance.tsv", sep="_")
 
