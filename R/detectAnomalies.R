@@ -522,9 +522,9 @@ detectAnomalies <- function(
       # Train the Lasso model
       model <- cv.glmnet(as.matrix(omicTrain), as.matrix(omicTrainDiagnosis), alpha = 1, family = "binomial", type.measure = "class", nfolds = 10)
 
-      coeficientes <- coef(model, s = model$lambda.min)
+      coefficients <- coef(model, s = model$lambda.min)
 
-      numPredictors[i] <- length(coeficientes@i)
+      numPredictors[i] <- length(coefficients@i)
 
       # Use the model to predict on the test set
       modelPrediction <- predict(model, newx = as.matrix(omicTest), alpha = 1, s = "lambda.min", type = "class")
@@ -541,82 +541,64 @@ detectAnomalies <- function(
 
     }
 
-    # Return the mean of the numModelExecutions balanced means obtained
     baselinePrecision <- mean(balancedAccValues)
 
     baselinePredictors <- round(mean(numPredictors))
 
-
-    # Obtaining the selected predictors of the best model
-    coeficients <- coef(bestModel, s = bestModel$lambda.min)
-
-    selected <- colnames(changedOmicData[, coeficients@i])
-
-    selectedOmicPredictors <- omic[, c(selected, classVariable)]
-
-    name <- paste("GA", savingName, sep="_")
-    dirPath <- paste(savingName, "analysisData", name, sep = "/")
-
-    # Save the selected data
-    selectedDataPath <- paste(dirPath, "Selected_Predictors.tsv", sep="_")
-
-    write.table(selectedOmicPredictors, selectedDataPath, row.names = T, col.names = T, sep =  '\t')
-
   } else if(mlAlgorithm == "RF"){
 
-    # Creating the ranger model
-    model <- ranger(
-      x = omicTrain,
-      y = omicTrainDiagnosis,
-      num.trees = numTrees,
-      mtry = mtry,
-      splitrule = splitrule,
-      importance = "impurity", # In order to obtain the important variables in the prediction
-      sample.fraction = sampleFraction,
-      max.depth = maxDepth,
-      min.node.size = minNodeSize,
-      classification = TRUE,
-      seed = seed
-    )
+    # This vector will store the balanced means of the numModelExecutions executions
+    balancedAccValues <- vector(length=numModelExecutions)
 
-    # Use the model to predict on the test set
-    modelPrediction <- predict(model, omicTest)$predictions
+    # Train the Lasso model numModelExecutions times
+    for (i in 1:numModelExecutions) {
 
-    # Get the confusion matrix
-    cfModel <-
-      confusionMatrix(as.factor(as.integer(modelPrediction)), as.factor(omicTestDiagnosis))
+      # Creating the ranger model
+      model <- ranger(
+        x = omicTrain,
+        y = omicTrainDiagnosis,
+        num.trees = numTrees,
+        mtry = mtry,
+        splitrule = splitrule,
+        importance = "impurity", # In order to obtain the important variables in the prediction
+        sample.fraction = sampleFraction,
+        max.depth = maxDepth,
+        min.node.size = minNodeSize,
+        classification = TRUE,
+        seed = seed
+      )
 
-    specificity <- ifelse(is.na(as.numeric(cfModel$byClass["Specificity"])), 0,  as.numeric(cfModel$byClass["Specificity"]))
+      # Use the model to predict on the test set
+      modelPrediction <- predict(model, omicTest)$predictions
 
-    sensitivity <- ifelse(is.na(as.numeric(cfModel$byClass["Sensitivity"])), 0,  as.numeric(cfModel$byClass["Sensitivity"]))
+      # Get the confusion matrix
+      cfModel <-
+        confusionMatrix(as.factor(as.integer(modelPrediction)), as.factor(omicTestDiagnosis))
 
-    # Return the balanced accuracy of the ranger model
-    baselinePrecision <- ((specificity + sensitivity) / 2)
+      specificity <- ifelse(is.na(as.numeric(cfModel$byClass["Specificity"])), 0,  as.numeric(cfModel$byClass["Specificity"]))
 
+      sensitivity <- ifelse(is.na(as.numeric(cfModel$byClass["Sensitivity"])), 0,  as.numeric(cfModel$byClass["Sensitivity"]))
 
-    # Obtenemos las variables junto a su importancia
-    impVariables <- bestModel$variable.importance
+      balancedAccValues[i] <- (specificity + sensitivity) / 2
+    }
 
-    # Creamos un dataframe con el nombre de las variables y su importancia
-    selectedData <- data.frame(Variable = names(impVariables), Importance = as.numeric(impVariables))
-
-    # Ordenamos las variables por importancia
-    selectedData <- selectedData[order(-selectedData$Importance), ]
-
-    # Obtenemos las primeras predictorsToSelect variables más importantes
-    selectedData <- head(selectedData, predictorsToSelect)
-
-    selectedOmicPredictors <- omic[, c(selectedData$Variable, classVariable)]
-
-    name <- paste("GA", savingName, sep="_")
-    dirPath <- paste(savingName, "analysisData", name, sep = "/")
-
-    # Save the selected data
-    selectedDataPath <- paste(dirPath, "Selected_Predictors.tsv", sep="_")
-
-    write.table(selectedOmicPredictors, selectedDataPath, row.names = T, col.names = T, sep =  '\t')
+    baselinePrecision <- mean(balancedAccValues)
 
   }
+
+  dirPath <- paste(savingName, "geneticAlgorithm", name, sep = "/")
+  selectedPredictorsPath <- paste(dirPath, "Predictors_Importance.tsv", sep="_")
+
+  selectedPredictors <- read.table(selectedPredictorsPath, header = TRUE, sep = "\t", row.names = 1)
+
+  selectedOmicPredictors <- omic[, c(rownames(selectedPredictors), classVariable)]
+
+
+  dirPath <- paste(savingName, "analysisData", name, sep = "/")
+  selectedDataPath <- paste(dirPath, "Selected_Predictors.tsv", sep="_")
+
+  write.table(selectedOmicPredictors, selectedDataPath, row.names = T, col.names = T, sep =  '\t')
+
 
   print("Performing PCA analysis")
   MLASDO::performPCAAnalysis(
@@ -646,7 +628,6 @@ detectAnomalies <- function(
     bestModelPrediction <- predict(bestModel, newx = as.matrix(omicTest), alpha = 1, s = "lambda.min", type = "class")
     bestCM <- confusionMatrix(as.factor(as.integer(bestModelPrediction)), as.factor(omicTestDiagnosis))
 
-
     worstModelPrediction <- predict(worstModel, newx = as.matrix(omicTest), alpha = 1, s = "lambda.min", type = "class")
     worstCM <- confusionMatrix(as.factor(as.integer(worstModelPrediction)), as.factor(omicTestDiagnosis))
 
@@ -655,7 +636,6 @@ detectAnomalies <- function(
     bestModelPrediction <- predict(bestModel, omicTest)$predictions
     bestCM <-
       confusionMatrix(as.factor(as.integer(bestModelPrediction)), as.factor(omicTestDiagnosis))
-
 
     worstModelPrediction <- predict(worstModel, omicTest)$predictions
     worstCM <-

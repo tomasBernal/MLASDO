@@ -431,6 +431,10 @@ executeGA <- function(
 
   colnames(predictorsInfo) <- newColnames
 
+  mean <- rowMeans(abs(predictorsInfo[, modelCols]))
+
+  predictorsInfo$meanImportance <- mean
+
   predictorsImportancePath <- paste(name, "Predictors_Importance.tsv", sep="_")
 
   write.table(predictorsInfo, paste(dirPath, predictorsImportancePath, sep = "/"), row.names = T, col.names = T, sep =  '\t')
@@ -456,9 +460,9 @@ executeGA <- function(
       # Train the Lasso model
       model <- cv.glmnet(as.matrix(omicTrain), as.matrix(solutionData), alpha = 1, family = "binomial", type.measure = "class", nfolds = 10)
 
-      coeficientes <- coef(model, s = model$lambda.min)
+      coefficients <- coef(model, s = model$lambda.min)
 
-      numPredictors[i] <- length(coeficientes@i)
+      numPredictors[i] <- length(coefficients@i)
 
       # Use the model to predict on the test set
       modelPrediction <- predict(model, newx = as.matrix(omicTest), alpha = 1, s = "lambda.min", type = "class")
@@ -471,10 +475,7 @@ executeGA <- function(
       sensitivity <- ifelse(is.na(as.numeric(cfModel$byClass["Sensitivity"])), 0,  as.numeric(cfModel$byClass["Sensitivity"]))
 
       # Save the balanced mean obtained in this iteration
-
-      actualBA <- (specificity + sensitivity) / 2
-
-      balancedAccValues[i] <- actualBA
+      balancedAccValues[i] <- (specificity + sensitivity) / 2
 
     }
 
