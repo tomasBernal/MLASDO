@@ -433,7 +433,7 @@ executeGA <- function(
 
   print(modelCols)
 
-  mean <- rowMeans(abs(predictorsInfo[, "numAparitions"]))
+  mean <- rowMeans(abs(predictorsInfo[, c("model_1", "model_2")]))
 
   predictorsInfo$meanImportance <- mean
 
