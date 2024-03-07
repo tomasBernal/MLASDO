@@ -438,8 +438,7 @@ executeGA <- function(
     meanImportance[[i]] <- mean(predictorsInfo[i, 2:ncol(predictorsInfo)])
   }
 
-  print(unlist(meanImportance))
-  predictorsInfo$meanImportance <- meanImportance
+  predictorsInfo$meanImportance <- unlist(meanImportance)
 
   predictorsImportancePath <- paste(name, "Predictors_Importance.tsv", sep="_")
 
