@@ -372,11 +372,11 @@ executeGA <- function(
 
           importance <- predictorsInfo[[predInfo$Variable[[i]]]][2:length(predictorsInfo[[predInfo$Variable[[i]]]])]
 
-          predictorsInfo[[predInfo$Variable[[i]]]] <- c(actualAparitions + 1, importance, predInfo$Importance[[i]])
+          predictorsInfo[[predInfo$Variable[[i]]]] <- c(actualAparitions + 1, importance, abs(predInfo$Importance[[i]]))
 
         } else {
 
-          predictorsInfo[[predInfo$Variable[[i]]]] <- c(1, predInfo$Importance[[i]])
+          predictorsInfo[[predInfo$Variable[[i]]]] <- c(1, abs(predInfo$Importance[[i]]))
 
         }
       }
@@ -431,15 +431,15 @@ executeGA <- function(
 
   colnames(predictorsInfo) <- newColnames
 
-  print(modelCols)
+  meanImportance <- vector(mode = "list", length = nrow(predictorsInfo))
 
-  write.table(predictorsInfo, paste(dirPath, predictorsImportancePath, sep = "/"), row.names = T, col.names = T, sep =  '\t')
+  for(i in 1:nrow(predictorsInfo)){
 
-  mean <- rowMeans(subset(predictorsInfo, select = modelCols), na.rm = TRUE)
+    meanImportance[[i]] <- mean(predictorsInfo[i, 2:ncol(predictorsInfo)])
+  }
 
-  print(mean)
-
-  predictorsInfo$meanImportance <- mean
+  print(meanImportance)
+  predictorsInfo$meanImportance <- meanImportance
 
   predictorsImportancePath <- paste(name, "Predictors_Importance.tsv", sep="_")
 
