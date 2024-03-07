@@ -427,18 +427,11 @@ executeGA <- function(
 
   newColnames <- c("numAparitions", modelCols)
 
-  predictorsInfo <- t(predictorsInfo)
+  predictorsInfo <- as.data.frame(t(predictorsInfo))
 
   colnames(predictorsInfo) <- newColnames
 
-  predictorsImportancePath <- paste(name, "Predictors_Importance_a.tsv", sep="_")
-
-  write.table(predictorsInfo, paste(dirPath, predictorsImportancePath, sep = "/"), row.names = T, col.names = T, sep =  '\t')
-
-  print(modelCols)
-  print(unname(rowMeans(predictorsInfo[, modelCols])))
-
-  predictorsInfo$meanImportance <- unlist(unname(rowMeans(predictorsInfo[, modelCols])))
+  predictorsInfo$meanImportance <- rowMeans(predictorsInfo[, modelCols])
 
   predictorsImportancePath <- paste(name, "Predictors_Importance.tsv", sep="_")
 
