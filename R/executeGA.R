@@ -435,7 +435,7 @@ executeGA <- function(
 
   write.table(predictorsInfo, paste(dirPath, predictorsImportancePath, sep = "/"), row.names = T, col.names = T, sep =  '\t')
 
-  predictorsInfo$meanImportance <- unname(rowMeans(imp[, modelCols]))
+  predictorsInfo$meanImportance <- unname(rowMeans(predictorsInfo[, modelCols]))
 
   predictorsImportancePath <- paste(name, "Predictors_Importance.tsv", sep="_")
 
