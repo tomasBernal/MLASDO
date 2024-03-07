@@ -356,6 +356,9 @@ executeGA <- function(
 
       predInfo <- model$variable.importance
 
+      modelPath <- paste(name, "info.rds", sep="_")
+      saveRDS(predInfo, file = paste(dirPath, modelPath, sep = "/"))
+
       for(i in 1:predictorsToSelect){
 
         if (exists(predInfo$Variable[[i]], where = predictorsInfo)) {
