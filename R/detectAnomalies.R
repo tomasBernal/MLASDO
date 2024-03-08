@@ -375,6 +375,12 @@ detectAnomalies <- function(
 
     print("Executing the genetic algorithm")
     MLASDO::executeGA(
+      savingName = savingName,
+      omicData = omicData,
+      subsetTrain = subsetTrain,
+      activePredictors = activePredictors,
+      classVariable = classVariable,
+      idColumn = idColumn,
       mlAlgorithm = mlAlgorithm,
       numModelExecutions = numModelExecutions,
       predictorsToSelect = predictorsToSelect,
@@ -384,13 +390,6 @@ detectAnomalies <- function(
       sampleFraction = sampleFraction,
       maxDepth = maxDepth,
       minNodeSize = minNodeSize,
-      omicData = omicData,
-      subsetTrain = subsetTrain,
-      savingName = savingName,
-      classVariable = classVariable,
-      idColumn = idColumn,
-      activePredictors = activePredictors,
-      nCores = nCores,
       nIterations = nIterations,
       nStopIter = nStopIter,
       populationSize = populationSize,
@@ -400,6 +399,7 @@ detectAnomalies <- function(
       selectionOperator = selectionOperator,
       mutationOperator = mutationOperator,
       mutationProbability = mutationProbability,
+      nCores = nCores,
       seed = seed
       )
   }
@@ -602,22 +602,22 @@ detectAnomalies <- function(
 
   print("Performing PCA analysis")
   MLASDO::performPCAAnalysis(
-    selectedData = selectedOmicPredictors,
-    mlAlgorithm = mlAlgorithm,
-    idColumn = idColumn,
-    changedOmicData = changedOmicData,
     savingName = savingName,
+    mlAlgorithm = mlAlgorithm,
+    changedOmicData = changedOmicData,
+    selectedData = selectedOmicPredictors,
+    idColumn = idColumn,
     classVariable = classVariable
   )
 
   print("Performing ratio analysis")
   MLASDO::performRatioAnalysis(
+    savingName = savingName,
     changedClinicData = changedClinicData,
     firstGroup = firstGroup,
     secondGroup = secondGroup,
-    savingName = savingName,
-    classVariable = classVariable,
-    activePredictors = activePredictors
+    activePredictors = activePredictors,
+    classVariable = classVariable
   )
 
   bestCM <- NULL
@@ -647,16 +647,16 @@ detectAnomalies <- function(
   MLASDO::compileMarkdown(
     savingName = savingName,
     justAnalysis = justAnalysis,
+    geneticAlgorithm = geneticAlgorithm,
+    mlAlgorithm = mlAlgorithm,
+    numModelExecutions = numModelExecutions,
     lassoPredictorsPath = lassoPredictorsPath,
     baselinePrecision = baselinePrecision,
     baselinePredictors = baselinePredictors,
-    mlAlgorithm = mlAlgorithm,
-    geneticAlgorithm = geneticAlgorithm,
     originalDiagnosis = omicData[[classVariable]],
     clinicData = changedClinicData,
     selectedData = selectedOmicPredictors,
     classVariable = classVariable,
-    numModelExecutions = numModelExecutions,
     bestModelCM = bestCM,
     worstModelCM = worstCM
     )

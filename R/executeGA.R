@@ -42,6 +42,13 @@
 #' This procedure is used to determine which samples were anomalous. The genetic algorithm locates these anomalous samples
 #' and the machine learning algorithm evidences this detection, validating that these samples belong to the alternative group.
 #'
+#' @param savingName String | Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.
+#'
+#' @param omicData Dataset | Dataset of omic data that will be used.
+#' @param subsetTrain Array of Integer | Subset of train samples.
+#' @param activePredictors Array of Strings | Predictors on which the study of the ratios will be conducted after the genetic algorithm has been performed. Default value: All the predictors in clinic data, except classVariable and idColumn.
+#' @param classVariable String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.
+#' @param idColumn String | Variable that indicates the identifier of each patient in both datasets. If the user does not specify a path to his own data, the value for the sample data, Trial, will be used.
 #'
 #' @param mlAlgorithm String | Machine Learning algorithm to be applied, the options are: Lasso or RF (Random Forest). Default value: RF.
 #'
@@ -55,14 +62,6 @@
 #' @param maxDepth Integer | Maximum height of each tree in the forest. Default value: 4.
 #' @param minNodeSize Integer | Minimum number of observations required in a node to be able to split it. Default value: 30.
 #'
-#' @param omicData Dataset of omic data that will be used.
-#' @param subsetTrain Subset of train samples.
-#' @param idColumn String | Variable that indicates the identifier of each patient in both datasets. If the user does not specify a path to his own data, the value for the sample data, Trial, will be used.
-#' @param activePredictors Array of Strings | Predictors on which the study of the ratios will be conducted after the genetic algorithm has been performed. Default value: All the predictors in clinic data, except classVariable and idColumn.
-#' @param classVariable String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.
-#' @param savingName String | Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.
-#'
-#' @param nCores Integer | Number of cores to be used in parallelization. Default value: 6.
 #' @param nIterations Integer | Number of iterations (generations) the genetic algorithm will perform. Default value: 200.
 #' @param nStopIter Integer | Number of iterations after which the algorithm will stop if all of them have the same fitness value. Default value: 25.
 #' @param populationSize Integer | Number of solutions that will be part of the initial population. Default value: 150.
@@ -72,6 +71,9 @@
 #' @param selectionOperator String | Selection operator used in the genetic algorithm. Default value: Tournament Selection.
 #' @param mutationOperator String | Mutation operator used in the genetic algorithm. Default value: Random Mutation.
 #' @param mutationProbability Decimal | Percentage (expressed as a fraction) indicating the probability of mutation occurrence. Default value: 0.1 (10%).
+#'
+#' @param nCores Integer | Number of cores to be used in parallelization. Default value: 6.
+#'
 #' @param seed Integer | Seed used for the creation of training and test sets. Default value: 1234.
 #'
 #'
@@ -81,34 +83,34 @@
 #'
 #' MLASDO::executeGA(mlAlgorithm = mlAlgorithm, numModelExecutions = numModelExecutions, predictorsToSelect = predictorsToSelect, numTrees = numTrees, mtry = mtry, splitrule = splitrule, sampleFraction = sampleFraction, maxDepth = maxDepth, minNodeSize = minNodeSize, omicData = omicData, subsetTrain = subsetTrain, activePredictors = activePredictors, classVariable = classVariable, idColumn = idColumn, savingName = savingName, nCores = nCores, nIterations = nIterations, nStopIter = nStopIter, populationSize = populationSize, diagnosticChangeProbability = diagnosticChangeProbability, crossoverOperator = crossoverOperator, crossoverProbability = crossoverProbability, selectionOperator = selectionOperator, mutationOperator = mutationOperator, mutationProbability = mutationProbability, seed = seed)
 
-executeGA <- function(
-                      mlAlgorithm,
-                      numModelExecutions,
-                      predictorsToSelect,
-                      numTrees,
-                      mtry,
-                      splitrule,
-                      sampleFraction,
-                      maxDepth,
-                      minNodeSize,
-                      omicData,
-                      subsetTrain,
-                      activePredictors,
-                      classVariable,
-                      idColumn,
-                      savingName,
-                      nCores,
-                      nIterations,
-                      nStopIter,
-                      populationSize,
-                      diagnosticChangeProbability,
-                      crossoverOperator,
-                      crossoverProbability,
-                      selectionOperator,
-                      mutationOperator,
-                      mutationProbability,
-                      seed
-                      ){
+  executeGA <- function(
+    savingName,
+    omicData,
+    subsetTrain,
+    activePredictors,
+    classVariable,
+    idColumn,
+    mlAlgorithm,
+    numModelExecutions,
+    predictorsToSelect,
+    numTrees,
+    mtry,
+    splitrule,
+    sampleFraction,
+    maxDepth,
+    minNodeSize,
+    nIterations,
+    nStopIter,
+    populationSize,
+    diagnosticChangeProbability,
+    crossoverOperator,
+    crossoverProbability,
+    selectionOperator,
+    mutationOperator,
+    mutationProbability,
+    nCores,
+    seed
+  ){
 
   #### REQUIRED LIBRARIES ####
   library(GA) # For genetic algorithm
@@ -116,7 +118,6 @@ executeGA <- function(
   library(ranger) # For ranger model
   library(caret) # For confusion matrix
   library(doParallel) # For parallel execution
-
 
   #### DATA READING ####
   omic <- omicData
@@ -432,6 +433,8 @@ executeGA <- function(
   colnames(predictorsInfo) <- newColnames
 
   predictorsInfo$meanImportance <- rowMeans(predictorsInfo[, modelCols])
+
+  predictorsInfo <- round(predictorsInfo, 2)
 
   predictorsImportancePath <- paste(name, "Predictors_Importance.tsv", sep="_")
 

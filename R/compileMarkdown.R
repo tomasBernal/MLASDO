@@ -2,17 +2,22 @@
 #'
 #' @description This function compiles the markdown file with the analysis results
 #'
+#' @param savingName String | Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.
+#'
 #' @param justAnalysis Bool | Indicates whether to perform the analysis directly (TRUE) or to run the genetic algorithm (FALSE). Default value: FALSE.
+#' @param geneticAlgorithm GA | Genetic algorithm object.
+#' @param mlAlgorithm String | Machine Learning algorithm to be applied, the options are: Lasso or RF (Random Forest).
+#' @param numModelExecutions Integer | Number of times the Lasso algorithm is executed. Default value: 5.
+#'
 #' @param lassoPredictorsPath String | Path to the mean number of predictors selected by Lasso in each generation.
 #' @param baselinePrecision Decimal | Baseline precision obtained with the model before the detection.
 #' @param baselinePredictors Integer | Baseline predictors selected with the model before the detection.
-#' @param geneticAlgorithm Array of Strings | Genetic algorithm object.
+#'
 #' @param originalDiagnosis Array of Strings | Original diagnostics of the patients.
-#' @param clinicData Data | Dataset of clinic data that will be used.
-#' @param selectedData Data | Dataset of omic data with only the predictors selected by the Lasso model.
+#' @param clinicData Dataset | Dataset of clinic data that will be used.
+#' @param selectedData Dataset | Dataset of omic data with only the predictors selected by the Lasso model.
 #' @param classVariable String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.
-#' @param savingName String | Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.
-#' @param numModelExecutions Integer | Number of times the Lasso algorithm is executed. Default value: 5.
+#'
 #' @param bestModelCM Confusion Matrix | Confusion matrix of the best model obtained before the detection.
 #' @param worstModelCM Confusion Matrix | Confusion matrix of the worst model obtained before the detection.
 #'
@@ -20,22 +25,22 @@
 #'
 #' @examples
 #'
-#' MLASDO::compileMarkdown(savingName = savingName, mlAlgorithm = mlAlgorithm, lassoPredictorsPath = lassoPredictorsPath, baselinePrecision = baselinePrecision, baselinePredictors = baselinePredictors, geneticAlgorithm = geneticAlgorithm, clinicData = clinicData, selectedData = selectedData, classVariable = classVariable, bestModelCM = bestModelCM, worstModelCM = worstModelCM)
+#' MLASDO::compileMarkdown(savingName = savingName, justAnalysis = justAnalysis, geneticAlgorithm = geneticAlgorithm, mlAlgorithm = mlAlgorithm, numModelExecutions = numModelExecutions, lassoPredictorsPath = lassoPredictorsPath, baselinePrecision = baselinePrecision, baselinePredictors = baselinePredictors, originalDiagnosis = originalDiagnosis, clinicData = clinicData, selectedData = selectedData, classVariable = classVariable,  bestModelCM = bestModelCM, worstModelCM = worstModelCM)
 #'
 
 compileMarkdown <- function(
     savingName,
     justAnalysis,
+    geneticAlgorithm,
+    mlAlgorithm,
+    numModelExecutions,
     lassoPredictorsPath,
     baselinePrecision,
     baselinePredictors,
-    mlAlgorithm,
-    geneticAlgorithm,
     originalDiagnosis,
     clinicData,
     selectedData,
     classVariable,
-    numModelExecutions,
     bestModelCM,
     worstModelCM
     ){

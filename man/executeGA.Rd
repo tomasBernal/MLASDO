@@ -5,21 +5,21 @@
 \title{executeGA}
 \usage{
 executeGA(
+  savingName,
+  omicData,
+  subsetTrain,
+  activePredictors,
+  classVariable,
+  idColumn,
   mlAlgorithm,
-  numLassoExecutions,
+  numModelExecutions,
+  predictorsToSelect,
   numTrees,
   mtry,
   splitrule,
   sampleFraction,
   maxDepth,
   minNodeSize,
-  omicData,
-  subsetTrain,
-  activePredictors,
-  classVariable,
-  idColumn,
-  savingName,
-  nCores,
   nIterations,
   nStopIter,
   populationSize,
@@ -29,13 +29,28 @@ executeGA(
   selectionOperator,
   mutationOperator,
   mutationProbability,
+  nCores,
   seed
 )
 }
 \arguments{
+\item{savingName}{String | Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.}
+
+\item{omicData}{Dataset | Dataset of omic data that will be used.}
+
+\item{subsetTrain}{Array of Integer | Subset of train samples.}
+
+\item{activePredictors}{Array of Strings | Predictors on which the study of the ratios will be conducted after the genetic algorithm has been performed. Default value: All the predictors in clinic data, except classVariable and idColumn.}
+
+\item{classVariable}{String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.}
+
+\item{idColumn}{String | Variable that indicates the identifier of each patient in both datasets. If the user does not specify a path to his own data, the value for the sample data, Trial, will be used.}
+
 \item{mlAlgorithm}{String | Machine Learning algorithm to be applied, the options are: Lasso or RF (Random Forest). Default value: RF.}
 
-\item{numLassoExecutions}{Integer | Number of times the Lasso algorithm is executed. Default value: 5.}
+\item{numModelExecutions}{Integer | Number of times the Lasso algorithm is executed. Default value: 5.}
+
+\item{predictorsToSelect}{Integer | Number of predictors to be selected from the most important predictors ranked by the RF model. This parameter is a integer number between 1 and the total number of predictors in the data. Default value: 15.}
 
 \item{numTrees}{Integer | Number of trees of the Random Forest model. Default value: 100.}
 
@@ -48,20 +63,6 @@ executeGA(
 \item{maxDepth}{Integer | Maximum height of each tree in the forest. Default value: 4.}
 
 \item{minNodeSize}{Integer | Minimum number of observations required in a node to be able to split it. Default value: 30.}
-
-\item{omicData}{Dataset of omic data that will be used.}
-
-\item{subsetTrain}{Subset of train samples.}
-
-\item{activePredictors}{Array of Strings | Predictors on which the study of the ratios will be conducted after the genetic algorithm has been performed. Default value: All the predictors in clinic data, except classVariable and idColumn.}
-
-\item{classVariable}{String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.}
-
-\item{idColumn}{String | Variable that indicates the identifier of each patient in both datasets. If the user does not specify a path to his own data, the value for the sample data, Trial, will be used.}
-
-\item{savingName}{String | Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.}
-
-\item{nCores}{Integer | Number of cores to be used in parallelization. Default value: 6.}
 
 \item{nIterations}{Integer | Number of iterations (generations) the genetic algorithm will perform. Default value: 200.}
 
@@ -80,6 +81,8 @@ executeGA(
 \item{mutationOperator}{String | Mutation operator used in the genetic algorithm. Default value: Random Mutation.}
 
 \item{mutationProbability}{Decimal | Percentage (expressed as a fraction) indicating the probability of mutation occurrence. Default value: 0.1 (10%).}
+
+\item{nCores}{Integer | Number of cores to be used in parallelization. Default value: 6.}
 
 \item{seed}{Integer | Seed used for the creation of training and test sets. Default value: 1234.}
 }
@@ -118,5 +121,5 @@ and the machine learning algorithm evidences this detection, validating that the
 }
 \examples{
 
-MLASDO::executeGA(mlAlgorithm = mlAlgorithm, numLassoExecutions = numLassoExecutions, numTrees = numTrees, mtry = mtry, splitrule = splitrule, sampleFraction = sampleFraction, maxDepth = maxDepth, minNodeSize = minNodeSize, omicData = omicData, subsetTrain = subsetTrain, activePredictors = activePredictors, classVariable = classVariable, idColumn = idColumn, savingName = savingName, nCores = nCores, nIterations = nIterations, nStopIter = nStopIter, populationSize = populationSize, diagnosticChangeProbability = diagnosticChangeProbability, crossoverOperator = crossoverOperator, crossoverProbability = crossoverProbability, selectionOperator = selectionOperator, mutationOperator = mutationOperator, mutationProbability = mutationProbability, seed = seed)
+MLASDO::executeGA(mlAlgorithm = mlAlgorithm, numModelExecutions = numModelExecutions, predictorsToSelect = predictorsToSelect, numTrees = numTrees, mtry = mtry, splitrule = splitrule, sampleFraction = sampleFraction, maxDepth = maxDepth, minNodeSize = minNodeSize, omicData = omicData, subsetTrain = subsetTrain, activePredictors = activePredictors, classVariable = classVariable, idColumn = idColumn, savingName = savingName, nCores = nCores, nIterations = nIterations, nStopIter = nStopIter, populationSize = populationSize, diagnosticChangeProbability = diagnosticChangeProbability, crossoverOperator = crossoverOperator, crossoverProbability = crossoverProbability, selectionOperator = selectionOperator, mutationOperator = mutationOperator, mutationProbability = mutationProbability, seed = seed)
 }

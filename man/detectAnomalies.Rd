@@ -8,10 +8,12 @@ detectAnomalies(
   justAnalysis = FALSE,
   solutionPath = "",
   geneticPath = "",
-  modelPath = "",
+  bestModelPath = "",
+  worstModelPath = "",
   lassoPredictorsPath = "",
   mlAlgorithm,
-  numLassoExecutions = 5,
+  predictorsToSelect = 15,
+  numModelExecutions = 5,
   numTrees = 100,
   mtry = 225,
   splitrule = "gini",
@@ -47,13 +49,17 @@ detectAnomalies(
 
 \item{geneticPath}{String | Path to genetic algorithm object.}
 
-\item{modelPath}{String | Path to the best model obtained.}
+\item{bestModelPath}{String | Path to the best model obtained.}
+
+\item{worstModelPath}{String | Path to the worst model obtained.}
 
 \item{lassoPredictorsPath}{String | Path to the mean number of predictors selected by Lasso in each generation.}
 
 \item{mlAlgorithm}{String | Machine Learning algorithm to be applied, the options are: Lasso or RF (Random Forest).}
 
-\item{numLassoExecutions}{Integer | Number of times the Lasso algorithm is executed. Default value: 5.}
+\item{predictorsToSelect}{Integer | Number of predictors to be selected from the most important predictors ranked by the RF model. This parameter is a integer number between 1 and the total number of predictors in the data. Default value: 15.}
+
+\item{numModelExecutions}{Integer | Number of times the Lasso algorithm is executed. Default value: 5.}
 
 \item{numTrees}{Integer | Number of trees of the Random Forest model. Default value: 100.}
 
@@ -125,7 +131,7 @@ MLASDO::detectAnomalies(savingName = "DefaultExecutionRF", mlAlgorithm = "RF")
 
 MLASDO::detectAnomalies(savingName = "QuickExecution", mlAlgorithm = "Lasso", nIterations = 3, nStopIter = 2, populationSize = 20, activePredictors = c("sex", "age", "Mutation", "Ethnicity"))
 
-MLASDO::detectAnomalies(savingName = "ExecutionWithOwnData", mlAlgorithm = "RF", omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv", idColumn = "Patient.Id", nIterations = 3, populationSize = 10, classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"))
+MLASDO::detectAnomalies(savingName = "ExecutionWithOwnData", mlAlgorithm = "RF", predictorsToSelect = 0.3, omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv", idColumn = "Patient.Id", nIterations = 3, populationSize = 10, classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"))
 
-MLASDO::detectAnomalies(justAnalysis = TRUE, mlAlgorithm = "Lasso", geneticPath = "GA.rds", solutionPath = "GA_solution.rds", modelPath = "GA_Model.rds", lassoPredictorsPath = "GA_Lasso_Predictors.rds", savingName = "ExecutionWithOwnData", omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv",idColumn = "Patient.Id",classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"))
+MLASDO::detectAnomalies(justAnalysis = TRUE, mlAlgorithm = "Lasso", geneticPath = "GA.rds", solutionPath = "GA_solution.rds", bestModelPath = "GA_Best_Model.rds", worstModelPath = "GA_Worst_Model.rds", lassoPredictorsPath = "GA_Lasso_Predictors.rds", savingName = "ExecutionWithOwnData", omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv",idColumn = "Patient.Id",classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"))
 }

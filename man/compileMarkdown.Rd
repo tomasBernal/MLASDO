@@ -7,13 +7,18 @@
 compileMarkdown(
   savingName,
   justAnalysis,
-  lassoPredictorsPath,
-  model,
-  mlAlgorithm,
   geneticAlgorithm,
+  mlAlgorithm,
+  numModelExecutions,
+  lassoPredictorsPath,
+  baselinePrecision,
+  baselinePredictors,
   originalDiagnosis,
   clinicData,
-  classVariable
+  selectedData,
+  classVariable,
+  bestModelCM,
+  worstModelCM
 )
 }
 \arguments{
@@ -21,23 +26,35 @@ compileMarkdown(
 
 \item{justAnalysis}{Bool | Indicates whether to perform the analysis directly (TRUE) or to run the genetic algorithm (FALSE). Default value: FALSE.}
 
+\item{geneticAlgorithm}{GA | Genetic algorithm object.}
+
+\item{mlAlgorithm}{String | Machine Learning algorithm to be applied, the options are: Lasso or RF (Random Forest).}
+
+\item{numModelExecutions}{Integer | Number of times the Lasso algorithm is executed. Default value: 5.}
+
 \item{lassoPredictorsPath}{String | Path to the mean number of predictors selected by Lasso in each generation.}
 
-\item{model}{ML Model | Best model obtained after the detection.}
+\item{baselinePrecision}{Decimal | Baseline precision obtained with the model before the detection.}
 
-\item{geneticAlgorithm}{Array of Strings | Genetic algorithm object.}
+\item{baselinePredictors}{Integer | Baseline predictors selected with the model before the detection.}
 
 \item{originalDiagnosis}{Array of Strings | Original diagnostics of the patients.}
 
-\item{clinicData}{Data | Dataset of clinic data that will be used.}
+\item{clinicData}{Dataset | Dataset of clinic data that will be used.}
+
+\item{selectedData}{Dataset | Dataset of omic data with only the predictors selected by the Lasso model.}
 
 \item{classVariable}{String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.}
+
+\item{bestModelCM}{Confusion Matrix | Confusion matrix of the best model obtained before the detection.}
+
+\item{worstModelCM}{Confusion Matrix | Confusion matrix of the worst model obtained before the detection.}
 }
 \description{
 This function compiles the markdown file with the analysis results
 }
 \examples{
 
-MLASDO::compileMarkdown(savingName = savingName, mlAlgorithm = mlAlgorithm, lassoPredictorsPath = lassoPredictorsPath, model = model, geneticAlgorithm = geneticAlgorithm, clinicData = clinicData, classVariable = classVariable)
+MLASDO::compileMarkdown(savingName = savingName, justAnalysis = justAnalysis, geneticAlgorithm = geneticAlgorithm, mlAlgorithm = mlAlgorithm, numModelExecutions = numModelExecutions, lassoPredictorsPath = lassoPredictorsPath, baselinePrecision = baselinePrecision, baselinePredictors = baselinePredictors, originalDiagnosis = originalDiagnosis, clinicData = clinicData, selectedData = selectedData, classVariable = classVariable,  bestModelCM = bestModelCM, worstModelCM = worstModelCM)
 
 }
