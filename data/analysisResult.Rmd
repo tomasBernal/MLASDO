@@ -243,14 +243,49 @@ totalTable <- params$totalTable
 ```
 
 ```{r, include = FALSE}
-sepCCCM <- 0.1
-sepECEM <- 0.1
-sepCE <- 0.1
-
-totalTable$CCCM <- totalTable$CCCM - 1
-totalTable$ECEM <- totalTable$ECEM - 1
-totalTable$CE <- totalTable$CE - 1
+totalTable$adjustedCCCM <- totalTable$CCCM - 1
+totalTable$adjustedECEM <- totalTable$ECEM - 1
+totalTable$adjustedCE <- totalTable$CE - 1
 ```
+
+```{r, include = FALSE}
+maxCCCM <- max(abs(totalTable$adjustedCCCM))
+
+maxECEM <- max(abs(totalTable$adjustedECEM))
+
+maxCE <- max(abs(totalTable$adjustedCE))
+
+if(maxCCCM > 2){
+  sepCCCM <- 0.25
+} else if(maxCCCM > 1) {
+  sepCCCM <- 0.2
+} else if(maxCCCM > 0.5) {
+  sepCCCM <- 0.1
+} else {
+  sepCCCM <- 0.05
+}
+
+if(maxECEM > 2){
+  sepECEM <- 0.25
+} else if(maxECEM > 1) {
+  sepECEM <- 0.2
+} else if(maxECEM > 0.5) {
+  sepECEM <- 0.1
+} else {
+  sepECEM <- 0.05
+}
+
+if(maxCE > 2){
+  sepCE <- 0.25
+} else if(maxCE > 1) {
+  sepCE <- 0.2
+} else if(maxCE > 0.5) {
+  sepCE <- 0.1
+} else {
+  sepCE <- 0.05
+}
+```
+
 
 ```{r, include=FALSE}
 totalTable$ColorsCCCM <- NA
@@ -263,15 +298,15 @@ totalTable$textCE <- NA
 
 for(indexRatio in 1:nrow(totalTable)){
 
-  if(totalTable$CCCM[indexRatio] == 0){
+  if(totalTable$adjustedCCCM[indexRatio] == 0){
 
     totalTable$ColorsCCCM[indexRatio] <- "black"
 
   } else {
 
-    if(abs(totalTable$CCCM[indexRatio]) < 0.15){
+    if(abs(totalTable$adjustedCCCM[indexRatio]) < 0.15){
       totalTable$ColorsCCCM[indexRatio] <- "gold"
-    } else if (abs(totalTable$CCCM[indexRatio]) > 0.15 && abs(totalTable$CCCM[indexRatio]) < 0.25){
+    } else if (abs(totalTable$adjustedCCCM[indexRatio]) > 0.15 && abs(totalTable$adjustedCCCM[indexRatio]) < 0.25){
       totalTable$ColorsCCCM[indexRatio] <- "orange"
     } else {
       totalTable$ColorsCCCM[indexRatio] <- "red"
@@ -336,15 +371,15 @@ for(indexRatio in 1:nrow(totalTable)){
 
   totalTable$textCCCM[indexRatio] <- text
 
-  if(totalTable$ECEM[indexRatio] == 0){
+  if(totalTable$adjustedECEM[indexRatio] == 0){
 
     totalTable$ColorsECEM[indexRatio] <- "black"
 
   } else {
 
-    if(abs(totalTable$ECEM[indexRatio]) < 0.15){
+    if(abs(totalTable$adjustedECEM[indexRatio]) < 0.15){
       totalTable$ColorsECEM[indexRatio] <- "gold"
-    } else if (abs(totalTable$ECEM[indexRatio]) > 0.15 && abs(totalTable$ECEM[indexRatio]) < 0.25){
+    } else if (abs(totalTable$adjustedECEM[indexRatio]) > 0.15 && abs(totalTable$adjustedECEM[indexRatio]) < 0.25){
       totalTable$ColorsECEM[indexRatio] <- "orange"
     } else {
       totalTable$ColorsECEM[indexRatio] <- "red"
@@ -418,15 +453,15 @@ for(indexRatio in 1:nrow(totalTable)){
   totalTable$textECEM[indexRatio] <- text
 
 
-  if(totalTable$CE[indexRatio] == 0){
+  if(totalTable$adjustedCE[indexRatio] == 0){
 
     totalTable$ColorsCE[indexRatio] <- "black"
 
   } else {
 
-    if(abs(totalTable$CE[indexRatio]) < 0.15){
+    if(abs(totalTable$adjustedCE[indexRatio]) < 0.15){
       totalTable$ColorsCE[indexRatio] <- "gold"
-    } else if (abs(totalTable$CE[indexRatio]) > 0.15 && abs(totalTable$CE[indexRatio]) < 0.25){
+    } else if (abs(totalTable$adjustedCE[indexRatio]) > 0.15 && abs(totalTable$adjustedCE[indexRatio]) < 0.25){
       totalTable$ColorsCE[indexRatio] <- "orange"
     } else {
       totalTable$ColorsCE[indexRatio] <- "red"
@@ -507,12 +542,12 @@ for(indexRatio in 1:nrow(totalTable)){
 # Ratio Analysis
 
 ```{r, include = FALSE}
-plotCE <- plot_ly(totalTable,x=~CE,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCE ), height = 800, width = 1000, hoverinfo = "text", text =~textCE)
+plotCE <- plot_ly(totalTable,x=~adjustedCE,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCE ), height = 800, width = 1000, hoverinfo = "text", text =~textCE)
 
 title <- "Ratios between Control and Case patients before detection (genetic algorithm)"
 
 plotCE <- plotCE %>% layout(title = title,
-                        xaxis = list(title = "Ratio <br>", tickvals = seq(-ceiling(-min(totalTable$CE)), ceiling(max(totalTable$CE)), by = sepCE)),
+                        xaxis = list(title = "Ratio in percentage scale <br>", tickvals = seq(-ceiling(-min(totalTable$adjustedCE)), ceiling(max(totalTable$CE)), by = sepCE)),
                         yaxis = list(title = "Predictor"))
 ```
 
@@ -521,11 +556,11 @@ plotCE
 ```
 
 ```{r, include = FALSE}
-plotCCCM <- plot_ly(totalTable,x=~CCCM,y=~rownames(totalTable), type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCCCM ), height = 800, width = 1000, hoverinfo = "text", text =~textCCCM)
+plotCCCM <- plot_ly(totalTable,x=~adjustedCCCM,y=~rownames(totalTable), type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCCCM ), height = 800, width = 1000, hoverinfo = "text", text =~textCCCM)
 
 title <- "Evolution of the set of Control patients after detection (genetic algorithm)"
 plotCCCM <- plotCCCM %>% layout(title = title,
-                        xaxis = list(title = "Ratio <br>", tickvals = seq(-ceiling(-min(totalTable$CCCM)), ceiling(max(totalTable$CCCM)), by = sepCCCM)),
+                        xaxis = list(title = "Ratio in percentage scale <br>", tickvals = seq(-ceiling(-min(totalTable$adjustedCCCM)), ceiling(max(totalTable$adjustedCCCM)), by = sepCCCM)),
                         yaxis = list(title = "Predictor"))
 ```
 
@@ -534,12 +569,12 @@ plotCCCM
 ```
 
 ```{r, include = FALSE}
-plotECEM <- plot_ly(totalTable,x=~ECEM,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsECEM ), height = 800, width = 1000, hoverinfo = "text", text =~textECEM)
+plotECEM <- plot_ly(totalTable,x=~adjustedECEM,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsECEM ), height = 800, width = 1000, hoverinfo = "text", text =~textECEM)
 
 title <- "Evolution of the set of CASE patients after detection (genetic algorithm)"
 
 plotECEM <- plotECEM %>% layout(title = title,
-                        xaxis = list(title = "Ratio <br>", tickvals = seq(-ceiling(-min(totalTable$ECEM)), ceiling(max(totalTable$ECEM)), by = sepECEM)),
+                        xaxis = list(title = "Ratio in percentage scale <br>", tickvals = seq(-ceiling(-min(totalTable$adjustedECEM)), ceiling(max(totalTable$adjustedECEM)), by = sepECEM)),
                         yaxis = list(title = "Predictor"))
 ```
 
