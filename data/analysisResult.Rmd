@@ -260,34 +260,34 @@ maxECEM <- max(abs(totalTable$adjustedECEM))
 
 maxCE <- max(abs(totalTable$adjustedCE))
 
-if(maxCCCM > 2){
-  sepCCCM <- 0.25
-} else if(maxCCCM > 1) {
-  sepCCCM <- 0.2
-} else if(maxCCCM > 0.5) {
-  sepCCCM <- 0.1
+if(maxCCCM > 200){
+  sepCCCM <- 25
+} else if(maxCCCM > 100) {
+  sepCCCM <- 20
+} else if(maxCCCM > 50) {
+  sepCCCM <- 10
 } else {
-  sepCCCM <- 0.05
+  sepCCCM <- 5
 }
 
-if(maxECEM > 2){
-  sepECEM <- 0.25
-} else if(maxECEM > 1) {
-  sepECEM <- 0.2
-} else if(maxECEM > 0.5) {
-  sepECEM <- 0.1
+if(maxECEM > 200){
+  sepECEM <- 25
+} else if(maxECEM > 100) {
+  sepECEM <- 20
+} else if(maxECEM > 50) {
+  sepECEM <- 10
 } else {
-  sepECEM <- 0.05
+  sepECEM <- 5
 }
 
-if(maxCE > 2){
-  sepCE <- 0.25
-} else if(maxCE > 1) {
-  sepCE <- 0.2
-} else if(maxCE > 0.5) {
-  sepCE <- 0.1
+if(maxCE > 200){
+  sepCE <- 25
+} else if(maxCE > 100) {
+  sepCE <- 20
+} else if(maxCE > 50) {
+  sepCE <- 10
 } else {
-  sepCE <- 0.05
+  sepCE <- 5
 }
 ```
 
