@@ -243,39 +243,13 @@ totalTable <- params$totalTable
 ```
 
 ```{r, include = FALSE}
-maxCCCM <- max(totalTable$CCCM)
-minCCCM <- min(totalTable$CCCM)
+sepCCCM <- 0.1
+sepECEM <- 0.1
+sepCE <- 0.1
 
-maxECEM <- max(totalTable$ECEM)
-minECEM <- min(totalTable$ECEM)
-
-maxCE <- max(totalTable$CE)
-minCE <- min(totalTable$CE)
-
-if(abs(maxCCCM) + abs(minCCCM) > 3){
-  sepCCCM <- 0.5
-} else if(abs(maxCCCM) + abs(minCCCM) > 1) {
-  sepCCCM <- 0.25
-} else {
-  sepCCCM <- 0.1
-}
-
-if(abs(maxECEM) + abs(minECEM) > 3){
-  sepECEM <- 0.5
-} else if(abs(maxECEM) + abs(minECEM) > 1) {
-  sepECEM <- 0.25
-} else {
-  sepECEM <- 0.1
-}
-
-
-if(abs(maxCE) + abs(minCE) > 3){
-  sepCE <- 0.5
-} else if(abs(maxCE) + abs(minCE) > 1) {
-  sepCE <- 0.25
-} else {
-  sepCE <- 0.1
-}
+totalTable$CCCM <- totalTable$CCCM - 1
+totalTable$ECEM <- totalTable$ECEM - 1
+totalTable$CE <- totalTable$CE - 1
 ```
 
 ```{r, include=FALSE}
@@ -295,9 +269,9 @@ for(indexRatio in 1:nrow(totalTable)){
 
   } else {
 
-    if(abs(totalTable$CCCM[indexRatio]) < 1){
+    if(abs(totalTable$CCCM[indexRatio]) < 0.15){
       totalTable$ColorsCCCM[indexRatio] <- "gold"
-    } else if (abs(totalTable$CCCM[indexRatio]) > 1 && abs(totalTable$CCCM[indexRatio]) < 2){
+    } else if (abs(totalTable$CCCM[indexRatio]) > 0.15 && abs(totalTable$CCCM[indexRatio]) < 0.25){
       totalTable$ColorsCCCM[indexRatio] <- "orange"
     } else {
       totalTable$ColorsCCCM[indexRatio] <- "red"
@@ -325,8 +299,6 @@ for(indexRatio in 1:nrow(totalTable)){
     text <- paste(text, "Mean value for the Control -> Control patients:", sep = "<br>")
     text <- paste(text, round(numericTable[rownames(totalTable)[indexRatio], "MeanCM"], digits = 3), sep = " ")
     
-    
-
   } else {
 
     predictor <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][1]
@@ -370,9 +342,9 @@ for(indexRatio in 1:nrow(totalTable)){
 
   } else {
 
-    if(abs(totalTable$ECEM[indexRatio]) < 1){
+    if(abs(totalTable$ECEM[indexRatio]) < 0.15){
       totalTable$ColorsECEM[indexRatio] <- "gold"
-    } else if (abs(totalTable$ECEM[indexRatio]) > 1 && abs(totalTable$ECEM[indexRatio]) < 2){
+    } else if (abs(totalTable$ECEM[indexRatio]) > 0.15 && abs(totalTable$ECEM[indexRatio]) < 0.25){
       totalTable$ColorsECEM[indexRatio] <- "orange"
     } else {
       totalTable$ColorsECEM[indexRatio] <- "red"
@@ -452,9 +424,9 @@ for(indexRatio in 1:nrow(totalTable)){
 
   } else {
 
-    if(abs(totalTable$CE[indexRatio]) < 1){
+    if(abs(totalTable$CE[indexRatio]) < 0.15){
       totalTable$ColorsCE[indexRatio] <- "gold"
-    } else if (abs(totalTable$CE[indexRatio]) > 1 && abs(totalTable$CE[indexRatio]) < 2){
+    } else if (abs(totalTable$CE[indexRatio]) > 0.15 && abs(totalTable$CE[indexRatio]) < 0.25){
       totalTable$ColorsCE[indexRatio] <- "orange"
     } else {
       totalTable$ColorsCE[indexRatio] <- "red"
