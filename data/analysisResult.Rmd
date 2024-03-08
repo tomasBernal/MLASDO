@@ -244,8 +244,13 @@ totalTable <- params$totalTable
 
 ```{r, include = FALSE}
 totalTable$adjustedCCCM <- totalTable$CCCM - 1
+totalTable$adjustedCCCM <- totalTable$adjustedCCCM * 100
+
 totalTable$adjustedECEM <- totalTable$ECEM - 1
+totalTable$adjustedECEM <- totalTable$adjustedECEM * 100
+
 totalTable$adjustedCE <- totalTable$CE - 1
+totalTable$adjustedCE <- totalTable$adjustedCE * 100
 ```
 
 ```{r, include = FALSE}
@@ -560,7 +565,7 @@ plotCCCM <- plot_ly(totalTable,x=~adjustedCCCM,y=~rownames(totalTable), type="sc
 
 title <- "Evolution of the set of Control patients after detection (genetic algorithm)"
 plotCCCM <- plotCCCM %>% layout(title = title,
-                        xaxis = list(title = "Ratio in percentage scale <br>", tickvals = seq(-ceiling(-min(totalTable$adjustedCCCM)), ceiling(max(totalTable$adjustedCCCM)), by = sepCCCM)),
+                        xaxis = list(title = "Ratio in percentage scale <br>", ticksuffix = "%", tickvals = seq(-ceiling(-min(totalTable$adjustedCCCM)), ceiling(max(totalTable$adjustedCCCM)), by = sepCCCM)),
                         yaxis = list(title = "Predictor"))
 ```
 
@@ -574,7 +579,7 @@ plotECEM <- plot_ly(totalTable,x=~adjustedECEM,y=~rownames(totalTable),type="sca
 title <- "Evolution of the set of CASE patients after detection (genetic algorithm)"
 
 plotECEM <- plotECEM %>% layout(title = title,
-                        xaxis = list(title = "Ratio in percentage scale <br>", tickvals = seq(-ceiling(-min(totalTable$adjustedECEM)), ceiling(max(totalTable$adjustedECEM)), by = sepECEM)),
+                        xaxis = list(title = "Ratio in percentage scale <br>", ticksuffix = "%", tickvals = seq(-ceiling(-min(totalTable$adjustedECEM)), ceiling(max(totalTable$adjustedECEM)), by = sepECEM)),
                         yaxis = list(title = "Predictor"))
 ```
 
