@@ -198,7 +198,6 @@ pcaAnalysis <- ggplot(params$pcaAnalysis, aes(PC1, PC2)) +
      xlab("First Principal Component") + 
     ylab("Second Principal Component") + 
     ggtitle("PCA Analysis of Changed Diagnostics")
-
 ```
 
 ```{r}
@@ -241,29 +240,17 @@ numericTable <- params$numericTable
 numericVariables <- rownames(numericTable)
 
 totalTable <- params$totalTable
-
-totalTable$logCCCM <- ifelse(totalTable$CCCM == 0, 1, totalTable$CCCM)
-
-totalTable$logCCCM <- log(totalTable$logCCCM, base = 2)
-
-totalTable$logECEM <- ifelse(totalTable$ECEM == 0, 1, totalTable$ECEM)
-
-totalTable$logECEM <- log(totalTable$logECEM, base = 2)
-
-totalTable$logCE <- ifelse(totalTable$CE == 0, 1, totalTable$CE)
-
-totalTable$logCE <- log(totalTable$logCE, base = 2)
 ```
 
 ```{r, include = FALSE}
-maxCCCM <- max(totalTable$logCCCM)
-minCCCM <- min(totalTable$logCCCM)
+maxCCCM <- max(totalTable$CCCM)
+minCCCM <- min(totalTable$CCCM)
 
-maxECEM <- max(totalTable$logECEM)
-minECEM <- min(totalTable$logECEM)
+maxECEM <- max(totalTable$ECEM)
+minECEM <- min(totalTable$ECEM)
 
-maxCE <- max(totalTable$logCE)
-minCE <- min(totalTable$logCE)
+maxCE <- max(totalTable$CE)
+minCE <- min(totalTable$CE)
 
 if(abs(maxCCCM) + abs(minCCCM) > 3){
   sepCCCM <- 0.5
@@ -308,9 +295,9 @@ for(indexRatio in 1:nrow(totalTable)){
 
   } else {
 
-    if(abs(totalTable$logCCCM[indexRatio]) < 1){
+    if(abs(totalTable$CCCM[indexRatio]) < 1){
       totalTable$ColorsCCCM[indexRatio] <- "gold"
-    } else if (abs(totalTable$logCCCM[indexRatio]) > 1 && abs(totalTable$logCCCM[indexRatio]) < 2){
+    } else if (abs(totalTable$CCCM[indexRatio]) > 1 && abs(totalTable$CCCM[indexRatio]) < 2){
       totalTable$ColorsCCCM[indexRatio] <- "orange"
     } else {
       totalTable$ColorsCCCM[indexRatio] <- "red"
@@ -324,7 +311,7 @@ for(indexRatio in 1:nrow(totalTable)){
   if(rownames(totalTable)[indexRatio] %in% numericVariables){
 
     text <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][1]
-    text <- paste(text, "(Numeric)", "Ratio:", round(totalTable$logCCCM[indexRatio], digits = 3),  sep = " ")
+    text <- paste(text, "(Numeric)", "Ratio:", round(totalTable$CCCM[indexRatio], digits = 3),  sep = " ")
     
     text <- paste(text, "Number of Control -> Case patients:", sep = "<br>")
     text <- paste(text, numericTable[rownames(totalTable)[indexRatio], "NumPatientsCC"], sep = " ")
@@ -337,6 +324,8 @@ for(indexRatio in 1:nrow(totalTable)){
 
     text <- paste(text, "Mean value for the Control -> Control patients:", sep = "<br>")
     text <- paste(text, round(numericTable[rownames(totalTable)[indexRatio], "MeanCM"], digits = 3), sep = " ")
+    
+    
 
   } else {
 
@@ -349,7 +338,7 @@ for(indexRatio in 1:nrow(totalTable)){
     vsValue <- replace(vsValue, is.na(vsValue), "Empty")
     
 
-    text <- paste(strsplit(predictor, " ")[[1]][1], "=", predictorValue, "(Categoric)", "Ratio:", round(totalTable$logCCCM[indexRatio], digits = 3), sep = " ")
+    text <- paste(strsplit(predictor, " ")[[1]][1], "=", predictorValue, "(Categoric)", "Ratio:", round(totalTable$CCCM[indexRatio], digits = 3), sep = " ")
 
     text <- paste(text, "<br>", sep = "")
     text <- paste(text, "Number of Control -> Case patients in ", predictorValue, ":", sep = "")
@@ -381,9 +370,9 @@ for(indexRatio in 1:nrow(totalTable)){
 
   } else {
 
-    if(abs(totalTable$logECEM[indexRatio]) < 1){
+    if(abs(totalTable$ECEM[indexRatio]) < 1){
       totalTable$ColorsECEM[indexRatio] <- "gold"
-    } else if (abs(totalTable$logECEM[indexRatio]) > 1 && abs(totalTable$logECEM[indexRatio]) < 2){
+    } else if (abs(totalTable$ECEM[indexRatio]) > 1 && abs(totalTable$ECEM[indexRatio]) < 2){
       totalTable$ColorsECEM[indexRatio] <- "orange"
     } else {
       totalTable$ColorsECEM[indexRatio] <- "red"
@@ -396,7 +385,7 @@ for(indexRatio in 1:nrow(totalTable)){
 
     text <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][1]
 
-    text <- paste(text, "(Numeric)","Ratio:", round(totalTable$logECEM[indexRatio], digits = 3), sep = " ")
+    text <- paste(text, "(Numeric)","Ratio:", round(totalTable$ECEM[indexRatio], digits = 3), sep = " ")
 
 
     text <- paste(text, "Number of Case -> Control patients:", sep = "<br>")
@@ -428,7 +417,7 @@ for(indexRatio in 1:nrow(totalTable)){
     vsValue <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][2]
     vsValue <- replace(vsValue, is.na(vsValue), "Empty")
     
-    text <- paste(strsplit(predictor, " ")[[1]][1], "=", predictorValue, "(Categoric)","Ratio:", round(totalTable$logECEM[indexRatio], digits = 3), sep = " ")
+    text <- paste(strsplit(predictor, " ")[[1]][1], "=", predictorValue, "(Categoric)","Ratio:", round(totalTable$ECEM[indexRatio], digits = 3), sep = " ")
 
     text <- paste(text, "<br>", sep = "")
     text <- paste(text, "Number of Case -> Control patients in ", predictorValue, ":", sep = "")
@@ -463,9 +452,9 @@ for(indexRatio in 1:nrow(totalTable)){
 
   } else {
 
-    if(abs(totalTable$logCE[indexRatio]) < 1){
+    if(abs(totalTable$CE[indexRatio]) < 1){
       totalTable$ColorsCE[indexRatio] <- "gold"
-    } else if (abs(totalTable$logCE[indexRatio]) > 1 && abs(totalTable$logCE[indexRatio]) < 2){
+    } else if (abs(totalTable$CE[indexRatio]) > 1 && abs(totalTable$CE[indexRatio]) < 2){
       totalTable$ColorsCE[indexRatio] <- "orange"
     } else {
       totalTable$ColorsCE[indexRatio] <- "red"
@@ -478,7 +467,7 @@ for(indexRatio in 1:nrow(totalTable)){
 
     text <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][1]
 
-    text <- paste(text, "(Numeric)", "Ratio:", round(totalTable$logCE[indexRatio], digits = 3), sep = " ")
+    text <- paste(text, "(Numeric)", "Ratio:", round(totalTable$CE[indexRatio], digits = 3), sep = " ")
 
     
     text <- paste(text, "Number of Control patients (before genetic):", sep = "<br>")
@@ -511,7 +500,7 @@ for(indexRatio in 1:nrow(totalTable)){
     vsValue <- replace(vsValue, is.na(vsValue), "Empty")
     
     
-    text <- paste(strsplit(predictor, " ")[[1]][1], "=", predictorValue, "(Categoric)","Ratio:", round(totalTable$logCE[indexRatio], digits = 3), sep = " ")
+    text <- paste(strsplit(predictor, " ")[[1]][1], "=", predictorValue, "(Categoric)","Ratio:", round(totalTable$CE[indexRatio], digits = 3), sep = " ")
 
     text <- paste(text, "<br>", sep = "")
     
@@ -546,12 +535,12 @@ for(indexRatio in 1:nrow(totalTable)){
 # Ratio Analysis
 
 ```{r, include = FALSE}
-plotCE <- plot_ly(totalTable,x=~logCE,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCE ), height = 800, width = 1000, hoverinfo = "text", text =~textCE)
+plotCE <- plot_ly(totalTable,x=~CE,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCE ), height = 800, width = 1000, hoverinfo = "text", text =~textCE)
 
 title <- "Ratios between Control and Case patients before detection (genetic algorithm)"
 
 plotCE <- plotCE %>% layout(title = title,
-                        xaxis = list(title = "Ratio on a logarithmic scale (base 2) <br>", tickvals = seq(-ceiling(-min(totalTable$logCE)), ceiling(max(totalTable$logCE)), by = sepCE)),
+                        xaxis = list(title = "Ratio <br>", tickvals = seq(-ceiling(-min(totalTable$CE)), ceiling(max(totalTable$CE)), by = sepCE)),
                         yaxis = list(title = "Predictor"))
 ```
 
@@ -560,11 +549,11 @@ plotCE
 ```
 
 ```{r, include = FALSE}
-plotCCCM <- plot_ly(totalTable,x=~logCCCM,y=~rownames(totalTable), type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCCCM ), height = 800, width = 1000, hoverinfo = "text", text =~textCCCM)
+plotCCCM <- plot_ly(totalTable,x=~CCCM,y=~rownames(totalTable), type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCCCM ), height = 800, width = 1000, hoverinfo = "text", text =~textCCCM)
 
 title <- "Evolution of the set of Control patients after detection (genetic algorithm)"
 plotCCCM <- plotCCCM %>% layout(title = title,
-                        xaxis = list(title = "Ratio on a logarithmic scale (base 2) <br>", tickvals = seq(-ceiling(-min(totalTable$logCCCM)), ceiling(max(totalTable$logCCCM)), by = sepCCCM)),
+                        xaxis = list(title = "Ratio <br>", tickvals = seq(-ceiling(-min(totalTable$CCCM)), ceiling(max(totalTable$CCCM)), by = sepCCCM)),
                         yaxis = list(title = "Predictor"))
 ```
 
@@ -573,12 +562,12 @@ plotCCCM
 ```
 
 ```{r, include = FALSE}
-plotECEM <- plot_ly(totalTable,x=~logECEM,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsECEM ), height = 800, width = 1000, hoverinfo = "text", text =~textECEM)
+plotECEM <- plot_ly(totalTable,x=~ECEM,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsECEM ), height = 800, width = 1000, hoverinfo = "text", text =~textECEM)
 
 title <- "Evolution of the set of CASE patients after detection (genetic algorithm)"
 
 plotECEM <- plotECEM %>% layout(title = title,
-                        xaxis = list(title = "Ratio on a logarithmic scale (base 2) <br>", tickvals = seq(-ceiling(-min(totalTable$logECEM)), ceiling(max(totalTable$logECEM)), by = sepECEM)),
+                        xaxis = list(title = "Ratio <br>", tickvals = seq(-ceiling(-min(totalTable$ECEM)), ceiling(max(totalTable$ECEM)), by = sepECEM)),
                         yaxis = list(title = "Predictor"))
 ```
 
