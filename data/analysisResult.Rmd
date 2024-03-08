@@ -547,7 +547,7 @@ plotCE <- plot_ly(totalTable,x=~adjustedCE,y=~rownames(totalTable),type="scatter
 title <- "Ratios between Control and Case patients before detection (genetic algorithm)"
 
 plotCE <- plotCE %>% layout(title = title,
-                        xaxis = list(title = "Ratio in percentage scale <br>", tickvals = seq(-ceiling(-min(totalTable$adjustedCE)), ceiling(max(totalTable$CE)), by = sepCE)),
+                        xaxis = list(title = "Ratio in percentage scale <br>", ticksuffix = "%", tickvals = seq(-ceiling(-min(totalTable$adjustedCE)), ceiling(max(totalTable$CE)), by = sepCE)),
                         yaxis = list(title = "Predictor"))
 ```
 
