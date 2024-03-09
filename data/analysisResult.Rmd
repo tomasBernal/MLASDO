@@ -309,9 +309,9 @@ for(indexRatio in 1:nrow(totalTable)){
 
   } else {
 
-    if(abs(totalTable$adjustedCCCM[indexRatio]) < 0.15){
+    if(abs(totalTable$adjustedCCCM[indexRatio]) < 15){
       totalTable$ColorsCCCM[indexRatio] <- "gold"
-    } else if (abs(totalTable$adjustedCCCM[indexRatio]) > 0.15 && abs(totalTable$adjustedCCCM[indexRatio]) < 0.25){
+    } else if (abs(totalTable$adjustedCCCM[indexRatio]) > 15 && abs(totalTable$adjustedCCCM[indexRatio]) < 25){
       totalTable$ColorsCCCM[indexRatio] <- "orange"
     } else {
       totalTable$ColorsCCCM[indexRatio] <- "red"
@@ -382,9 +382,9 @@ for(indexRatio in 1:nrow(totalTable)){
 
   } else {
 
-    if(abs(totalTable$adjustedECEM[indexRatio]) < 0.15){
+    if(abs(totalTable$adjustedECEM[indexRatio]) < 15){
       totalTable$ColorsECEM[indexRatio] <- "gold"
-    } else if (abs(totalTable$adjustedECEM[indexRatio]) > 0.15 && abs(totalTable$adjustedECEM[indexRatio]) < 0.25){
+    } else if (abs(totalTable$adjustedECEM[indexRatio]) > 15 && abs(totalTable$adjustedECEM[indexRatio]) < 25){
       totalTable$ColorsECEM[indexRatio] <- "orange"
     } else {
       totalTable$ColorsECEM[indexRatio] <- "red"
@@ -464,9 +464,9 @@ for(indexRatio in 1:nrow(totalTable)){
 
   } else {
 
-    if(abs(totalTable$adjustedCE[indexRatio]) < 0.15){
+    if(abs(totalTable$adjustedCE[indexRatio]) < 15){
       totalTable$ColorsCE[indexRatio] <- "gold"
-    } else if (abs(totalTable$adjustedCE[indexRatio]) > 0.15 && abs(totalTable$adjustedCE[indexRatio]) < 0.25){
+    } else if (abs(totalTable$adjustedCE[indexRatio]) > 15 && abs(totalTable$adjustedCE[indexRatio]) < 25){
       totalTable$ColorsCE[indexRatio] <- "orange"
     } else {
       totalTable$ColorsCE[indexRatio] <- "red"
