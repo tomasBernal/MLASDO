@@ -71,6 +71,16 @@ performPCAAnalysis <- function(
   write.table(pca, gaPath, row.names = T, col.names = T, sep =  '\t')
 
 
+  selectedData[[idColumn]] <- NULL
+
+  # We need to remove non numeric columns
+  selectedData <- dplyr::select(selectedData, where(is.numeric))
+
+  # We need to remove constant or zero variance columns
+  uselessColumns <- sapply(selectedData, function(x) length(unique(x)) == 1)
+
+  selectedData <- selectedData[, !uselessColumns]
+
   # Performing prcomp which gives us the deviations of the principal components
   omicResult <- prcomp(selectedData, scale. = TRUE)
 
