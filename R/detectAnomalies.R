@@ -591,7 +591,10 @@ detectAnomalies <- function(
 
   selectedPredictors <- read.table(selectedPredictorsPath, header = TRUE, sep = "\t", row.names = 1)
 
-  selectedOmicPredictors <- omic[, c(idColumn, rownames(selectedPredictors), classVariable)]
+  omicDataShow <- omicData
+  omicDataShow[subsetTrain,][[classVariable]] <- changedDiagnoses
+
+  selectedOmicPredictors <- omicDataShow[, c(idColumn, rownames(selectedPredictors), classVariable)]
 
 
   dirPath <- paste(savingName, "analysisData", name, sep = "/")
