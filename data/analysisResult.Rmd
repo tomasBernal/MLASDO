@@ -320,9 +320,9 @@ for(indexRatio in 1:nrow(totalTable)){
 
   } else {
 
-    if(abs(totalTable$logCCCM[indexRatio]) < 1){
+    if(abs(totalTable$logCCCM[indexRatio]) < 0.5){
       totalTable$ColorsCCCM[indexRatio] <- "gold"
-    } else if (abs(totalTable$logCCCM[indexRatio]) > 1 && abs(totalTable$logCCCM[indexRatio]) < 2){
+    } else if (abs(totalTable$logCCCM[indexRatio]) > 0.5 && abs(totalTable$logCCCM[indexRatio]) < 1.5){
       totalTable$ColorsCCCM[indexRatio] <- "orange"
     } else {
       totalTable$ColorsCCCM[indexRatio] <- "red"
@@ -336,7 +336,9 @@ for(indexRatio in 1:nrow(totalTable)){
   if(rownames(totalTable)[indexRatio] %in% numericVariables){
 
     text <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][1]
-    text <- paste(text, "(Numeric)", "Ratio:", round(totalTable$CCCM[indexRatio], digits = 3),  sep = " ")
+    text <- paste(text, "(Numeric)", "<br>", sep = " ")
+    
+    text <- paste(text, "Ratio:", round(totalTable$CCCM[indexRatio], digits = 3),  sep = " ")
     
     text <- paste(text, "Ratio (logaritmic):", sep = "<br>")
     text <- paste(text, round(totalTable$logCCCM[indexRatio], digits = 3),  sep = " ")
@@ -415,9 +417,9 @@ for(indexRatio in 1:nrow(totalTable)){
 
   } else {
 
-    if(abs(totalTable$logECEM[indexRatio]) < 1){
+    if(abs(totalTable$logECEM[indexRatio]) < 0.5){
       totalTable$ColorsECEM[indexRatio] <- "gold"
-    } else if (abs(totalTable$logECEM[indexRatio]) > 1 && abs(totalTable$logECEM[indexRatio]) < 2){
+    } else if (abs(totalTable$logECEM[indexRatio]) > 0.5 && abs(totalTable$logECEM[indexRatio]) < 1.5){
       totalTable$ColorsECEM[indexRatio] <- "orange"
     } else {
       totalTable$ColorsECEM[indexRatio] <- "red"
@@ -519,9 +521,9 @@ for(indexRatio in 1:nrow(totalTable)){
 
   } else {
 
-    if(abs(totalTable$logCE[indexRatio]) < 1){
+    if(abs(totalTable$logCE[indexRatio]) < 0.5){
       totalTable$ColorsCE[indexRatio] <- "gold"
-    } else if (abs(totalTable$logCE[indexRatio]) > 1 && abs(totalTable$logCE[indexRatio]) < 2){
+    } else if (abs(totalTable$logCE[indexRatio]) > 0.5 && abs(totalTable$logCE[indexRatio]) < 1.5){
       totalTable$ColorsCE[indexRatio] <- "orange"
     } else {
       totalTable$ColorsCE[indexRatio] <- "red"
