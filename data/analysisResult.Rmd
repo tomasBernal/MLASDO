@@ -328,9 +328,9 @@ for(indexRatio in 1:nrow(totalTable)){
     text <- paste(text, "(Numeric)", "Ratio:", round(totalTable$CCCM[indexRatio], digits = 3),  sep = " ")
     
     text <- paste(text, "Percentage:", sep = "<br>")
-    text <- paste(text, round(totalTable$adjustedCCCM[indexRatio], digits = 1), "%",  sep = " ")
+    text <- paste(text, paste(round(totalTable$adjustedCCCM[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
     
-    text <- paste(text, "<br>", sep = "")
+  
     
     text <- paste(text, "Number of Control -> Case patients:", sep = "<br>")
     text <- paste(text, numericTable[rownames(totalTable)[indexRatio], "NumPatientsCC"], sep = " ")
@@ -359,9 +359,9 @@ for(indexRatio in 1:nrow(totalTable)){
     
     text <- paste(text, "Percentage:", sep = "<br>")
     
-    text <- paste(text, round(totalTable$adjustedCCCM[indexRatio], digits = 1), "%",  sep = " ")
+    text <- paste(text, paste(round(totalTable$adjustedCCCM[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
     
-    text <- paste(text, "<br>", sep = "")
+
     text <- paste(text, "<br>", sep = "")
     text <- paste(text, "Number of Control -> Case patients in ", predictorValue, ":", sep = "")
 
@@ -410,8 +410,8 @@ for(indexRatio in 1:nrow(totalTable)){
     text <- paste(text, "(Numeric)","Ratio:", round(totalTable$ECEM[indexRatio], digits = 3), sep = " ")
   
     text <- paste(text, "Percentage:", sep = "<br>")
-    text <- paste(text, round(totalTable$adjustedECEM[indexRatio], digits = 1), "%",  sep = " ")
-    text <- paste(text, "<br>", sep = "")
+    text <- paste(text, paste(round(totalTable$adjustedECEM[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
+
     
     text <- paste(text, "Number of Case -> Control patients:", sep = "<br>")
 
@@ -446,9 +446,9 @@ for(indexRatio in 1:nrow(totalTable)){
     
     text <- paste(text, "Percentage:", sep = "<br>")
     
-    text <- paste(text, round(totalTable$adjustedECEM[indexRatio], digits = 1), "%",  sep = " ")
+    text <- paste(text, paste(round(totalTable$adjustedECEM[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
     
-    text <- paste(text, "<br>", sep = "")
+
     text <- paste(text, "<br>", sep = "")
     text <- paste(text, "Number of Case -> Control patients in ", predictorValue, ":", sep = "")
 
@@ -500,8 +500,8 @@ for(indexRatio in 1:nrow(totalTable)){
     text <- paste(text, "(Numeric)", "Ratio:", round(totalTable$CE[indexRatio], digits = 3), sep = " ")
 
     text <- paste(text, "Percentage:", sep = "<br>")
-    text <- paste(text, round(totalTable$adjustedCE[indexRatio], digits = 1), "%",  sep = " ")
-    text <- paste(text, "<br>", sep = "")
+    text <- paste(text, paste(round(totalTable$adjustedCE[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
+    
     
     text <- paste(text, "Number of Control patients (before genetic):", sep = "<br>")
 
@@ -537,10 +537,9 @@ for(indexRatio in 1:nrow(totalTable)){
     
     text <- paste(text, "Percentage:", sep = "<br>")
     
-    text <- paste(text, round(totalTable$adjustedCE[indexRatio], digits = 1), "%",  sep = " ")
+    text <- paste(text, paste(round(totalTable$adjustedCE[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
     text <- paste(text, "<br>", sep = "")
     
-    text <- paste(text, "<br>", sep = "")
     text <- paste(text, "Number of Control patients (before genetic) in ", predictorValue, ":", sep = "")
 
     text <- paste(text, totalTable$SumCNumerator[indexRatio], sep = " ")
