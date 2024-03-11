@@ -374,7 +374,9 @@ for(indexRatio in 1:nrow(totalTable)){
     vsValue <- replace(vsValue, is.na(vsValue), "Empty")
     
 
-    text <- paste(strsplit(predictor, " ")[[1]][1], "=", predictorValue, "(Categoric)", "Ratio:", round(totalTable$CCCM[indexRatio], digits = 3), sep = " ")
+    text <- paste(strsplit(predictor, " ")[[1]][1], "=", predictorValue, "(Categoric)", "<br>", sep = " ")
+    
+    text <- paste(text, "Ratio:", round(totalTable$CCCM[indexRatio], digits = 3), sep = " ")
     
     text <- paste(text, "Ratio (logaritmic):", sep = "<br>")
     text <- paste(text, round(totalTable$logCCCM[indexRatio], digits = 3),  sep = " ")
@@ -433,7 +435,9 @@ for(indexRatio in 1:nrow(totalTable)){
 
     text <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][1]
 
-    text <- paste(text, "(Numeric)","Ratio:", round(totalTable$ECEM[indexRatio], digits = 3), sep = " ")
+    text <- paste(text, "(Numeric)", "<br>", sep = " ")
+    
+    text <- paste(text, "Ratio:", round(totalTable$ECEM[indexRatio], digits = 3), sep = " ")
   
     text <- paste(text, "Ratio (logaritmic):", sep = "<br>")
     text <- paste(text, round(totalTable$logECEM[indexRatio], digits = 3),  sep = " ")
@@ -475,7 +479,9 @@ for(indexRatio in 1:nrow(totalTable)){
     vsValue <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][2]
     vsValue <- replace(vsValue, is.na(vsValue), "Empty")
     
-    text <- paste(strsplit(predictor, " ")[[1]][1], "=", predictorValue, "(Categoric)","Ratio:", round(totalTable$ECEM[indexRatio], digits = 3), sep = " ")
+    text <- paste(strsplit(predictor, " ")[[1]][1], "=", predictorValue, "(Categoric)","<br>", sep = " ")
+    
+    text <- paste(text, "Ratio:", round(totalTable$ECEM[indexRatio], digits = 3), sep = " ")
     
     text <- paste(text, "Ratio (logaritmic):", sep = "<br>")
     text <- paste(text, round(totalTable$logECEM[indexRatio], digits = 3),  sep = " ")
@@ -537,7 +543,9 @@ for(indexRatio in 1:nrow(totalTable)){
 
     text <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][1]
 
-    text <- paste(text, "(Numeric)", "Ratio:", round(totalTable$CE[indexRatio], digits = 3), sep = " ")
+    text <- paste(text, "(Numeric)", "<br>", sep = " ")
+    
+    text <- paste(text, "Ratio:", round(totalTable$CE[indexRatio], digits = 3), sep = " ")
     
     text <- paste(text, "Ratio (logaritmic):", sep = "<br>")
     text <- paste(text, round(totalTable$logCE[indexRatio], digits = 3),  sep = " ")
@@ -580,7 +588,9 @@ for(indexRatio in 1:nrow(totalTable)){
     vsValue <- replace(vsValue, is.na(vsValue), "Empty")
     
     
-    text <- paste(strsplit(predictor, " ")[[1]][1], "=", predictorValue, "(Categoric)","Ratio:", round(totalTable$CE[indexRatio], digits = 3), sep = " ")
+    text <- paste(strsplit(predictor, " ")[[1]][1], "=", predictorValue, "(Categoric)", "<br>", sep = " ")
+    
+    text <- paste(text, "Ratio:", round(totalTable$CE[indexRatio], digits = 3), sep = " ")
     
     text <- paste(text, "Ratio (logaritmic):", sep = "<br>")
     text <- paste(text, round(totalTable$logCE[indexRatio], digits = 3),  sep = " ")
