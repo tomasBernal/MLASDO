@@ -243,51 +243,62 @@ totalTable <- params$totalTable
 ```
 
 ```{r, include = FALSE}
-totalTable$adjustedCCCM <- totalTable$CCCM - 1
-totalTable$adjustedCCCM <- totalTable$adjustedCCCM * 100
+totalTable$percentageCCCM <- totalTable$CCCM - 1
+totalTable$percentageCCCM <- totalTable$percentageCCCM * 100
 
-totalTable$adjustedECEM <- totalTable$ECEM - 1
-totalTable$adjustedECEM <- totalTable$adjustedECEM * 100
+totalTable$percentageECEM <- totalTable$ECEM - 1
+totalTable$percentageECEM <- totalTable$percentageECEM * 100
 
-totalTable$adjustedCE <- totalTable$CE - 1
-totalTable$adjustedCE <- totalTable$adjustedCE * 100
+totalTable$percentageCE <- totalTable$CE - 1
+totalTable$percentageCE <- totalTable$percentageCE * 100
+
+
+totalTable$logCCCM <- ifelse(totalTable$CCCM == 0, 1, totalTable$CCCM)
+
+totalTable$logCCCM <- log(totalTable$logCCCM, base = 2)
+
+totalTable$logECEM <- ifelse(totalTable$ECEM == 0, 1, totalTable$ECEM)
+
+totalTable$logECEM <- log(totalTable$logECEM, base = 2)
+
+totalTable$logCE <- ifelse(totalTable$CE == 0, 1, totalTable$CE)
+
+totalTable$logCE <- log(totalTable$logCE, base = 2)
 ```
 
 ```{r, include = FALSE}
-maxCCCM <- max(abs(totalTable$adjustedCCCM))
+maxCCCM <- max(totalTable$logCCCM)
+minCCCM <- min(totalTable$logCCCM)
 
-maxECEM <- max(abs(totalTable$adjustedECEM))
+maxECEM <- max(totalTable$logECEM)
+minECEM <- min(totalTable$logECEM)
 
-maxCE <- max(abs(totalTable$adjustedCE))
+maxCE <- max(totalTable$logCE)
+minCE <- min(totalTable$logCE)
 
-if(maxCCCM > 200){
-  sepCCCM <- 25
-} else if(maxCCCM > 100) {
-  sepCCCM <- 20
-} else if(maxCCCM > 50) {
-  sepCCCM <- 10
+if(abs(maxCCCM) + abs(minCCCM) > 3){
+  sepCCCM <- 0.5
+} else if(abs(maxCCCM) + abs(minCCCM) > 1) {
+  sepCCCM <- 0.25
 } else {
-  sepCCCM <- 5
+  sepCCCM <- 0.1
 }
 
-if(maxECEM > 200){
-  sepECEM <- 25
-} else if(maxECEM > 100) {
-  sepECEM <- 20
-} else if(maxECEM > 50) {
-  sepECEM <- 10
+if(abs(maxECEM) + abs(minECEM) > 3){
+  sepECEM <- 0.5
+} else if(abs(maxECEM) + abs(minECEM) > 1) {
+  sepECEM <- 0.25
 } else {
-  sepECEM <- 5
+  sepECEM <- 0.1
 }
 
-if(maxCE > 200){
-  sepCE <- 25
-} else if(maxCE > 100) {
-  sepCE <- 20
-} else if(maxCE > 50) {
-  sepCE <- 10
+
+if(abs(maxCE) + abs(minCE) > 3){
+  sepCE <- 0.5
+} else if(abs(maxCE) + abs(minCE) > 1) {
+  sepCE <- 0.25
 } else {
-  sepCE <- 5
+  sepCE <- 0.1
 }
 ```
 
@@ -303,15 +314,15 @@ totalTable$textCE <- NA
 
 for(indexRatio in 1:nrow(totalTable)){
 
-  if(totalTable$adjustedCCCM[indexRatio] == 0){
+  if(totalTable$CCCM[indexRatio] == 0){
 
     totalTable$ColorsCCCM[indexRatio] <- "black"
 
   } else {
 
-    if(abs(totalTable$adjustedCCCM[indexRatio]) < 15){
+    if(abs(totalTable$logCCCM[indexRatio]) < 1){
       totalTable$ColorsCCCM[indexRatio] <- "gold"
-    } else if (abs(totalTable$adjustedCCCM[indexRatio]) > 15 && abs(totalTable$adjustedCCCM[indexRatio]) < 25){
+    } else if (abs(totalTable$logCCCM[indexRatio]) > 1 && abs(totalTable$logCCCM[indexRatio]) < 2){
       totalTable$ColorsCCCM[indexRatio] <- "orange"
     } else {
       totalTable$ColorsCCCM[indexRatio] <- "red"
@@ -327,10 +338,16 @@ for(indexRatio in 1:nrow(totalTable)){
     text <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][1]
     text <- paste(text, "(Numeric)", "Ratio:", round(totalTable$CCCM[indexRatio], digits = 3),  sep = " ")
     
-    text <- paste(text, "Percentage:", sep = "<br>")
-    text <- paste(text, paste(round(totalTable$adjustedCCCM[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
-    
-  
+    text <- paste(text, "Ratio (logaritmic):", sep = "<br>")
+    text <- paste(text, round(totalTable$logCCCM[indexRatio], digits = 3),  sep = " ")
+      
+    if (totalTable$percentageCCCM[indexRatio] > 0){
+      text <- paste(text, "Percentage:", sep = "<br>")
+      text <- paste(text, paste(round(totalTable$percentageCCCM[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
+    } else {
+      text <- paste(text, "Percentage:", sep = "<br>")
+      text <- paste(text, paste(round(totalTable$percentageCCCM[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
+    }
     
     text <- paste(text, "Number of Control -> Case patients:", sep = "<br>")
     text <- paste(text, numericTable[rownames(totalTable)[indexRatio], "NumPatientsCC"], sep = " ")
@@ -357,10 +374,16 @@ for(indexRatio in 1:nrow(totalTable)){
 
     text <- paste(strsplit(predictor, " ")[[1]][1], "=", predictorValue, "(Categoric)", "Ratio:", round(totalTable$CCCM[indexRatio], digits = 3), sep = " ")
     
-    text <- paste(text, "Percentage:", sep = "<br>")
+    text <- paste(text, "Ratio (logaritmic):", sep = "<br>")
+    text <- paste(text, round(totalTable$logCCCM[indexRatio], digits = 3),  sep = " ")
     
-    text <- paste(text, paste(round(totalTable$adjustedCCCM[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
-    
+    if (totalTable$percentageCCCM[indexRatio] > 0){
+      text <- paste(text, "Percentage:", sep = "<br>")
+      text <- paste(text, paste(round(totalTable$percentageCCCM[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
+    } else {
+      text <- paste(text, "Percentage:", sep = "<br>")
+      text <- paste(text, paste(round(totalTable$percentageCCCM[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
+    }
 
     text <- paste(text, "<br>", sep = "")
     text <- paste(text, "Number of Control -> Case patients in ", predictorValue, ":", sep = "")
@@ -386,19 +409,20 @@ for(indexRatio in 1:nrow(totalTable)){
 
   totalTable$textCCCM[indexRatio] <- text
 
-  if(totalTable$adjustedECEM[indexRatio] == 0){
+  if(totalTable$ECEM[indexRatio] == 0){
 
     totalTable$ColorsECEM[indexRatio] <- "black"
 
   } else {
 
-    if(abs(totalTable$adjustedECEM[indexRatio]) < 15){
+    if(abs(totalTable$logECEM[indexRatio]) < 1){
       totalTable$ColorsECEM[indexRatio] <- "gold"
-    } else if (abs(totalTable$adjustedECEM[indexRatio]) > 15 && abs(totalTable$adjustedECEM[indexRatio]) < 25){
+    } else if (abs(totalTable$logECEM[indexRatio]) > 1 && abs(totalTable$logECEM[indexRatio]) < 2){
       totalTable$ColorsECEM[indexRatio] <- "orange"
     } else {
       totalTable$ColorsECEM[indexRatio] <- "red"
     }
+
   }
 
   text <- ""
@@ -409,9 +433,16 @@ for(indexRatio in 1:nrow(totalTable)){
 
     text <- paste(text, "(Numeric)","Ratio:", round(totalTable$ECEM[indexRatio], digits = 3), sep = " ")
   
-    text <- paste(text, "Percentage:", sep = "<br>")
-    text <- paste(text, paste(round(totalTable$adjustedECEM[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
-
+    text <- paste(text, "Ratio (logaritmic):", sep = "<br>")
+    text <- paste(text, round(totalTable$logECEM[indexRatio], digits = 3),  sep = " ")
+    
+    if (totalTable$percentageECEM[indexRatio] > 0){
+      text <- paste(text, "Percentage:", sep = "<br>")
+      text <- paste(text, paste(round(totalTable$percentageECEM[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
+    } else {
+      text <- paste(text, "Percentage:", sep = "<br>")
+      text <- paste(text, paste(round(totalTable$percentageECEM[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
+    }
     
     text <- paste(text, "Number of Case -> Control patients:", sep = "<br>")
 
@@ -444,10 +475,16 @@ for(indexRatio in 1:nrow(totalTable)){
     
     text <- paste(strsplit(predictor, " ")[[1]][1], "=", predictorValue, "(Categoric)","Ratio:", round(totalTable$ECEM[indexRatio], digits = 3), sep = " ")
     
-    text <- paste(text, "Percentage:", sep = "<br>")
+    text <- paste(text, "Ratio (logaritmic):", sep = "<br>")
+    text <- paste(text, round(totalTable$logECEM[indexRatio], digits = 3),  sep = " ")
     
-    text <- paste(text, paste(round(totalTable$adjustedECEM[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
-    
+    if (totalTable$percentageECEM[indexRatio] > 0){
+      text <- paste(text, "Percentage:", sep = "<br>")
+      text <- paste(text, paste(round(totalTable$percentageECEM[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
+    } else {
+      text <- paste(text, "Percentage:", sep = "<br>")
+      text <- paste(text, paste(round(totalTable$percentageECEM[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
+    }
 
     text <- paste(text, "<br>", sep = "")
     text <- paste(text, "Number of Case -> Control patients in ", predictorValue, ":", sep = "")
@@ -475,20 +512,21 @@ for(indexRatio in 1:nrow(totalTable)){
 
   totalTable$textECEM[indexRatio] <- text
 
-
-  if(totalTable$adjustedCE[indexRatio] == 0){
+  
+  if(totalTable$CE[indexRatio] == 0){
 
     totalTable$ColorsCE[indexRatio] <- "black"
 
   } else {
 
-    if(abs(totalTable$adjustedCE[indexRatio]) < 15){
+    if(abs(totalTable$logCE[indexRatio]) < 1){
       totalTable$ColorsCE[indexRatio] <- "gold"
-    } else if (abs(totalTable$adjustedCE[indexRatio]) > 15 && abs(totalTable$adjustedCE[indexRatio]) < 25){
+    } else if (abs(totalTable$logCE[indexRatio]) > 1 && abs(totalTable$logCE[indexRatio]) < 2){
       totalTable$ColorsCE[indexRatio] <- "orange"
     } else {
       totalTable$ColorsCE[indexRatio] <- "red"
     }
+
   }
 
   text <- ""
@@ -498,10 +536,17 @@ for(indexRatio in 1:nrow(totalTable)){
     text <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][1]
 
     text <- paste(text, "(Numeric)", "Ratio:", round(totalTable$CE[indexRatio], digits = 3), sep = " ")
-
-    text <- paste(text, "Percentage:", sep = "<br>")
-    text <- paste(text, paste(round(totalTable$adjustedCE[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
     
+    text <- paste(text, "Ratio (logaritmic):", sep = "<br>")
+    text <- paste(text, round(totalTable$logCE[indexRatio], digits = 3),  sep = " ")
+    
+    if (totalTable$percentageCE[indexRatio] > 0){
+      text <- paste(text, "Percentage:", sep = "<br>")
+      text <- paste(text, paste(round(totalTable$percentageCE[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
+    } else {
+      text <- paste(text, "Percentage:", sep = "<br>")
+      text <- paste(text, paste(round(totalTable$percentageCE[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
+    }
     
     text <- paste(text, "Number of Control patients (before genetic):", sep = "<br>")
 
@@ -535,9 +580,17 @@ for(indexRatio in 1:nrow(totalTable)){
     
     text <- paste(strsplit(predictor, " ")[[1]][1], "=", predictorValue, "(Categoric)","Ratio:", round(totalTable$CE[indexRatio], digits = 3), sep = " ")
     
-    text <- paste(text, "Percentage:", sep = "<br>")
+    text <- paste(text, "Ratio (logaritmic):", sep = "<br>")
+    text <- paste(text, round(totalTable$logCE[indexRatio], digits = 3),  sep = " ")
     
-    text <- paste(text, paste(round(totalTable$adjustedCE[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
+    if (totalTable$percentageCE[indexRatio] > 0){
+      text <- paste(text, "Percentage:", sep = "<br>")
+      text <- paste(text, paste(round(totalTable$percentageCE[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
+    } else {
+      text <- paste(text, "Percentage:", sep = "<br>")
+      text <- paste(text, paste(round(totalTable$percentageCE[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
+    }
+    
     text <- paste(text, "<br>", sep = "")
     
     text <- paste(text, "Number of Control patients (before genetic) in ", predictorValue, ":", sep = "")
@@ -571,12 +624,12 @@ for(indexRatio in 1:nrow(totalTable)){
 # Ratio Analysis
 
 ```{r, include = FALSE}
-plotCE <- plot_ly(totalTable,x=~adjustedCE,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCE ), height = 800, width = 1000, hoverinfo = "text", text =~textCE)
+plotCE <- plot_ly(totalTable,x=~percentageCE,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCE ), height = 800, width = 1000, hoverinfo = "text", text =~textCE)
 
 title <- "Ratios between Control and Case patients before detection (genetic algorithm)"
 
 plotCE <- plotCE %>% layout(title = title,
-                        xaxis = list(title = "Ratio in percentage scale <br>", ticksuffix = "%", tickvals = seq(-ceiling(-min(totalTable$adjustedCE)), ceiling(max(totalTable$adjustedCE)), by = sepCE)),
+                        xaxis = list(title = "Ratio in percentage scale <br>", ticksuffix = "%", tickvals = seq(-ceiling(-min(totalTable$percentageCE)), ceiling(max(totalTable$percentageCE)), by = sepCE)),
                         yaxis = list(title = "Predictor"))
 ```
 
@@ -585,11 +638,11 @@ plotCE
 ```
 
 ```{r, include = FALSE}
-plotCCCM <- plot_ly(totalTable,x=~adjustedCCCM,y=~rownames(totalTable), type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCCCM ), height = 800, width = 1000, hoverinfo = "text", text =~textCCCM)
+plotCCCM <- plot_ly(totalTable,x=~percentageCCCM,y=~rownames(totalTable), type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCCCM ), height = 800, width = 1000, hoverinfo = "text", text =~textCCCM)
 
 title <- "Evolution of the set of Control patients after detection (genetic algorithm)"
 plotCCCM <- plotCCCM %>% layout(title = title,
-                        xaxis = list(title = "Ratio in percentage scale <br>", ticksuffix = "%", tickvals = seq(-ceiling(-min(totalTable$adjustedCCCM)), ceiling(max(totalTable$adjustedCCCM)), by = sepCCCM)),
+                        xaxis = list(title = "Ratio in percentage scale <br>", ticksuffix = "%", tickvals = seq(-ceiling(-min(totalTable$percentageCCCM)), ceiling(max(totalTable$percentageCCCM)), by = sepCCCM)),
                         yaxis = list(title = "Predictor"))
 ```
 
@@ -598,12 +651,12 @@ plotCCCM
 ```
 
 ```{r, include = FALSE}
-plotECEM <- plot_ly(totalTable,x=~adjustedECEM,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsECEM ), height = 800, width = 1000, hoverinfo = "text", text =~textECEM)
+plotECEM <- plot_ly(totalTable,x=~percentageECEM,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsECEM ), height = 800, width = 1000, hoverinfo = "text", text =~textECEM)
 
 title <- "Evolution of the set of CASE patients after detection (genetic algorithm)"
 
 plotECEM <- plotECEM %>% layout(title = title,
-                        xaxis = list(title = "Ratio in percentage scale <br>", ticksuffix = "%", tickvals = seq(-ceiling(-min(totalTable$adjustedECEM)), ceiling(max(totalTable$adjustedECEM)), by = sepECEM)),
+                        xaxis = list(title = "Ratio in percentage scale <br>", ticksuffix = "%", tickvals = seq(-ceiling(-min(totalTable$percentageECEM)), ceiling(max(totalTable$percentageECEM)), by = sepECEM)),
                         yaxis = list(title = "Predictor"))
 ```
 
