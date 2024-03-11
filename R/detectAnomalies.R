@@ -596,7 +596,6 @@ detectAnomalies <- function(
 
   selectedOmicPredictors <- omicDataShow[, c(idColumn, rownames(selectedPredictors), classVariable)]
 
-
   dirPath <- paste(savingName, "analysisData", name, sep = "/")
   selectedDataPath <- paste(dirPath, "Selected_Predictors.tsv", sep="_")
 
@@ -645,6 +644,12 @@ detectAnomalies <- function(
       confusionMatrix(as.factor(as.integer(worstModelPrediction)), as.factor(omicTestDiagnosis))
 
   }
+
+  rownames(selectedOmicPredictors) <- selectedOmicPredictors[[idColumn]]
+  selectedOmicPredictors[[idColumn]] <- NULL
+
+  rownames(changedClinicData) <- changedClinicData[[idColumn]]
+  changedClinicData[[idColumn]] <- NULL
 
   print("Compiling Markdown file")
   MLASDO::compileMarkdown(
