@@ -150,7 +150,7 @@ performRatioAnalysis <- function(
       ratio2 <- replace(ratio2, is.na(ratio2), 0)
       ratio2 <- replace(ratio2, is.infinite(ratio2), 0)
 
-      ratio3 <- MeanE / MeanC
+      ratio3 <- MeanC / MeanE
       ratio3 <- replace(ratio3, is.na(ratio3), 0)
       ratio3 <- replace(ratio3, is.infinite(ratio3), 0)
 
