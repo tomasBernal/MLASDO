@@ -211,7 +211,7 @@ performRatioAnalysis <- function(
         ratio2 <- 0
         ratio3 <- 0
 
-        predictorName <- paste(activePredictor, "all =" unique(clinic[[activePredictor]]), sep = " ")
+        predictorName <- paste(activePredictor, "all =", unique(clinic[[activePredictor]]), sep = " ")
 
         namesCategoricRows <- c(namesCategoricRows, predictorName)
 
