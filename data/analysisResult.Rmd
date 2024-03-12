@@ -356,9 +356,13 @@ for(indexRatio in 1:nrow(totalTable)){
     text <- paste(text, round(numericTable[rownames(totalTable)[indexRatio], "MeanCM"], digits = 3), sep = " ")
     
     if (totalTable$percentageCCCM[indexRatio] > 0){
-      percentageText <- round(totalTable$percentageCCCM[indexRatio], digits = 1)
+      
+      percentageText <- paste(rownames(totalTable)[indexRatio], round(totalTable$percentageCCCM[indexRatio], digits = 1), sep = " ")
+ 
     } else {
-      percentageText <- round(totalTable$percentageCCCM[indexRatio], digits = 1)
+      
+      percentageText <- paste(rownames(totalTable)[indexRatio], round(totalTable$percentageCCCM[indexRatio], digits = 1), sep = " ")
+      
     }
     
   } else {
@@ -399,9 +403,13 @@ for(indexRatio in 1:nrow(totalTable)){
     text <- paste(text, totalTable$SumCMDenominator[indexRatio], sep = " ")
     
     if (totalTable$percentageCCCM[indexRatio] > 0){
-      percentageText <- round(totalTable$percentageCCCM[indexRatio], digits = 1)
+      
+      percentageText <- paste(rownames(totalTable)[indexRatio], round(totalTable$percentageCCCM[indexRatio], digits = 1), sep = " ")
+ 
     } else {
-      percentageText <- round(totalTable$percentageCCCM[indexRatio], digits = 1)
+      
+      percentageText <- paste(rownames(totalTable)[indexRatio], round(totalTable$percentageCCCM[indexRatio], digits = 1), sep = " ")
+      
     }
 
   }
@@ -458,10 +466,15 @@ for(indexRatio in 1:nrow(totalTable)){
 
     text <- paste(text, round(numericTable[rownames(totalTable)[indexRatio], "MeanEM"], digits = 3), sep = " ")
     
+    
     if (totalTable$percentageECEM[indexRatio] > 0){
-      percentageText <- round(totalTable$percentageECEM[indexRatio], digits = 1)
+      
+      percentageText <- paste(rownames(totalTable)[indexRatio], round(totalTable$percentageECEM[indexRatio], digits = 1), sep = " ")
+ 
     } else {
-      percentageText <- round(totalTable$percentageECEM[indexRatio], digits = 1)
+      
+      percentageText <- paste(rownames(totalTable)[indexRatio], round(totalTable$percentageECEM[indexRatio], digits = 1), sep = " ")
+      
     }
     
   } else {
@@ -505,9 +518,13 @@ for(indexRatio in 1:nrow(totalTable)){
     text <- paste(text, totalTable$SumEMDenominator[indexRatio], sep = " ")
     
     if (totalTable$percentageECEM[indexRatio] > 0){
-      percentageText <- round(totalTable$percentageECEM[indexRatio], digits = 1)
+      
+      percentageText <- paste(rownames(totalTable)[indexRatio], round(totalTable$percentageECEM[indexRatio], digits = 1), sep = " ")
+ 
     } else {
-      percentageText <- round(totalTable$percentageECEM[indexRatio], digits = 1)
+      
+      percentageText <- paste(rownames(totalTable)[indexRatio], round(totalTable$percentageECEM[indexRatio], digits = 1), sep = " ")
+      
     }
   }
 
@@ -563,10 +580,15 @@ for(indexRatio in 1:nrow(totalTable)){
 
     text <- paste(text, round(numericTable[rownames(totalTable)[indexRatio], "MeanE"], digits = 3), sep = " ")
     
+    
     if (totalTable$percentageCE[indexRatio] > 0){
-      percentageText <- round(totalTable$percentageCE[indexRatio], digits = 1)
+      
+      percentageText <- paste(rownames(totalTable)[indexRatio], round(totalTable$percentageCE[indexRatio], digits = 1), sep = " ")
+ 
     } else {
-      percentageText <- round(totalTable$percentageCE[indexRatio], digits = 1)
+      
+      percentageText <- paste(rownames(totalTable)[indexRatio], round(totalTable$percentageCE[indexRatio], digits = 1), sep = " ")
+      
     }
     
   } else {
@@ -613,9 +635,13 @@ for(indexRatio in 1:nrow(totalTable)){
     text <- paste(text, totalTable$SumEDenominator[indexRatio], sep = " ")
     
     if (totalTable$percentageCE[indexRatio] > 0){
-      percentageText <- round(totalTable$percentageCE[indexRatio], digits = 1)
+      
+      percentageText <- paste(rownames(totalTable)[indexRatio], round(totalTable$percentageCE[indexRatio], digits = 1), sep = " ")
+ 
     } else {
-      percentageText <- round(totalTable$percentageCE[indexRatio], digits = 1)
+      
+      percentageText <- paste(rownames(totalTable)[indexRatio], round(totalTable$percentageCE[indexRatio], digits = 1), sep = " ")
+      
     }
   }
 
@@ -643,10 +669,7 @@ plotCE
 ```
 
 ```{r}
-for(indexRatio in 1:nrow(totalTable)){
-  
-  print(paste(rownames(totalTable)[indexRatio], totalTable$percentageTextCE[indexRatio], sep = " "))
-}
+print(totalTable$percentageTextCE)
 ```
 
 ### Evolution of the set of Control patients after detection
@@ -664,10 +687,7 @@ plotCCCM
 ```
 
 ```{r}
-for(indexRatio in 1:nrow(totalTable)){
-  
-  print(paste(rownames(totalTable)[indexRatio], totalTable$percentageTextCCCM[indexRatio], sep = " "))
-}
+print(totalTable$percentageTextCCCM)
 ```
 
 ### Evolution of the set of Case patients after detection
@@ -686,8 +706,5 @@ plotECEM
 ```
 
 ```{r}
-for(indexRatio in 1:nrow(totalTable)){
-  
-  print(paste(rownames(totalTable)[indexRatio], totalTable$percentageTextECEM[indexRatio], sep = " "))
-}
+print(totalTable$percentageTextECEM)
 ```
