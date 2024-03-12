@@ -603,6 +603,10 @@ plotCE <- plotCE %>% layout(title = title,
 plotCE
 ```
 
+```{r}
+totalTable$percentageCE
+```
+
 ### Evolution of the set of Control patients after detection
 ```{r, include = FALSE}
 plotCCCM <- plot_ly(totalTable,x=~logCCCM,y=~rownames(totalTable), type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCCCM ), height = 800, width = 1000, hoverinfo = "text", text =~textCCCM)
@@ -615,6 +619,10 @@ plotCCCM <- plotCCCM %>% layout(title = title,
 
 ```{r}
 plotCCCM
+```
+
+```{r}
+totalTable$percentageCCCM
 ```
 
 ### Evolution of the set of Case patients after detection
@@ -630,4 +638,8 @@ plotECEM <- plotECEM %>% layout(title = title,
 
 ```{r}
 plotECEM
+```
+
+```{r}
+totalTable$percentageECEM
 ```
