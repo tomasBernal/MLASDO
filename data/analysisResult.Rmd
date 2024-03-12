@@ -342,14 +342,6 @@ for(indexRatio in 1:nrow(totalTable)){
     
     text <- paste(text, "Ratio (logaritmic):", sep = "<br>")
     text <- paste(text, round(totalTable$logCCCM[indexRatio], digits = 3),  sep = " ")
-      
-    if (totalTable$percentageCCCM[indexRatio] > 0){
-      text <- paste(text, "Percentage:", sep = "<br>")
-      text <- paste(text, paste(round(totalTable$percentageCCCM[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
-    } else {
-      text <- paste(text, "Percentage:", sep = "<br>")
-      text <- paste(text, paste(round(totalTable$percentageCCCM[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
-    }
     
     text <- paste(text, "Number of Control -> Case patients:", sep = "<br>")
     text <- paste(text, numericTable[rownames(totalTable)[indexRatio], "NumPatientsCC"], sep = " ")
@@ -380,14 +372,6 @@ for(indexRatio in 1:nrow(totalTable)){
     
     text <- paste(text, "Ratio (logaritmic):", sep = "<br>")
     text <- paste(text, round(totalTable$logCCCM[indexRatio], digits = 3),  sep = " ")
-    
-    if (totalTable$percentageCCCM[indexRatio] > 0){
-      text <- paste(text, "Percentage:", sep = "<br>")
-      text <- paste(text, paste(round(totalTable$percentageCCCM[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
-    } else {
-      text <- paste(text, "Percentage:", sep = "<br>")
-      text <- paste(text, paste(round(totalTable$percentageCCCM[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
-    }
 
     text <- paste(text, "<br>", sep = "")
     text <- paste(text, "Number of Control -> Case patients in ", predictorValue, ":", sep = "")
@@ -442,14 +426,6 @@ for(indexRatio in 1:nrow(totalTable)){
     text <- paste(text, "Ratio (logaritmic):", sep = "<br>")
     text <- paste(text, round(totalTable$logECEM[indexRatio], digits = 3),  sep = " ")
     
-    if (totalTable$percentageECEM[indexRatio] > 0){
-      text <- paste(text, "Percentage:", sep = "<br>")
-      text <- paste(text, paste(round(totalTable$percentageECEM[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
-    } else {
-      text <- paste(text, "Percentage:", sep = "<br>")
-      text <- paste(text, paste(round(totalTable$percentageECEM[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
-    }
-    
     text <- paste(text, "Number of Case -> Control patients:", sep = "<br>")
 
     text <- paste(text, numericTable[rownames(totalTable)[indexRatio], "NumPatientsEC"], sep = " ")
@@ -485,14 +461,6 @@ for(indexRatio in 1:nrow(totalTable)){
     
     text <- paste(text, "Ratio (logaritmic):", sep = "<br>")
     text <- paste(text, round(totalTable$logECEM[indexRatio], digits = 3),  sep = " ")
-    
-    if (totalTable$percentageECEM[indexRatio] > 0){
-      text <- paste(text, "Percentage:", sep = "<br>")
-      text <- paste(text, paste(round(totalTable$percentageECEM[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
-    } else {
-      text <- paste(text, "Percentage:", sep = "<br>")
-      text <- paste(text, paste(round(totalTable$percentageECEM[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
-    }
 
     text <- paste(text, "<br>", sep = "")
     text <- paste(text, "Number of Case -> Control patients in ", predictorValue, ":", sep = "")
@@ -550,14 +518,6 @@ for(indexRatio in 1:nrow(totalTable)){
     text <- paste(text, "Ratio (logaritmic):", sep = "<br>")
     text <- paste(text, round(totalTable$logCE[indexRatio], digits = 3),  sep = " ")
     
-    if (totalTable$percentageCE[indexRatio] > 0){
-      text <- paste(text, "Percentage:", sep = "<br>")
-      text <- paste(text, paste(round(totalTable$percentageCE[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
-    } else {
-      text <- paste(text, "Percentage:", sep = "<br>")
-      text <- paste(text, paste(round(totalTable$percentageCE[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
-    }
-    
     text <- paste(text, "Number of Control patients (before genetic):", sep = "<br>")
 
     text <- paste(text, numericTable[rownames(totalTable)[indexRatio], "NumPatientsC"], sep = " ")
@@ -594,14 +554,6 @@ for(indexRatio in 1:nrow(totalTable)){
     
     text <- paste(text, "Ratio (logaritmic):", sep = "<br>")
     text <- paste(text, round(totalTable$logCE[indexRatio], digits = 3),  sep = " ")
-    
-    if (totalTable$percentageCE[indexRatio] > 0){
-      text <- paste(text, "Percentage:", sep = "<br>")
-      text <- paste(text, paste(round(totalTable$percentageCE[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
-    } else {
-      text <- paste(text, "Percentage:", sep = "<br>")
-      text <- paste(text, paste(round(totalTable$percentageCE[indexRatio], digits = 1), "%", sep = ""),  sep = " ")
-    }
     
     text <- paste(text, "<br>", sep = "")
     
