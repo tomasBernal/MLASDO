@@ -746,18 +746,7 @@ plotCE
 ```
 
 ```{r}
-library("ggplot2")  
- 
-
-
-for(i in 1:nrow(totalTable)){
-
-  ggplot() +
-  annotate("text", x = 10,  y = 10,
-           size = 6,
-           label = totalTable$percentageTextCE[i]) + theme_void()
-}
-
+print(totalTable$percentageTextCE)
 ```
 
 ### Evolution of the set of Control patients after detection
