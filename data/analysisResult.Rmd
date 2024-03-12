@@ -643,7 +643,10 @@ plotCE
 ```
 
 ```{r}
-totalTable$percentageTextCE
+for(indexRatio in 1:nrow(totalTable)){
+  
+  print(paste(rownames(totalTable)[indexRatio], totalTable$percentageTextCE, sep = " "))
+}
 ```
 
 ### Evolution of the set of Control patients after detection
@@ -661,7 +664,10 @@ plotCCCM
 ```
 
 ```{r}
-totalTable$percentageTextCCCM
+for(indexRatio in 1:nrow(totalTable)){
+  
+  print(paste(rownames(totalTable)[indexRatio], totalTable$percentageTextCCCM, sep = " "))
+}
 ```
 
 ### Evolution of the set of Case patients after detection
@@ -680,5 +686,8 @@ plotECEM
 ```
 
 ```{r}
-totalTable$percentageTextECEM
+for(indexRatio in 1:nrow(totalTable)){
+  
+  print(paste(rownames(totalTable)[indexRatio], totalTable$percentageTextECEM, sep = " "))
+}
 ```
