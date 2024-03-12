@@ -732,7 +732,7 @@ for(indexRatio in 1:nrow(totalTable)){
 ### Ratios between Control and Case patients before detection
 
 ```{r, include = FALSE}
-plotCE <- plot_ly(totalTable,x=~logCE,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCE ), height = 800, width = 1000, hoverinfo = "text", text =~textCE)
+plotCE <- plot_ly(totalTable,x=~logCE,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCE), height = 800, width = 1000, hoverinfo = "text", text =~textCE)
 
 title <- "Ratios between Control and Case patients before detection (genetic algorithm)"
 
@@ -746,7 +746,7 @@ plotCE
 ```
 
 ```{r}
-DT::datatable(totalTable, class = 'cell-border stripe', options = list(scrollX = TRUE))
+DT::datatable(totalTable$percentageTextCE, class = 'cell-border stripe', options = list(scrollX = TRUE))
 ```
 
 ### Evolution of the set of Control patients after detection
