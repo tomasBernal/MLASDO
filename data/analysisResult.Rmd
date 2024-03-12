@@ -643,7 +643,7 @@ plotCE
 ```
 
 ```{r}
-DT::datatable(totalTable$percentageTextCE, class = 'cell-border stripe', options = list(scrollX = TRUE))
+totalTable$percentageTextCE
 ```
 
 ### Evolution of the set of Control patients after detection
@@ -661,7 +661,7 @@ plotCCCM
 ```
 
 ```{r}
-DT::datatable(totalTable$percentageTextCCCM, class = 'cell-border stripe', options = list(scrollX = TRUE))
+totalTable$percentageTextCCCM
 ```
 
 ### Evolution of the set of Case patients after detection
@@ -680,5 +680,5 @@ plotECEM
 ```
 
 ```{r}
-DT::datatable(totalTable$percentageTextECEM, class = 'cell-border stripe', options = list(scrollX = TRUE))
+totalTable$percentageTextECEM
 ```
