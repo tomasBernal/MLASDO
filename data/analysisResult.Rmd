@@ -252,7 +252,6 @@ totalTable$percentageECEM <- totalTable$percentageECEM * 100
 totalTable$percentageCE <- totalTable$CE - 1
 totalTable$percentageCE <- totalTable$percentageCE * 100
 
-
 totalTable$logCCCM <- ifelse(totalTable$CCCM == 0, 1, totalTable$CCCM)
 
 totalTable$logCCCM <- log(totalTable$logCCCM, base = 2)
@@ -332,7 +331,8 @@ for(indexRatio in 1:nrow(totalTable)){
 
 
   text <- ""
-
+  percentageText <- ""
+  
   if(rownames(totalTable)[indexRatio] %in% numericVariables){
 
     text <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][1]
@@ -354,6 +354,12 @@ for(indexRatio in 1:nrow(totalTable)){
 
     text <- paste(text, "Mean value for the Control -> Control patients:", sep = "<br>")
     text <- paste(text, round(numericTable[rownames(totalTable)[indexRatio], "MeanCM"], digits = 3), sep = " ")
+    
+    if (totalTable$percentageCCCM[indexRatio] > 0){
+      percentageText <- round(totalTable$percentageCCCM[indexRatio], digits = 1)
+    } else {
+      percentageText <- round(totalTable$percentageCCCM[indexRatio], digits = 1)
+    }
     
   } else {
 
@@ -384,7 +390,6 @@ for(indexRatio in 1:nrow(totalTable)){
     text <- paste(text, totalTable$SumCCDenominator[indexRatio], sep = " ")
     text <- paste(text, "<br>", sep = "")
 
-
     text <- paste(text, "Number of Control -> Control patients in ", predictorValue, ":", sep = "")
     text <- paste(text, totalTable$SumCMNumerator[indexRatio], sep = " ")
 
@@ -392,11 +397,18 @@ for(indexRatio in 1:nrow(totalTable)){
     text <- paste(text, "Number of Control -> Control patients in ", vsValue, ":", sep = "")
 
     text <- paste(text, totalTable$SumCMDenominator[indexRatio], sep = " ")
+    
+    if (totalTable$percentageCCCM[indexRatio] > 0){
+      percentageText <- round(totalTable$percentageCCCM[indexRatio], digits = 1)
+    } else {
+      percentageText <- round(totalTable$percentageCCCM[indexRatio], digits = 1)
+    }
 
   }
 
   totalTable$textCCCM[indexRatio] <- text
-
+  totalTable$percentageTextCCCM[indexRatio] <- percentageText
+  
   if(totalTable$ECEM[indexRatio] == 0){
 
     totalTable$ColorsECEM[indexRatio] <- "black"
@@ -414,6 +426,7 @@ for(indexRatio in 1:nrow(totalTable)){
   }
 
   text <- ""
+  percentageText <- ""
 
   if(rownames(totalTable)[indexRatio] %in% numericVariables){
 
@@ -444,7 +457,13 @@ for(indexRatio in 1:nrow(totalTable)){
     text <- paste(text, "Mean value for the Case -> Case patients:", sep = "<br>")
 
     text <- paste(text, round(numericTable[rownames(totalTable)[indexRatio], "MeanEM"], digits = 3), sep = " ")
-
+    
+    if (totalTable$percentageECEM[indexRatio] > 0){
+      percentageText <- round(totalTable$percentageECEM[indexRatio], digits = 1)
+    } else {
+      percentageText <- round(totalTable$percentageECEM[indexRatio], digits = 1)
+    }
+    
   } else {
 
     predictor <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][1]
@@ -484,10 +503,16 @@ for(indexRatio in 1:nrow(totalTable)){
     text <- paste(text, "Number of Case -> Case patients in ", vsValue, ":", sep = "")
 
     text <- paste(text, totalTable$SumEMDenominator[indexRatio], sep = " ")
+    
+    if (totalTable$percentageECEM[indexRatio] > 0){
+      percentageText <- round(totalTable$percentageECEM[indexRatio], digits = 1)
+    } else {
+      percentageText <- round(totalTable$percentageECEM[indexRatio], digits = 1)
+    }
   }
 
   totalTable$textECEM[indexRatio] <- text
-
+  totalTable$percentageTextECEM[indexRatio] <- percentageText
   
   if(totalTable$CE[indexRatio] == 0){
 
@@ -506,7 +531,8 @@ for(indexRatio in 1:nrow(totalTable)){
   }
 
   text <- ""
-
+  percentageText <- ""
+  
   if(rownames(totalTable)[indexRatio] %in% numericVariables){
 
     text <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][1]
@@ -536,7 +562,13 @@ for(indexRatio in 1:nrow(totalTable)){
     text <- paste(text, "Mean value for the Case patients (before genetic):", sep = "<br>")
 
     text <- paste(text, round(numericTable[rownames(totalTable)[indexRatio], "MeanE"], digits = 3), sep = " ")
-
+    
+    if (totalTable$percentageCE[indexRatio] > 0){
+      percentageText <- round(totalTable$percentageCE[indexRatio], digits = 1)
+    } else {
+      percentageText <- round(totalTable$percentageCE[indexRatio], digits = 1)
+    }
+    
   } else {
 
     predictor <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][1]
@@ -579,9 +611,16 @@ for(indexRatio in 1:nrow(totalTable)){
     text <- paste(text, "Number of Case patients (before genetic) in ", vsValue, ":", sep = "")
 
     text <- paste(text, totalTable$SumEDenominator[indexRatio], sep = " ")
+    
+    if (totalTable$percentageCE[indexRatio] > 0){
+      percentageText <- round(totalTable$percentageCE[indexRatio], digits = 1)
+    } else {
+      percentageText <- round(totalTable$percentageCE[indexRatio], digits = 1)
+    }
   }
 
   totalTable$textCE[indexRatio] <- text
+  totalTable$percentageTextCE[indexRatio] <- percentageText
 }
 ```
 
@@ -604,7 +643,7 @@ plotCE
 ```
 
 ```{r}
-totalTable$percentageCE
+DT::datatable(totalTable[, c(percentageCE, percentageTextCE)], class = 'cell-border stripe', options = list(scrollX = TRUE))
 ```
 
 ### Evolution of the set of Control patients after detection
@@ -622,7 +661,7 @@ plotCCCM
 ```
 
 ```{r}
-totalTable$percentageCCCM
+DT::datatable(totalTable[, c(percentageCCCM, percentageTextCCCM)], class = 'cell-border stripe', options = list(scrollX = TRUE))
 ```
 
 ### Evolution of the set of Case patients after detection
@@ -641,5 +680,5 @@ plotECEM
 ```
 
 ```{r}
-totalTable$percentageECEM
+DT::datatable(totalTable[, c(percentageECEM, percentageTextECEM)], class = 'cell-border stripe', options = list(scrollX = TRUE))
 ```
