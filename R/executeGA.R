@@ -518,6 +518,10 @@
 
         currentVal <- postFitness((GA@bestSol[[i]][j ,]))
 
+        print(currentVal)
+        print(currentVal[[1]])
+        print(currentVal[[2]])
+
         if(currentVal[[1]] > maxValue){
           maxValue <- currentVal[[1]]
           maxPredictors <- currentVal[[2]]
