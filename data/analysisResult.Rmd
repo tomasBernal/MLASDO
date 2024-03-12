@@ -359,8 +359,7 @@ for(indexRatio in 1:nrow(totalTable)){
       
     percentageText <- paste(percentageText, "\n", sep ="")
     
-    percentageText <- paste(percentageText, "A", round(totalTable$CCCM[indexRatio], digits = 3), "ratio is obtained.")
-    
+    percentageText <- paste(percentageText, "A ", round(totalTable$CCCM[indexRatio], digits = 3), " ratio is obtained.", sep = "")
     percentageText <- paste(percentageText, "\n", sep ="")
     
     percentageText <- paste(percentageText, "This ratio means:", sep = "")
@@ -420,7 +419,7 @@ for(indexRatio in 1:nrow(totalTable)){
       
     percentageText <- paste(percentageText, "\n", sep ="")
     
-    percentageText <- paste(percentageText, "When the values", predictorValue, "and", vsValue, "are confronted, a", round(totalTable$CCCM[indexRatio], digits = 3), "ratio is obtained.")
+    percentageText <- paste(percentageText, "When the values ", predictorValue, " and ", vsValue, " are confronted, a ", round(totalTable$CCCM[indexRatio], digits = 3), " ratio is obtained.", sep = "")
     
     percentageText <- paste(percentageText, "\n", sep ="")
     
@@ -497,7 +496,8 @@ for(indexRatio in 1:nrow(totalTable)){
       
     percentageText <- paste(percentageText, "\n", sep ="")
     
-    percentageText <- paste(percentageText, "A", round(totalTable$ECEM[indexRatio], digits = 3), "ratio is obtained.")
+
+    percentageText <- paste(percentageText, "A ", round(totalTable$ECEM[indexRatio], digits = 3), " ratio is obtained.", sep = "")
     
     percentageText <- paste(percentageText, "\n", sep ="")
     
@@ -560,7 +560,7 @@ for(indexRatio in 1:nrow(totalTable)){
       
     percentageText <- paste(percentageText, "\n", sep ="")
     
-    percentageText <- paste(percentageText, "When the values", predictorValue, "and", vsValue, "are confronted, a", round(totalTable$ECEM[indexRatio], digits = 3), "ratio is obtained.")
+    percentageText <- paste(percentageText, "When the values ", predictorValue, " and ", vsValue, " are confronted, a ", round(totalTable$ECEM[indexRatio], digits = 3), " ratio is obtained.", sep = "")
     
     percentageText <- paste(percentageText, "\n", sep ="")
     
@@ -636,7 +636,7 @@ for(indexRatio in 1:nrow(totalTable)){
       
     percentageText <- paste(percentageText, "\n", sep ="")
     
-    percentageText <- paste(percentageText, "A", round(totalTable$CE[indexRatio], digits = 3), "ratio is obtained.")
+    percentageText <- paste(percentageText, "A ", round(totalTable$CE[indexRatio], digits = 3), " ratio is obtained.", sep = "")
     
     percentageText <- paste(percentageText, "\n", sep ="")
     
@@ -704,7 +704,7 @@ for(indexRatio in 1:nrow(totalTable)){
       
     percentageText <- paste(percentageText, "\n", sep ="")
     
-    percentageText <- paste(percentageText, "When the values", predictorValue, "and", vsValue, "are confronted, a", round(totalTable$CE[indexRatio], digits = 3), "ratio is obtained.")
+    percentageText <- paste(percentageText, "When the values ", predictorValue, " and ", vsValue, " are confronted, a ", round(totalTable$CE[indexRatio], digits = 3), " ratio is obtained.", sep = "")
     
     percentageText <- paste(percentageText, "\n", sep ="")
     
@@ -749,7 +749,7 @@ plotCE
 ```{r}
 for(i in 1:nrow(totalTable)){
   cat(totalTable$percentageTextCE[i])
-  cat("\n")
+  cat("\n\n")
 }
 ```
 
@@ -770,7 +770,7 @@ plotCCCM
 ```{r}
 for(i in 1:nrow(totalTable)){
   cat(totalTable$percentageTextCCCM[i])
-  cat("\n")
+  cat("\n\n")
 }
 ```
 
@@ -792,6 +792,6 @@ plotECEM
 ```{r}
 for(i in 1:nrow(totalTable)){
   cat(totalTable$percentageTextECEM[i])
-  cat("\n")
+  cat("\n\n")
 }
 ```
