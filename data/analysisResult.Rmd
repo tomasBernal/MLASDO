@@ -645,7 +645,7 @@ plotCE
 ```{r}
 for(indexRatio in 1:nrow(totalTable)){
   
-  print(paste(rownames(totalTable)[indexRatio], totalTable$percentageTextCE, sep = " "))
+  print(paste(rownames(totalTable)[indexRatio], totalTable$percentageTextCE[indexRatio], sep = " "))
 }
 ```
 
@@ -666,7 +666,7 @@ plotCCCM
 ```{r}
 for(indexRatio in 1:nrow(totalTable)){
   
-  print(paste(rownames(totalTable)[indexRatio], totalTable$percentageTextCCCM, sep = " "))
+  print(paste(rownames(totalTable)[indexRatio], totalTable$percentageTextCCCM[indexRatio], sep = " "))
 }
 ```
 
@@ -688,6 +688,6 @@ plotECEM
 ```{r}
 for(indexRatio in 1:nrow(totalTable)){
   
-  print(paste(rownames(totalTable)[indexRatio], totalTable$percentageTextECEM, sep = " "))
+  print(paste(rownames(totalTable)[indexRatio], totalTable$percentageTextECEM[indexRatio], sep = " "))
 }
 ```
