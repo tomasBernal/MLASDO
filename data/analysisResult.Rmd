@@ -360,21 +360,27 @@ for(indexRatio in 1:nrow(totalTable)){
     percentageText <- paste(percentageText, "\n", sep ="")
     
     percentageText <- paste(percentageText, "A ", round(totalTable$CCCM[indexRatio], digits = 3), " ratio is obtained.", sep = "")
-    percentageText <- paste(percentageText, "\n", sep ="")
     
-    percentageText <- paste(percentageText, "This ratio means:", sep = "")
     
-    percentageText <- paste(percentageText, "\n", sep ="")
+    if(totalTable$CCCM[indexRatio] != 0){
+      
+      percentageText <- paste(percentageText, "\n", sep ="")
+      
+      percentageText <- paste(percentageText, "This ratio means:", sep = "")
     
-    if (totalTable$percentageCCCM[indexRatio] > 0){
+      percentageText <- paste(percentageText, "\n", sep ="")
       
-      percentageText <- paste(percentageText, "The average value of Controls changed to Case is a ", round(totalTable$percentageCCCM[indexRatio], digits = 1), "%", " higher than that of the Controls held as controls." , sep = "")
-      
-    } else {
-      
-      percentageText <- paste(percentageText, "The average value of Controls changed to Case is a ", round(totalTable$percentageCCCM[indexRatio], digits = 1), "%", " less than that of the Controls held as controls.", sep = "")
-      
+      if (totalTable$percentageCCCM[indexRatio] > 0){
+        
+        percentageText <- paste(percentageText, "The average value of Controls changed to Case is a ", round(totalTable$percentageCCCM[indexRatio], digits = 1), "%", " higher than that of the Controls held as controls." , sep = "")
+        
+      } else {
+        
+        percentageText <- paste(percentageText, "The average value of Controls changed to Case is a ", round(totalTable$percentageCCCM[indexRatio], digits = 1), "%", " less than that of the Controls held as controls.", sep = "")
+        
+      }
     }
+    
     
     
   } else {
@@ -421,20 +427,24 @@ for(indexRatio in 1:nrow(totalTable)){
     
     percentageText <- paste(percentageText, "When the values ", predictorValue, " and ", vsValue, " are confronted, a ", round(totalTable$CCCM[indexRatio], digits = 3), " ratio is obtained.", sep = "")
     
-    percentageText <- paste(percentageText, "\n", sep ="")
+    if(totalTable$CCCM[indexRatio] != 0){
+      
+      percentageText <- paste(percentageText, "\n", sep ="")
+      
+      percentageText <- paste(percentageText, "This ratio means:", sep = "")
+      
+      percentageText <- paste(percentageText, "\n", sep ="")
+      
+      if (totalTable$percentageCCCM[indexRatio] > 0){
+        
+        percentageText <- paste(percentageText, "That there are ", round(totalTable$percentageCCCM[indexRatio], digits = 1), "% more patients in ", predictorValue, " that have been changed from Control to Case than in ", vsValue, "." , sep = "")
+        
+      } else {
+        
+        percentageText <- paste(percentageText, "That there are ", round(totalTable$percentageCCCM[indexRatio], digits = 1), "% less patients in ", predictorValue, " that have been changed from Control to Case than in ", vsValue, "." , sep = "")
+        
+      }
     
-    percentageText <- paste(percentageText, "This ratio means:", sep = "")
-    
-    percentageText <- paste(percentageText, "\n", sep ="")
-    
-    if (totalTable$percentageCCCM[indexRatio] > 0){
-      
-      percentageText <- paste(percentageText, "That there are ", round(totalTable$percentageCCCM[indexRatio], digits = 1), "% more patients in ", predictorValue, " that have been changed from Control to Case than in ", vsValue, "." , sep = "")
-      
-    } else {
-      
-      percentageText <- paste(percentageText, "That there are ", round(totalTable$percentageCCCM[indexRatio], digits = 1), "% less patients in ", predictorValue, " that have been changed from Control to Case than in ", vsValue, "." , sep = "")
-      
     }
 
   }
@@ -499,22 +509,24 @@ for(indexRatio in 1:nrow(totalTable)){
 
     percentageText <- paste(percentageText, "A ", round(totalTable$ECEM[indexRatio], digits = 3), " ratio is obtained.", sep = "")
     
-    percentageText <- paste(percentageText, "\n", sep ="")
-    
-    percentageText <- paste(percentageText, "This ratio means:", sep = "")
-    
-    percentageText <- paste(percentageText, "\n", sep ="")
-    
-    if (totalTable$percentageECEM[indexRatio] > 0){
+    if(totalTable$ECEM[indexRatio] != 0){
       
-      percentageText <- paste(percentageText, "The average value of Controls changed to Case is a ", round(totalTable$percentageECEM[indexRatio], digits = 1), "%", " higher than that of the Controls held as controls.", sep = "")
+      percentageText <- paste(percentageText, "\n", sep ="")
       
-    } else {
+      percentageText <- paste(percentageText, "This ratio means:", sep = "")
       
-      percentageText <- paste(percentageText, "The average value of Controls changed to Case is a ", round(totalTable$percentageECEM[indexRatio], digits = 1), "%", " less than that of the Controls held as controls.", sep = "")
+      percentageText <- paste(percentageText, "\n", sep ="")
       
+      if (totalTable$percentageECEM[indexRatio] > 0){
+        
+        percentageText <- paste(percentageText, "The average value of Controls changed to Case is a ", round(totalTable$percentageECEM[indexRatio], digits = 1), "%", " higher than that of the Controls held as controls.", sep = "")
+        
+      } else {
+        
+        percentageText <- paste(percentageText, "The average value of Controls changed to Case is a ", round(totalTable$percentageECEM[indexRatio], digits = 1), "%", " less than that of the Controls held as controls.", sep = "")
+        
+      }
     }
-    
     
   } else {
 
@@ -562,20 +574,23 @@ for(indexRatio in 1:nrow(totalTable)){
     
     percentageText <- paste(percentageText, "When the values ", predictorValue, " and ", vsValue, " are confronted, a ", round(totalTable$ECEM[indexRatio], digits = 3), " ratio is obtained.", sep = "")
     
-    percentageText <- paste(percentageText, "\n", sep ="")
-    
-    percentageText <- paste(percentageText, "This ratio means:", sep = "")
-    
-    percentageText <- paste(percentageText, "\n", sep ="")
-    
-    if (totalTable$percentageECEM[indexRatio] > 0){
+    if(totalTable$ECEM[indexRatio] != 0){
       
-      percentageText <- paste(percentageText, "That there are ", round(totalTable$percentageECEM[indexRatio], digits = 1), "% more patients in ", predictorValue, " that have been changed from Control to Case than in ", vsValue, "." , sep = "")
+      percentageText <- paste(percentageText, "\n", sep ="")
       
-    } else {
+      percentageText <- paste(percentageText, "This ratio means:", sep = "")
       
-      percentageText <- paste(percentageText, "That there are ", round(totalTable$percentageECEM[indexRatio], digits = 1), "% less patients in ", predictorValue, " that have been changed from Control to Case than in ", vsValue, "." , sep = "")
+      percentageText <- paste(percentageText, "\n", sep ="")
       
+      if (totalTable$percentageECEM[indexRatio] > 0){
+        
+        percentageText <- paste(percentageText, "That there are ", round(totalTable$percentageECEM[indexRatio], digits = 1), "% more patients in ", predictorValue, " that have been changed from Control to Case than in ", vsValue, "." , sep = "")
+        
+      } else {
+        
+        percentageText <- paste(percentageText, "That there are ", round(totalTable$percentageECEM[indexRatio], digits = 1), "% less patients in ", predictorValue, " that have been changed from Control to Case than in ", vsValue, "." , sep = "")
+        
+      }
     }
   }
 
@@ -638,22 +653,24 @@ for(indexRatio in 1:nrow(totalTable)){
     
     percentageText <- paste(percentageText, "A ", round(totalTable$CE[indexRatio], digits = 3), " ratio is obtained.", sep = "")
     
-    percentageText <- paste(percentageText, "\n", sep ="")
     
-    percentageText <- paste(percentageText, "This ratio means:", sep = "")
+    if(totalTable$CE[indexRatio] != 0){
     
-    percentageText <- paste(percentageText, "\n", sep ="")
-    
-    if (totalTable$percentageCE[indexRatio] > 0){
+      percentageText <- paste(percentageText, "\n", sep ="")
+      percentageText <- paste(percentageText, "This ratio means:", sep = "")
       
-      percentageText <- paste(percentageText, "The average value of the Control patients before the detection is a ", round(totalTable$percentageCE[indexRatio], digits = 1), "%", " higher than that of the Case patients.", sep = "")
+      percentageText <- paste(percentageText, "\n", sep ="")
       
-    } else {
-      
-      percentageText <- paste(percentageText, "The average value of the Control patients before the detection is a ", round(totalTable$percentageCE[indexRatio], digits = 1), "%", " less than that of the Case patients.", sep = "")
-      
+      if (totalTable$percentageCE[indexRatio] > 0){
+        
+        percentageText <- paste(percentageText, "The average value of the Control patients before the detection is a ", round(totalTable$percentageCE[indexRatio], digits = 1), "%", " higher than that of the Case patients.", sep = "")
+        
+      } else {
+        
+        percentageText <- paste(percentageText, "The average value of the Control patients before the detection is a ", round(totalTable$percentageCE[indexRatio], digits = 1), "%", " less than that of the Case patients.", sep = "")
+        
+      }
     }
-    
     
   } else {
 
@@ -706,20 +723,23 @@ for(indexRatio in 1:nrow(totalTable)){
     
     percentageText <- paste(percentageText, "When the values ", predictorValue, " and ", vsValue, " are confronted, a ", round(totalTable$CE[indexRatio], digits = 3), " ratio is obtained.", sep = "")
     
-    percentageText <- paste(percentageText, "\n", sep ="")
-    
-    percentageText <- paste(percentageText, "This ratio means:", sep = "")
-    
-    percentageText <- paste(percentageText, "\n", sep ="")
-    
-    if (totalTable$percentageCE[indexRatio] > 0){
+    if(totalTable$CE[indexRatio] != 0){
       
-      percentageText <- paste(percentageText, "That there are ", round(totalTable$percentageCE[indexRatio], digits = 1), "% more Control patients in ", predictorValue, " that Control patients in ", vsValue, "." , sep = "")
+      percentageText <- paste(percentageText, "\n", sep ="")
       
-    } else {
+      percentageText <- paste(percentageText, "This ratio means:", sep = "")
       
-      percentageText <- paste(percentageText, "That there are ", round(totalTable$percentageCE[indexRatio], digits = 1), "% less Control patients in ", predictorValue, " that Control patients in ", vsValue, "." , sep = "")
+      percentageText <- paste(percentageText, "\n", sep ="")
       
+      if (totalTable$percentageCE[indexRatio] > 0){
+        
+        percentageText <- paste(percentageText, "That there are ", round(totalTable$percentageCE[indexRatio], digits = 1), "% more Control patients in ", predictorValue, " that Control patients in ", vsValue, "." , sep = "")
+        
+      } else {
+        
+        percentageText <- paste(percentageText, "That there are ", round(totalTable$percentageCE[indexRatio], digits = 1), "% less Control patients in ", predictorValue, " that Control patients in ", vsValue, "." , sep = "")
+        
+      }
     }
   }
 

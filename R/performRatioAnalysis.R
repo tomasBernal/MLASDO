@@ -211,8 +211,9 @@ performRatioAnalysis <- function(
         ratio2 <- 0
         ratio3 <- 0
 
+        predictorName <- paste(activePredictor, "all =" unique(clinic[[activePredictor]]), sep = " ")
 
-        namesCategoricRows <- c(namesCategoricRows, activePredictor)
+        namesCategoricRows <- c(namesCategoricRows, predictorName)
 
         # Create a row for these new ratios
         newRow <- data.frame(SumCCNumerator = sumCCNumerator, SumCCDenominator = sumCCDenominator, SumCMNumerator = sumCMNumerator, SumCMDenominator = sumCMDenominator, CCCM = ratio1,
@@ -223,7 +224,7 @@ performRatioAnalysis <- function(
         # Add the new row
         categoricalResult <- rbind(categoricalResult, newRow)
 
-        namesAllRows <- c(namesAllRows, activePredictor)
+        namesAllRows <- c(namesAllRows, predictorName)
 
         # Adding the new row
         totalResult <- rbind(totalResult, newRow)
