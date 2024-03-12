@@ -473,7 +473,7 @@
 
         predName <- names(omicTrain)[[indexes[[i]]]]
 
-        if (!exists(predName, where = predictorsInfo)) {
+        if (!exists(predName, where = numPredictors)) {
 
           numPredictors[[predName]] <- 1
 
