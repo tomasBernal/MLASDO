@@ -746,7 +746,7 @@ plotCE
 ```
 
 ```{r}
-DT::datatable(totalTable$percentageTextCE, class = 'cell-border stripe', options = list(scrollX = TRUE))
+totalTable$percentageTextCE
 ```
 
 ### Evolution of the set of Control patients after detection
