@@ -451,7 +451,7 @@
 
     # This vector will store the balanced means of the numModelExecutions executions
     balancedAccValues <- vector(length = numModelExecutions)
-    numPredictors <- vector(length = numModelExecutions)
+    numPredictors <- list()
 
     set.seed(seed)
 
@@ -463,7 +463,24 @@
 
       coefficients <- coef(model, s = model$lambda.min)
 
-      numPredictors[i] <- length(coefficients@i)
+      indexes <- coefficients@i
+
+      posZero <- which(indexes == 0)
+
+      indexes <- indexes[-posZero]
+
+      for(i in 1:length(indexes)){
+
+        predName <- names(omicTrain)[[indexes[[i]]]]
+
+        if (!exists(predName, where = predictorsInfo)) {
+
+          numPredictors[[predName]] <- 1
+
+        }
+
+      }
+
 
       # Use the model to predict on the test set
       modelPrediction <- predict(model, newx = as.matrix(omicTest), alpha = 1, s = "lambda.min", type = "class")
@@ -481,7 +498,7 @@
     }
 
     # Return the mean of the numModelExecutions balanced means obtained
-    return(c(mean(balancedAccValues), round(mean(numPredictors))))
+    return(c(mean(balancedAccValues), length(numPredictors)))
   }
 
   if(mlAlgorithm == "Lasso"){

@@ -89,7 +89,7 @@ hline <- function(y = 0, color = "black") {
 }
 ```
 
-## Evolution of the balanced accuracy obtained
+### Evolution of the balanced accuracy obtained
 ```{r, include = FALSE}
 precisionPlot <- plot_ly(precisionDF, x=~generation, y=~precision, hoveron = "points", hoverinfo = "text", text = paste("Maximum accuracy value obtained: ", round(precisionDF$precision, 2), "%<br>Generation: ", precisionDF$generation, sep = ""), type = 'scatter', mode = 'lines+markers', name ="Precision", color = I("cadetblue3"))
   
@@ -106,7 +106,7 @@ precisionPlot <- precisionPlot %>% layout(shapes = list(hline(precisionLine))) %
 precisionPlot
 ```
 
-`r if(executeLasso){"## Evolution of the number of predictors selected"}`
+`r if(executeLasso){"### Evolution of the number of predictors selected"}`
 ```{r, include = FALSE, eval = executeLasso}
 predictorsDF <- data.frame(generation = 1:length(params$lassoPredictors), predictors = params$lassoPredictors)
   
@@ -126,12 +126,12 @@ predictorsPlot
 
 # Precision obtained by the `r modelName` model before the detection
 
-## Confusion Matrix of the best model obtained of the total of `r params$numModelExecutions` models
+### Confusion Matrix of the best model obtained of the total of `r params$numModelExecutions` models
 ```{r}
 bestCM
 ```
 
-## Confusion Matrix of the worst model obtained of the total of `r params$numModelExecutions` models
+### Confusion Matrix of the worst model obtained of the total of `r params$numModelExecutions` models
 ```{r}
 worstCM
 ```
@@ -187,7 +187,7 @@ distributionDashboard
 
 # PCA Analysis
 
-## PCA Analysis over total predictors
+### PCA Analysis over total predictors
 ```{r, include = FALSE}
 classVariable <- params$pcaAnalysis[[params$classVariable]]
 
@@ -204,7 +204,7 @@ pcaAnalysis <- ggplot(params$pcaAnalysis, aes(PC1, PC2)) +
 pcaAnalysis
 ```
 
-## PCA Analysis over the selected predictors by the model
+### PCA Analysis over the selected predictors by the model
 ```{r, include = FALSE}
 pcaSelected <- ggplot(params$pcaAnalysisSelected, aes(PC1, PC2)) + 
     modelr::geom_ref_line(h = 0) +
@@ -635,6 +635,8 @@ for(indexRatio in 1:nrow(totalTable)){
 
 # Ratio Analysis
 
+### Ratios between Control and Case patients before detection
+
 ```{r, include = FALSE}
 plotCE <- plot_ly(totalTable,x=~logCE,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCE ), height = 800, width = 1000, hoverinfo = "text", text =~textCE)
 
@@ -649,6 +651,7 @@ plotCE <- plotCE %>% layout(title = title,
 plotCE
 ```
 
+### Evolution of the set of Control patients after detection
 ```{r, include = FALSE}
 plotCCCM <- plot_ly(totalTable,x=~logCCCM,y=~rownames(totalTable), type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCCCM ), height = 800, width = 1000, hoverinfo = "text", text =~textCCCM)
 
@@ -662,10 +665,11 @@ plotCCCM <- plotCCCM %>% layout(title = title,
 plotCCCM
 ```
 
+### Evolution of the set of Case patients after detection
 ```{r, include = FALSE}
 plotECEM <- plot_ly(totalTable,x=~logECEM,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsECEM ), height = 800, width = 1000, hoverinfo = "text", text =~textECEM)
 
-title <- "Evolution of the set of CASE patients after detection (genetic algorithm)"
+title <- "Evolution of the set of Case patients after detection (genetic algorithm)"
 
 plotECEM <- plotECEM %>% layout(title = title,
                         xaxis = list(title = "Ratio in logaritmic (base 2) scale <br>", tickvals = seq(-ceiling(-min(totalTable$logECEM)), ceiling(max(totalTable$logECEM)), by = sepECEM)),
