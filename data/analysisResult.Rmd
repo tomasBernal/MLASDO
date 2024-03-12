@@ -747,7 +747,7 @@ plotCE
 
 ```{r}
 for(i in 1:nrow(totalTable)){
-  print(totalTable$percentageTextCE[i])
+  totalTable$percentageTextCE[i]
 }
 
 ```
