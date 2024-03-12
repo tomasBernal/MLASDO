@@ -746,7 +746,10 @@ plotCE
 ```
 
 ```{r}
-totalTable$percentageTextCE
+for(i in 1:nrow(totalTable)){
+  print(totalTable$percentageTextCE[i])
+}
+
 ```
 
 ### Evolution of the set of Control patients after detection
