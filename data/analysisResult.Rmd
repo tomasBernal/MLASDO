@@ -377,7 +377,6 @@ for(indexRatio in 1:nrow(totalTable)){
       
     }
     
-    percentageText <- paste(percentageText, "\n", sep ="")
     
   } else {
 
@@ -438,8 +437,6 @@ for(indexRatio in 1:nrow(totalTable)){
       percentageText <- paste(percentageText, "That there are ", round(totalTable$percentageCCCM[indexRatio], digits = 1), "% less patients in ", predictorValue, " that have been changed from Control to Case than in ", vsValue, "." , sep = "")
       
     }
-    
-    percentageText <- paste(percentageText, "\n", sep ="")
 
   }
 
@@ -518,7 +515,6 @@ for(indexRatio in 1:nrow(totalTable)){
       
     }
     
-    percentageText <- paste(percentageText, "\n", sep ="")
     
   } else {
 
@@ -581,8 +577,6 @@ for(indexRatio in 1:nrow(totalTable)){
       percentageText <- paste(percentageText, "That there are ", round(totalTable$percentageECEM[indexRatio], digits = 1), "% less patients in ", predictorValue, " that have been changed from Control to Case than in ", vsValue, "." , sep = "")
       
     }
-    
-    percentageText <- paste(percentageText, "\n", sep ="")
   }
 
   totalTable$textECEM[indexRatio] <- text
@@ -660,7 +654,6 @@ for(indexRatio in 1:nrow(totalTable)){
       
     }
     
-    percentageText <- paste(percentageText, "\n", sep ="")
     
   } else {
 
@@ -728,8 +721,6 @@ for(indexRatio in 1:nrow(totalTable)){
       percentageText <- paste(percentageText, "That there are ", round(totalTable$percentageCE[indexRatio], digits = 1), "% less Control patients in ", predictorValue, " that Control patients in ", vsValue, "." , sep = "")
       
     }
-    
-    percentageText <- paste(percentageText, "\n", sep ="")
   }
 
   totalTable$textCE[indexRatio] <- text
@@ -756,7 +747,10 @@ plotCE
 ```
 
 ```{r}
-cat(totalTable$percentageTextCE)
+for(i in 1:nrow(totalTable)){
+  cat(totalTable$percentageTextCE[i])
+  cat("\n")
+}
 ```
 
 ### Evolution of the set of Control patients after detection
@@ -774,7 +768,10 @@ plotCCCM
 ```
 
 ```{r}
-cat(totalTable$percentageTextCCCM)
+for(i in 1:nrow(totalTable)){
+  cat(totalTable$percentageTextCCCM[i])
+  cat("\n")
+}
 ```
 
 ### Evolution of the set of Case patients after detection
@@ -793,5 +790,8 @@ plotECEM
 ```
 
 ```{r}
-cat(totalTable$percentageTextECEM)
+for(i in 1:nrow(totalTable)){
+  cat(totalTable$percentageTextECEM[i])
+  cat("\n")
+}
 ```
