@@ -512,7 +512,7 @@ detectAnomalies <- function(
     # This vector will store the balanced means of the numModelExecutions executions
     balancedAccValues <- vector(length=numModelExecutions)
 
-    numPredictors <- vector(length = numModelExecutions)
+    numPredictors <- list()
 
     set.seed(seed)
 
@@ -524,7 +524,23 @@ detectAnomalies <- function(
 
       coefficients <- coef(model, s = model$lambda.min)
 
-      numPredictors[i] <- length(coefficients@i)
+      indexes <- coefficients@i
+
+      posZero <- which(indexes == 0)
+
+      indexes <- indexes[-posZero]
+
+      for(j in 1:length(indexes)){
+
+        predName <- names(omicTrain)[[indexes[[j]]]]
+
+        if (!exists(predName, where = numPredictors)) {
+
+          numPredictors[[predName]] <- 1
+
+        }
+
+      }
 
       # Use the model to predict on the test set
       modelPrediction <- predict(model, newx = as.matrix(omicTest), alpha = 1, s = "lambda.min", type = "class")
@@ -543,7 +559,7 @@ detectAnomalies <- function(
 
     baselinePrecision <- mean(balancedAccValues)
 
-    baselinePredictors <- round(mean(numPredictors))
+    baselinePredictors <- length(numPredictors)
 
   } else if(mlAlgorithm == "RF"){
 

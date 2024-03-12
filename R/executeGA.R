@@ -313,11 +313,11 @@
 
       indexes <- indexes[-posZero]
 
-      for(i in 1:length(indexes)){
+      for(j in 1:length(indexes)){
 
-        predName <- names(omicTrain)[[indexes[[i]]]]
+        predName <- names(omicTrain)[[indexes[[j]]]]
 
-        predImp <- predInfo@x[[i]]
+        predImp <- predInfo@x[[j]]
 
         if (exists(predName, where = predictorsInfo)) {
 
@@ -365,19 +365,19 @@
 
       predInfo <- predInfo[order(predInfo$Importance), ]
 
-      for(i in 1:predictorsToSelect){
+      for(j in 1:predictorsToSelect){
 
-        if (exists(predInfo$Variable[[i]], where = predictorsInfo)) {
+        if (exists(predInfo$Variable[[j]], where = predictorsInfo)) {
 
-          actualAparitions <- predictorsInfo[[predInfo$Variable[[i]]]][1]
+          actualAparitions <- predictorsInfo[[predInfo$Variable[[j]]]][1]
 
-          importance <- predictorsInfo[[predInfo$Variable[[i]]]][2:length(predictorsInfo[[predInfo$Variable[[i]]]])]
+          importance <- predictorsInfo[[predInfo$Variable[[j]]]][2:length(predictorsInfo[[predInfo$Variable[[j]]]])]
 
-          predictorsInfo[[predInfo$Variable[[i]]]] <- c(actualAparitions + 1, importance, abs(predInfo$Importance[[i]]))
+          predictorsInfo[[predInfo$Variable[[j]]]] <- c(actualAparitions + 1, importance, abs(predInfo$Importance[[j]]))
 
         } else {
 
-          predictorsInfo[[predInfo$Variable[[i]]]] <- c(1, abs(predInfo$Importance[[i]]))
+          predictorsInfo[[predInfo$Variable[[j]]]] <- c(1, abs(predInfo$Importance[[j]]))
 
         }
       }
@@ -469,9 +469,9 @@
 
       indexes <- indexes[-posZero]
 
-      for(i in 1:length(indexes)){
+      for(j in 1:length(indexes)){
 
-        predName <- names(omicTrain)[[indexes[[i]]]]
+        predName <- names(omicTrain)[[indexes[[j]]]]
 
         if (!exists(predName, where = numPredictors)) {
 
@@ -517,10 +517,6 @@
       for(j in 1:nrow(GA@bestSol[[i]])){
 
         currentVal <- postFitness((GA@bestSol[[i]][j ,]))
-
-        print(currentVal)
-        print(currentVal[[1]])
-        print(currentVal[[2]])
 
         if(currentVal[[1]] > maxValue){
           maxValue <- currentVal[[1]]
