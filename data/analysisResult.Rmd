@@ -387,11 +387,26 @@ for(indexRatio in 1:nrow(totalTable)){
 
     predictor <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][1]
     
-    predictorValue <- strsplit(predictor, " ")[[1]][2]
-    predictorValue <- replace(predictorValue, is.na(predictorValue), "Empty")
+    allFlag = FALSE
     
-    vsValue <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][2]
-    vsValue <- replace(vsValue, is.na(vsValue), "Empty")
+    if (grepl("all =", predictor)) {
+      allFlag = TRUE
+    }
+    
+    if(!allFlag){
+      predictorValue <- strsplit(predictor, " ")[[1]][2]
+      predictorValue <- replace(predictorValue, is.na(predictorValue), "Empty")
+      
+      vsValue <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][2]
+      vsValue <- replace(vsValue, is.na(vsValue), "Empty")
+    } else {
+      
+      predictorValue <- strsplit(predictor, " ")[[1]][4]
+      predictorValue <- replace(predictorValue, is.na(predictorValue), "Empty")
+      
+      vsValue <- "AAAA"
+    }
+    
     
 
     text <- paste(strsplit(predictor, " ")[[1]][1], "=", predictorValue, "(Categoric)", "<br>", sep = " ")
