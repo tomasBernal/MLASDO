@@ -404,7 +404,6 @@ for(indexRatio in 1:nrow(totalTable)){
       predictorValue <- strsplit(predictor, " ")[[1]][4]
       predictorValue <- replace(predictorValue, is.na(predictorValue), "Empty")
       
-      vsValue <- "AAAA"
     }
     
     
@@ -421,20 +420,24 @@ for(indexRatio in 1:nrow(totalTable)){
 
     text <- paste(text, totalTable$SumCCNumerator[indexRatio], sep = " ")
     text <- paste(text, "<br>", sep = "")
-
-    text <- paste(text, "Number of Control -> Case patients in ", vsValue, ":", sep = "")
-
-    text <- paste(text, totalTable$SumCCDenominator[indexRatio], sep = " ")
-    text <- paste(text, "<br>", sep = "")
-
+    
+    if(!allFlag){
+      text <- paste(text, "Number of Control -> Case patients in ", vsValue, ":", sep = "")
+  
+      text <- paste(text, totalTable$SumCCDenominator[indexRatio], sep = " ")
+      text <- paste(text, "<br>", sep = "")
+    }
+    
     text <- paste(text, "Number of Control -> Control patients in ", predictorValue, ":", sep = "")
     text <- paste(text, totalTable$SumCMNumerator[indexRatio], sep = " ")
 
     text <- paste(text, "<br>", sep = "")
-    text <- paste(text, "Number of Control -> Control patients in ", vsValue, ":", sep = "")
-
-    text <- paste(text, totalTable$SumCMDenominator[indexRatio], sep = " ")
     
+    if(!allFlag){
+      text <- paste(text, "Number of Control -> Control patients in ", vsValue, ":", sep = "")
+  
+      text <- paste(text, totalTable$SumCMDenominator[indexRatio], sep = " ")
+    }
     
     percentageText <- paste("The variable", rownames(totalTable)[indexRatio], "is categoric.", sep = " ")
       
