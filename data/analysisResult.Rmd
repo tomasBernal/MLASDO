@@ -118,7 +118,7 @@ predictorsPlot <- plot_ly(predictorsDF, x=~generation, y=~predictors, hoveron = 
 predictorsPlot <- predictorsPlot %>%  layout(title = "Evolution of the number of predictors selected during generations", xaxis = list(title = "Actual generation <br>"), yaxis = list(title = "Number of predictors <br> <br> <br>", range = c(min(c(predictorsLine, min(params$lassoPredictors))) - 5, max(c(predictorsLine, max(params$lassoPredictors))) + 5), xaxis = list(range = c(0, max(predictorsDF$generation)))))
 
 predictorsPlot <- predictorsPlot %>% layout(shapes = list(hline(predictorsLine))) %>%
-  add_annotations(x = length(algorithmPrecisions) - 3, y = predictorsLine + ((maxPredictors - minPredictors) / 10), showarrow = F,
+  add_annotations(x = length(algorithmPrecisions) - 3, y = predictorsLine + (((maxPredictors - minPredictors) / 10) / 2 ), showarrow = F,
            text = paste("Baseline selected predictors: ", predictorsLine, sep = ""))
 ```
 
