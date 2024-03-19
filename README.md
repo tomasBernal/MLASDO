@@ -1,4 +1,4 @@
-# MLASDO (Machine learning based Anomalous Sample Detection on Omics)
+# MLASDO (Machine Learning based Anomalous Sample Detection on Omics)
 
 ## What problem are we seeking to solve
 
