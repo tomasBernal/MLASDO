@@ -43,10 +43,13 @@ performRatioAnalysis <- function(
     # Checking if the activePredictor is categorical
     if(!is.numeric(clinic[[activePredictor]])){
 
-
         # Replacing NA with the string "Empty"
         clinic[[activePredictor]] <- replace(clinic[[activePredictor]], is.na(clinic[[activePredictor]]), "Empty")
 
+    # Checking the discrete parameters also
+    } else if (is.integer(clinic[[activePredictor]])){
+      # Replacing NA with the string "Empty"
+      clinic[[activePredictor]] <- replace(clinic[[activePredictor]], is.na(clinic[[activePredictor]]), "Empty")
     }
   }
 
@@ -84,7 +87,7 @@ performRatioAnalysis <- function(
   for(activePredictor in activePredictors){
 
     # Checking if the activePredictor is numerical
-    if(is.numeric(clinic[[activePredictor]])){
+    if(is.numeric(clinic[[activePredictor]]) & !is.integer(clinic[[activePredictor]])){
 
       # Obtaining the number of patients for the numerator and the denominator
       # Since the activePredictor is numeric, there will be empty columns
