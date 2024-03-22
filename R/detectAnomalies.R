@@ -12,8 +12,7 @@
 #' @param justAnalysis Bool | Indicates whether to perform the analysis directly (TRUE) or to run the genetic algorithm (FALSE). Default value: FALSE.
 #' @param geneticPath String | Path to genetic algorithm object.
 #' @param solutionPath String | Path to genetic algorithm solution.
-#' @param bestModelPath String | Path to the best model obtained.
-#' @param worstModelPath String | Path to the worst model obtained.
+#' @param bestModelAfterDetectionPath String | Path to the best model obtained after the detection.
 #' @param lassoPredictorsPath String | Path to the mean number of predictors selected by Lasso in each generation.
 #'
 #' @param mlAlgorithm String | Machine Learning algorithm to be applied, the options are: Lasso or RF (Random Forest).
@@ -22,7 +21,7 @@
 #' @param numModelExecutions Integer | Number of times the Lasso algorithm is executed. Default value: 5.
 #' @param numTrees Integer | Number of trees of the Random Forest model. Default value: 100.
 #' @param mtry Integer | Number of predictors that are evaluated at each partition (node) of each tree. Default value: 225.
-#' @param splitrule String | This is the rule used by the algorithm to select the predictor and the optimal value to separate a node into two branches during the tree construction. Default value: gini.
+#' @param splitRule String | This is the rule used by the algorithm to select the predictor and the optimal value to separate a node into two branches during the tree construction. Default value: gini.
 #' @param sampleFraction Decimal | Fraction of the training data that will be used to create each of the trees in the forest. Default value: 1.
 #' @param maxDepth Integer | Maximum height of each tree in the forest. Default value: 4.
 #' @param minNodeSize Integer | Minimum number of observations required in a node to be able to split it. Default value: 30.
@@ -63,21 +62,20 @@
 #'
 #' MLASDO::detectAnomalies(savingName = "ExecutionWithOwnData", mlAlgorithm = "RF", predictorsToSelect = 0.3, omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv", idColumn = "Patient.Id", nIterations = 3, populationSize = 10, classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"))
 #'
-#' MLASDO::detectAnomalies(justAnalysis = TRUE, mlAlgorithm = "Lasso", geneticPath = "GA.rds", solutionPath = "GA_solution.rds", bestModelPath = "GA_Best_Model.rds", worstModelPath = "GA_Worst_Model.rds", lassoPredictorsPath = "GA_Lasso_Predictors.rds", savingName = "ExecutionWithOwnData", omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv",idColumn = "Patient.Id",classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"))
+#' MLASDO::detectAnomalies(justAnalysis = TRUE, mlAlgorithm = "Lasso", geneticPath = "GA.rds", solutionPath = "GA_solution.rds", bestModelPath = "GA_Best_Model.rds", lassoPredictorsPath = "GA_Lasso_Predictors.rds", savingName = "ExecutionWithOwnData", omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv",idColumn = "Patient.Id",classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"))
 
 detectAnomalies <- function(
     justAnalysis = FALSE,
     solutionPath = "",
     geneticPath = "",
     bestModelPath = "",
-    worstModelPath = "",
     lassoPredictorsPath = "",
     mlAlgorithm,
     predictorsToSelect = 15,
     numModelExecutions = 5,
     numTrees = 100,
     mtry = 225,
-    splitrule = "gini",
+    splitRule = "gini",
     sampleFraction = 1,
     maxDepth = 4,
     minNodeSize = 30,
@@ -159,12 +157,8 @@ detectAnomalies <- function(
     return("If you want to perform the analysis only, you must indicate the path to the genetic algorithm object.")
   }
 
-  if(justAnalysis & bestModelPath == ""){
-    return("If you want to perform the analysis only, you must indicate the path to the best model.")
-  }
-
-  if(justAnalysis & worstModelPath == ""){
-    return("If you want to perform the analysis only, you must indicate the path to the worst model.")
+  if(justAnalysis & bestModelAfterDetectionPath == ""){
+    return("If you want to perform the analysis only, you must indicate the path to the best model obtained after the detection.")
   }
 
   if(justAnalysis & mlAlgorithm == "Lasso" & lassoPredictorsPath == ""){
@@ -378,7 +372,6 @@ detectAnomalies <- function(
       savingName = savingName,
       omicData = omicData,
       subsetTrain = subsetTrain,
-      activePredictors = activePredictors,
       classVariable = classVariable,
       idColumn = idColumn,
       mlAlgorithm = mlAlgorithm,
@@ -386,7 +379,7 @@ detectAnomalies <- function(
       predictorsToSelect = predictorsToSelect,
       numTrees = numTrees,
       mtry = mtry,
-      splitrule = splitrule,
+      splitRule = splitRule,
       sampleFraction = sampleFraction,
       maxDepth = maxDepth,
       minNodeSize = minNodeSize,
@@ -411,18 +404,14 @@ detectAnomalies <- function(
 
     geneticAlgorithm <- readRDS(geneticPath)
     solutionGA <- readRDS(solutionPath)
-    bestModel <- readRDS(bestModelPath)
-    worstModel <- readRDS(worstModelPath)
+    bestModelAfterDetection <- readRDS(bestModelAfterDetectionPath)
 
   } else {
 
     dirPath <- paste(savingName, "geneticAlgorithm", name, sep = "/")
 
-    bestModelPath <- paste(dirPath, "Best_Model.rds", sep="_")
-    bestModel <- readRDS(bestModelPath)
-
-    worstModelPath <- paste(dirPath, "Worst_Model.rds", sep="_")
-    worstModel <- readRDS(worstModelPath)
+    bestModelAfterDetectionPath <- paste(dirPath, "Best_Model_After_Detection.rds", sep="_")
+    bestModelAfterDetection <- readRDS(bestModelAfterDetectionPath)
 
     solutionPath <- paste(dirPath, "Solution.rds", sep="_")
     solutionGA <- readRDS(solutionPath)
@@ -575,7 +564,7 @@ detectAnomalies <- function(
         y = omicTrainDiagnosis,
         num.trees = numTrees,
         mtry = mtry,
-        splitrule = splitrule,
+        splitRule = splitRule,
         importance = "impurity", # In order to obtain the important variables in the prediction
         sample.fraction = sampleFraction,
         max.depth = maxDepth,
@@ -638,26 +627,18 @@ detectAnomalies <- function(
     classVariable = classVariable
   )
 
-  bestCM <- NULL
-  worstCM <- NULL
+  bestAfterDetectionCM <- NULL
 
   if(mlAlgorithm == "Lasso"){
 
-    bestModelPrediction <- predict(bestModel, newx = as.matrix(omicTest), alpha = 1, s = "lambda.min", type = "class")
-    bestCM <- confusionMatrix(as.factor(as.integer(bestModelPrediction)), as.factor(omicTestDiagnosis))
-
-    worstModelPrediction <- predict(worstModel, newx = as.matrix(omicTest), alpha = 1, s = "lambda.min", type = "class")
-    worstCM <- confusionMatrix(as.factor(as.integer(worstModelPrediction)), as.factor(omicTestDiagnosis))
+    bestModelAfterDetectionPrediction <- predict(bestModelAfterDetection, newx = as.matrix(omicTest), alpha = 1, s = "lambda.min", type = "class")
+    bestAfterDetectionCM <- confusionMatrix(as.factor(as.integer(bestModelAfterDetectionPrediction)), as.factor(omicTestDiagnosis))
 
   } else if (mlAlgorithm == "RF"){
 
-    bestModelPrediction <- predict(bestModel, omicTest)$predictions
-    bestCM <-
-      confusionMatrix(as.factor(as.integer(bestModelPrediction)), as.factor(omicTestDiagnosis))
-
-    worstModelPrediction <- predict(worstModel, omicTest)$predictions
-    worstCM <-
-      confusionMatrix(as.factor(as.integer(worstModelPrediction)), as.factor(omicTestDiagnosis))
+    bestModelAfterDetectionPrediction <- predict(bestModelAfterDetection, omicTest)$predictions
+    bestAfterDetectionCM <-
+      confusionMatrix(as.factor(as.integer(bestModelAfterDetectionPrediction)), as.factor(omicTestDiagnosis))
 
   }
 
@@ -681,7 +662,6 @@ detectAnomalies <- function(
     clinicData = changedClinicData,
     selectedData = selectedOmicPredictors,
     classVariable = classVariable,
-    bestModelCM = bestCM,
-    worstModelCM = worstCM
+    bestAfterDetectionCM = bestAfterDetectionCM
     )
 }

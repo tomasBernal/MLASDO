@@ -46,7 +46,6 @@
 #'
 #' @param omicData Dataset | Dataset of omic data that will be used.
 #' @param subsetTrain Array of Integer | Subset of train samples.
-#' @param activePredictors Array of Strings | Predictors on which the study of the ratios will be conducted after the genetic algorithm has been performed. Default value: All the predictors in clinic data, except classVariable and idColumn.
 #' @param classVariable String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.
 #' @param idColumn String | Variable that indicates the identifier of each patient in both datasets. If the user does not specify a path to his own data, the value for the sample data, Trial, will be used.
 #'
@@ -57,7 +56,7 @@
 #' @param predictorsToSelect Integer | Number of predictors to be selected from the most important predictors ranked by the RF model. This parameter is a integer number between 1 and the total number of predictors in the data. Default value: 15.
 #' @param numTrees Integer | Number of trees of the Random Forest model. Default value: 100.
 #' @param mtry Integer | Number of predictors that are evaluated at each partition (node) of each tree. Default value: 225.
-#' @param splitrule String | This is the rule used by the algorithm to select the predictor and the optimal value to separate a node into two branches during the tree construction. Default value: gini.
+#' @param splitRule String | This is the rule used by the algorithm to select the predictor and the optimal value to separate a node into two branches during the tree construction. Default value: gini.
 #' @param sampleFraction Decimal | Fraction of the training data that will be used to create each of the trees in the forest. Default value: 1.
 #' @param maxDepth Integer | Maximum height of each tree in the forest. Default value: 4.
 #' @param minNodeSize Integer | Minimum number of observations required in a node to be able to split it. Default value: 30.
@@ -81,13 +80,12 @@
 #'
 #' @examples
 #'
-#' MLASDO::executeGA(mlAlgorithm = mlAlgorithm, numModelExecutions = numModelExecutions, predictorsToSelect = predictorsToSelect, numTrees = numTrees, mtry = mtry, splitrule = splitrule, sampleFraction = sampleFraction, maxDepth = maxDepth, minNodeSize = minNodeSize, omicData = omicData, subsetTrain = subsetTrain, activePredictors = activePredictors, classVariable = classVariable, idColumn = idColumn, savingName = savingName, nCores = nCores, nIterations = nIterations, nStopIter = nStopIter, populationSize = populationSize, diagnosticChangeProbability = diagnosticChangeProbability, crossoverOperator = crossoverOperator, crossoverProbability = crossoverProbability, selectionOperator = selectionOperator, mutationOperator = mutationOperator, mutationProbability = mutationProbability, seed = seed)
+#' MLASDO::executeGA(mlAlgorithm = mlAlgorithm, numModelExecutions = numModelExecutions, predictorsToSelect = predictorsToSelect, numTrees = numTrees, mtry = mtry, splitRule = splitRule, sampleFraction = sampleFraction, maxDepth = maxDepth, minNodeSize = minNodeSize, omicData = omicData, subsetTrain = subsetTrain, classVariable = classVariable, idColumn = idColumn, savingName = savingName, nCores = nCores, nIterations = nIterations, nStopIter = nStopIter, populationSize = populationSize, diagnosticChangeProbability = diagnosticChangeProbability, crossoverOperator = crossoverOperator, crossoverProbability = crossoverProbability, selectionOperator = selectionOperator, mutationOperator = mutationOperator, mutationProbability = mutationProbability, seed = seed)
 
   executeGA <- function(
     savingName,
     omicData,
     subsetTrain,
-    activePredictors,
     classVariable,
     idColumn,
     mlAlgorithm,
@@ -95,7 +93,7 @@
     predictorsToSelect,
     numTrees,
     mtry,
-    splitrule,
+    splitRule,
     sampleFraction,
     maxDepth,
     minNodeSize,
@@ -176,7 +174,7 @@
             y = solutionData,
             num.trees = numTrees,
             mtry = mtry,
-            splitrule = splitrule,
+            splitRule = splitRule,
             importance = "impurity", # In order to obtain the important variables in the prediction
             sample.fraction = sampleFraction,
             max.depth = maxDepth,
@@ -237,13 +235,13 @@
     nBits = nrow(omicTrain), # Number of bits in the genome (one for each example in the dataset)
     popSize = populationSize, # Size of the initial population
     population = generateInitialPopulation, # Function that generates the initial population (explained above)
-    selection = selectionOperator, # Selection of the best individuals through tournament
+    selection = selectionOperator, #  Function that performs the selection of the best individuals
     maxiter = nIterations, # Number of iterations to perform
     run = nStopIter, # Number of iterations to stop if the fitness value doesn't change
     pcrossover = crossoverProbability, # Probability of performing crossover between parents
-    crossover = crossoverOperator, # Function that performs crossover, in this case, single-point crossover (taking a part from each parent)
+    crossover = crossoverOperator, # Function that performs crossover
     pmutation = mutationProbability, # Probability of performing mutation in parents
-    mutation = mutationOperator, # Function that performs mutation, in this case, randomly changes a gene
+    mutation = mutationOperator, # Function that performs mutation
     parallel = nCores # Number of cores used in the parallelization
   )
 
@@ -282,15 +280,10 @@
   # Obtaining the worst and the best model with the final solution
   solutionData <- bitwXor(omicTrainDiagnosis, geneticSolution)
 
-  models <- vector(mode = "list", length = numModelExecutions)
-
   predictorsInfo <- list()
 
-  bestModelIndex <- 1
-  worstModelIndex <- 1
-
+  bestModel <- NULL
   bestModelBA <- 0
-  worstModelBA <- 1
 
 
   for (i in 1:numModelExecutions) {
@@ -343,7 +336,7 @@
         y = solutionData,
         num.trees = numTrees,
         mtry = mtry,
-        splitrule = splitrule,
+        splitRule = splitRule,
         importance = "impurity", # In order to obtain the important variables in the prediction
         sample.fraction = sampleFraction,
         max.depth = maxDepth,
@@ -383,7 +376,7 @@
       }
     }
 
-    models[[i]] <- model
+
 
     # Get the confusion matrix
     cfModel <- confusionMatrix(as.factor(as.integer(modelPrediction)), as.factor(omicTestDiagnosis))
@@ -398,24 +391,15 @@
     if(actualBA > bestModelBA){
 
       bestModelBA <- actualBA
-      bestModelIndex <- i
-    }
-
-    if(actualBA < worstModelBA){
-      worstModelBA <- actualBA
-      worstModelIndex <- i
+      bestModel <- model
     }
 
   }
 
 
   ## Save the best solution of the genetic algorithm
-  modelPath <- paste(name, "Best_Model.rds", sep="_")
-  saveRDS(models[[bestModelIndex]], file = paste(dirPath, modelPath, sep = "/"))
-
-  modelPath <- paste(name, "Worst_Model.rds", sep="_")
-  saveRDS(models[[worstModelIndex]], file = paste(dirPath, modelPath, sep = "/"))
-
+  modelPath <- paste(name, "Best_Model_After_Detection.rds", sep="_")
+  saveRDS(bestModel, file = paste(dirPath, modelPath, sep = "/"))
 
   predictorsInfo <- as.data.frame(predictorsInfo)
 

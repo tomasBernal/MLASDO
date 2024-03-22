@@ -16,16 +16,39 @@
 #' @param originalDiagnosis Array of Strings | Original diagnostics of the patients.
 #' @param clinicData Dataset | Dataset of clinic data that will be used.
 #' @param selectedData Dataset | Dataset of omic data with only the predictors selected by the Lasso model.
-#' @param classVariable String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.
 #'
-#' @param bestModelCM Confusion Matrix | Confusion matrix of the best model obtained before the detection.
-#' @param worstModelCM Confusion Matrix | Confusion matrix of the worst model obtained before the detection.
+#' @param classVariable String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.
+#' @param idColumn String | Variable that indicates the identifier of each patient in both datasets. If the user does not specify a path to his own data, the value for the sample data, Trial, will be used.
+#'
+#' @param predictorsToSelect Integer | Number of predictors to be selected from the most important predictors ranked by the RF model. This parameter is a integer number between 1 and the total number of predictors in the data. Default value: 15.
+#' @param numTrees Integer | Number of trees of the Random Forest model. Default value: 100.
+#' @param mtry Integer | Number of predictors that are evaluated at each partition (node) of each tree. Default value: 225.
+#' @param splitRule String | This is the rule used by the algorithm to select the predictor and the optimal value to separate a node into two branches during the tree construction. Default value: gini.
+#' @param sampleFraction Decimal | Fraction of the training data that will be used to create each of the trees in the forest. Default value: 1.
+#' @param maxDepth Integer | Maximum height of each tree in the forest. Default value: 4.
+#' @param minNodeSize Integer | Minimum number of observations required in a node to be able to split it. Default value: 30.
+#'
+#' @param nIterations Integer | Number of iterations (generations) the genetic algorithm will perform. Default value: 200.
+#' @param nStopIter Integer | Number of iterations after which the algorithm will stop if all of them have the same fitness value. Default value: 25.
+#' @param populationSize Integer | Number of solutions that will be part of the initial population. Default value: 150.
+#' @param diagnosticChangeProbability Decimal | Percentage (expressed as a fraction) indicating the probability of each gene in the solutions to be changed. Default value: 0.1 (10%).
+#' @param crossoverOperator String | Crossover operator used in the genetic algorithm. Default value: Single Point Crossover.
+#' @param crossoverProbability Decimal | Percentage (expressed as a fraction) indicating the probability of crossover occurrence. Default value: 0.8 (80%).
+#' @param selectionOperator String | Selection operator used in the genetic algorithm. Default value: Tournament Selection.
+#' @param mutationOperator String | Mutation operator used in the genetic algorithm. Default value: Random Mutation.
+#' @param mutationProbability Decimal | Percentage (expressed as a fraction) indicating the probability of mutation occurrence. Default value: 0.1 (10%).
+#'
+#' @param nCores Integer | Number of cores to be used in parallelization. Default value: 6.
+#'
+#' @param seed Integer | Seed used for the creation of training and test sets. Default value: 1234.
+#'
+#' @param bestAfterDetectionCM Confusion Matrix | Confusion matrix of the best model obtained after the detection.
 #'
 #' @export
 #'
 #' @examples
 #'
-#' MLASDO::compileMarkdown(savingName = savingName, justAnalysis = justAnalysis, geneticAlgorithm = geneticAlgorithm, mlAlgorithm = mlAlgorithm, numModelExecutions = numModelExecutions, lassoPredictorsPath = lassoPredictorsPath, baselinePrecision = baselinePrecision, baselinePredictors = baselinePredictors, originalDiagnosis = originalDiagnosis, clinicData = clinicData, selectedData = selectedData, classVariable = classVariable,  bestModelCM = bestModelCM, worstModelCM = worstModelCM)
+#' MLASDO::compileMarkdown(savingName = savingName, justAnalysis = justAnalysis, geneticAlgorithm = geneticAlgorithm, mlAlgorithm = mlAlgorithm, numModelExecutions = numModelExecutions, lassoPredictorsPath = lassoPredictorsPath, baselinePrecision = baselinePrecision, baselinePredictors = baselinePredictors, originalDiagnosis = originalDiagnosis, clinicData = clinicData, selectedData = selectedData, classVariable = classVariable, idColumn = idColumn, predictorsToSelect = predictorsToSelect, numTrees = numTrees, mtry = mtry, splitRule = splitRule, sampleFraction = sampleFraction, maxDepth = maxDepth, minNodeSize = minNodeSize, nIterations = nIterations, nStopiter = nStopiter, populationSize = populationSize, diagnosticChangeProbability = diagnosticChangeProbability, crossoverOperator = crossoverOperator, crossoverProbability = crossoverProbability, selectionOperator = selectionOperator, mutationOperator = mutationOperator, mutationProbability = mutationProbability, nCores = nCores, seed = seed, bestAfterDetectionCM = bestAfterDetectionCM)
 #'
 
 compileMarkdown <- function(
@@ -41,8 +64,26 @@ compileMarkdown <- function(
     clinicData,
     selectedData,
     classVariable,
-    bestModelCM,
-    worstModelCM
+    idColumn,
+    predictorsToSelect,
+    numTrees,
+    mtry,
+    splitRule,
+    sampleFraction,
+    maxDepth,
+    minNodeSize,
+    nIterations,
+    nStopiter,
+    populationSize,
+    diagnosticChangeProbability,
+    crossoverOperator,
+    crossoverProbability,
+    selectionOperator,
+    mutationOperator,
+    mutationProbability,
+    nCores,
+    seed,
+    bestAfterDetectionCM
     ){
 
   name <- paste("GA", savingName, sep="_")
@@ -101,9 +142,27 @@ compileMarkdown <- function(
                                  numericTable = numeric,
                                  totalTable = total,
                                  classVariable = classVariable,
+                                 idColumn = idColumn,
+                                 predictorsToSelect = predictorsToSelect,
+                                 numTrees = numTrees,
+                                 mtry = mtry,
+                                 splitRule = splitRule,
+                                 sampleFraction = sampleFraction,
+                                 maxDepth = maxDepth,
+                                 minNodeSize = minNodeSize,
+                                 nIterations = nIterations,
+                                 nStopiter = nStopiter,
+                                 populationSize = populationSize,
+                                 diagnosticChangeProbability = diagnosticChangeProbability,
+                                 crossoverOperator = crossoverOperator,
+                                 crossoverProbability = crossoverProbability,
+                                 selectionOperator = selectionOperator,
+                                 mutationOperator = mutationOperator,
+                                 mutationProbability = mutationProbability,
+                                 nCores = nCores,
+                                 seed = seed,
                                  numModelExecutions = numModelExecutions,
-                                 bestModelCM = bestModelCM,
-                                 worstModelCM = worstModelCM,
+                                 bestAfterDetectionCM = bestAfterDetectionCM,
                                  predictorsImp = predictorsImp
                                  ),
                    output_file = outputName,

@@ -20,8 +20,27 @@ params:
   numericTable : NULL
   totalTable : NULL
   classVariable: NULL
+  idColumn : NULL
+  predictorsToSelect : NULL
+  numTrees : NULL
+  mtry : NULL
+  splitRule : NULL 
+  sampleFraction : NULL
+  maxDepth : NULL
+  minNodeSize : NULL
+  nIterations : NULL 
+  nStopiter : NULL
+  populationSize : NULL 
+  diagnosticChangeProbability : NULL 
+  crossoverOperator : NULL
+  crossoverProbability : NULL 
+  selectionOperator : NULL
+  mutationOperator : NULL
+  mutationProbability : NULL 
+  nCores : NULL
+  seed : NULL
   numModelExecutions : NULL
-  bestModelCM : NULL
+  bestAfterDetectionCM : NULL
   worstModelCM : NULL
   predictorsImp : NULL
 ---
@@ -60,16 +79,65 @@ predictorsLine <- params$baselinePredictors
 
 lassoText <- paste(paste("Also, the mean number of selected predictors has gone from", predictorsLine, "to", tail(params$lassoPredictors, n=1),  sep = " "), ".", sep = "")
 
-bestCM <- params$bestModelCM
+bestAfterDetectionCM <- params$bestAfterDetectionCM
 worstCM <- params$worstModelCM
 ```
 
-A `r modelName` model has been used to detect anomalous cases. 
+# 1. Parameters and hyperparameters used for anomalous case detection
+
+The class variable used in the anomalous sample detection process was **params$classVariable**. The variable used as identifier of each patient has been **params$idColumn**.
+
+This process has been performed by applying a parallelization with **params$nCores** cores. In addition, the seed used in the process has been **params$seed**.
+
+### 1.1 Parameters chosen for the genetic algorithm
+
+The choice of parameters for the execution of the genetic algorithm was as follows:
+
+- Size of the initial population: **params$populationSize**.
+- Percentage of patients whose diagnosis is changed at the time of generating the initial population: **params$diagnosticChangeProbability**.
+
+- Maximum number of iterations to perform: **params$nIterations**.
+- Number of iterations to stop if the fitness value doesn't change: **params$nStopIter**.
+
+- Selection operator: **params$selectionOperator**.
+
+- Crossover operator: **params$crossoverOperator**.
+- Probability of crossover: **params$crossoverProbability**.
+
+- Mutation operator: **params$mutationOperator**.
+- Probability of mutation: **params$mutationProbability**.
+
+
+### 1.2 Model selection mechanism chosen
+Regarding the model selection mechanism:
+
+- The hyperparameter grid used contains a unique combination.
+- The type of validation used was repetition, specifically with **params$numModelExecutions** repetitions.
+ 
+### 1.3 Algorithm chosen and the hyperparameters chosen for it
+A `r modelName` model has been used to detect anomalous cases.
+
+`r if(executeLasso){"No hyperparameter is chosen for this model, since the alpha is chosen by R."}`
+
+`r if(executeRF){"The following hyperparameters have been chosen for this model:"}`
+`r if(executeRF){"- Number of trees of the Random Forest model: params$numTrees."}`
+`r if(executeRF){"- Number of predictors that are evaluated at each partition (node) of each tree: params$mtry."}`
+`r if(executeRF){"- Rule used to select the predictor and the optimal value to separate a node into two branches during the tree construction: params$splitRule."}`
+`r if(executeRF){"- Fraction of the training data that will be used to create each of the trees in the forest: params$sampleFraction."}`
+`r if(executeRF){"- Maximum height of each tree in the forest: params$maxDepth."}`
+`r if(executeRF){"- Minimum number of observations required in a node to be able to split it: params$minNodeSize."}`
+
+`r if(executeRF){" In the RF model it is necessary to indicate the number of predictors to be selected from the most important predictors. In this case the number of predictors selected has been: params$predictorsToSelect."}`
+
+### 1.4 Categorization of clinical data
+Lista de atributos numéricos, lista de atributos categóricos
+
+ 
+
+# 2. Evolution of the `r modelName` model during the detection
 
 In the anomalous sample detection process, `r numExecutions` iterations have been performed. During this process, the accuracy has gone from `r baselinePrecision` percent to `r maxPrecision` percent.
 `r if(executeLasso){lassoText}`
-
-# Evolution of the `r modelName` model during the detection
 
 ```{r, include = FALSE}
 algorithmPrecisions <- params$geneticAlgorithm@summary[,1]
@@ -89,7 +157,7 @@ hline <- function(y = 0, color = "black") {
 }
 ```
 
-### Evolution of the balanced accuracy obtained
+### 2.1 Evolution of the balanced accuracy obtained
 ```{r, include = FALSE}
 precisionPlot <- plot_ly(precisionDF, x=~generation, y=~precision, hoveron = "points", hoverinfo = "text", text = paste("Maximum accuracy value obtained: ", round(precisionDF$precision, 2), "%<br>Generation: ", precisionDF$generation, sep = ""), type = 'scatter', mode = 'lines+markers', name ="Precision", color = I("cadetblue3"))
   
@@ -127,19 +195,14 @@ predictorsPlot
 ```
 
 
-# Precision obtained by the `r modelName` model before the detection
+# 3. Precision obtained by the `r modelName` model after the detection
 
-### Confusion Matrix of the best model obtained of the total of `r params$numModelExecutions` models
+### 3.1 Confusion Matrix of the best model obtained of the total of `r params$numModelExecutions` models
 ```{r}
-bestCM
+bestAfterDetectionCM
 ```
 
-### Confusion Matrix of the worst model obtained of the total of `r params$numModelExecutions` models
-```{r}
-worstCM
-```
-
-# Diagnostics distribution after and before the detection
+# 4. Diagnostics distribution before and after the detection
 ```{r, include = FALSE}
 originalDF <- data.frame(
   Case = sum( params$originalDiagnosis == "Case"),
@@ -188,9 +251,9 @@ distributionDashboard <- distributionDashboard %>%  layout(title = "Distribution
 distributionDashboard
 ```
 
-# PCA Analysis
+# 5. PCA Analysis
 
-### PCA Analysis over total predictors
+### 5.1 PCA Analysis over total predictors
 ```{r, include = FALSE}
 classVariable <- params$pcaAnalysis[[params$classVariable]]
 
@@ -207,7 +270,7 @@ pcaAnalysis <- ggplot(params$pcaAnalysis, aes(PC1, PC2)) +
 pcaAnalysis
 ```
 
-### PCA Analysis over the selected predictors by the model
+### 5.2 PCA Analysis over the selected predictors by the model
 ```{r, include = FALSE}
 pcaSelected <- ggplot(params$pcaAnalysisSelected, aes(PC1, PC2)) + 
     modelr::geom_ref_line(h = 0) +
@@ -222,20 +285,22 @@ pcaSelected <- ggplot(params$pcaAnalysisSelected, aes(PC1, PC2)) +
 pcaSelected
 ```
 
-# Table with information about the selected predictors
+# 6. Table with information about the selected predictors
 ```{r}
 DT::datatable(params$predictorsImp, class = 'cell-border stripe', options = list(scrollX = TRUE))
 ```
 
-# Omical data with only the selected predictors
+# 7. Omical data with only the selected predictors
 ```{r}
 DT::datatable(params$selectedData, class = 'cell-border stripe', options = list(scrollX = TRUE))
 ```
 
-# Table of clinical data for patients
+# 8. Table of clinical data for patients
 ```{r}
 DT::datatable(params$clinicData, class = 'cell-border stripe', options = list(scrollX = TRUE))
 ```
+
+# 9. Ratio Analysis
 
 ```{r, include=FALSE}
 numericTable <- params$numericTable
@@ -789,8 +854,6 @@ for(indexRatio in 1:nrow(totalTable)){
   totalTable$percentageTextCE[indexRatio] <- percentageText
 }
 ```
-
-# Ratio Analysis
 
 ### Ratios between Control and Case patients before detection
 
