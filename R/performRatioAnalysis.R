@@ -83,7 +83,7 @@ performRatioAnalysis <- function(
   for(activePredictor in activePredictors){
 
     # Checking if the activePredictor is numerical
-    if ((is.numeric(clinic[[activePredictor]]) & !is.integer(clinic[[activePredictor]])) | (is.integer(clinic[[activePredictor]] & length(unique(clinic[[activePredictor]])) >= 6))){
+    if((is.numeric(clinic[[activePredictor]]) & !is.integer(clinic[[activePredictor]])) | (is.integer(clinic[[activePredictor]]) & length(unique(clinic[[activePredictor]])) >= 6)){
 
       # Obtaining the number of patients for the numerator and the denominator
       # Since the activePredictor is numeric, there will be empty columns
