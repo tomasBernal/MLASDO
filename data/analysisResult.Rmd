@@ -29,7 +29,7 @@ params:
   maxDepth : NULL
   minNodeSize : NULL
   nIterations : NULL 
-  nStopiter : NULL
+  nStopIter : NULL
   populationSize : NULL 
   diagnosticChangeProbability : NULL 
   crossoverOperator : NULL
