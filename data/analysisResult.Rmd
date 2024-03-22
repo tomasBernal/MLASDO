@@ -85,38 +85,54 @@ worstCM <- params$worstModelCM
 
 ```{r, include = FALSE}
 classVariable <- params$classVariable
+idColumn <- params$idColumn
+
+nCores <- params$nCores
+seed <- params$seed
+
+populationSize <- params$populationSize
+diagnosticChangeProbability <- params$diagnosticChangeProbability
+nIterations <- params$nIterations
+nStopIter <- params$nStopIter
+selectionOperator <- params$selectionOperator
+crossoverOperator <- params$crossoverOperator
+crossoverProbability <- params$crossoverProbability
+mutationOperator <- params$mutationOperator
+mutationProbability <- params$mutationProbability
+
+numModelExecutions <- params$numModelExecutions
 ```
 
 # 1. Parameters and hyperparameters used for anomalous case detection
 
-The class variable used in the anomalous sample detection process was **`r classVariable`**. The variable used as identifier of each patient has been **params$idColumn**.
+The class variable used in the anomalous sample detection process was **`r classVariable`**. The variable used as identifier of each patient has been **`r idColumn`**.
 
-This process has been performed by applying a parallelization with **params$nCores** cores. In addition, the seed used in the process has been **params$seed**.
+This process has been performed by applying a parallelization with **`r nCores`** cores. In addition, the seed used in the process has been **`r seed`**.
 
 ### 1.1 Parameters chosen for the genetic algorithm
 
 The choice of parameters for the execution of the genetic algorithm was as follows:
 
-- Size of the initial population: **params$populationSize**.
-- Percentage of patients whose diagnosis is changed at the time of generating the initial population: **params$diagnosticChangeProbability**.
+- Size of the initial population: **`r populationSize`**.
+- Percentage of patients whose diagnosis is changed at the time of generating the initial population: **`r diagnosticChangeProbability`**.
 
-- Maximum number of iterations to perform: **params$nIterations**.
-- Number of iterations to stop if the fitness value doesn't change: **params$nStopIter**.
+- Maximum number of iterations to perform: **`r nIterations`**.
+- Number of iterations to stop if the fitness value doesn't change: **`r nStopIter`**.
 
-- Selection operator: **params$selectionOperator**.
+- Selection operator: **`r selectionOperator`**.
 
-- Crossover operator: **params$crossoverOperator**.
-- Probability of crossover: **params$crossoverProbability**.
+- Crossover operator: **`r crossoverOperator`**.
+- Probability of crossover: **`r crossoverProbability`**.
 
-- Mutation operator: **params$mutationOperator**.
-- Probability of mutation: **params$mutationProbability**.
+- Mutation operator: **`r mutationOperator`**.
+- Probability of mutation: **`r mutationProbability`**.
 
 
 ### 1.2 Model selection mechanism chosen
 Regarding the model selection mechanism:
 
 - The hyperparameter grid used contains a unique combination.
-- The type of validation used was repetition, specifically with** `r params$numModelExecutions` **repetitions.
+- The type of validation used was repetition, specifically with **`r numModelExecutions`** repetitions.
  
 ### 1.3 Algorithm chosen and the hyperparameters chosen for it
 A `r modelName` model has been used to detect anomalous cases.
@@ -124,7 +140,8 @@ A `r modelName` model has been used to detect anomalous cases.
 `r if(executeLasso){"No hyperparameter is chosen for this model, since the alpha is chosen by R."}`
 
 `r if(executeRF){"The following hyperparameters have been chosen for this model:"}`
-`r if(executeRF){"- Number of trees of the Random Forest model: params$numTrees."}`
+
+`r if(executeRF){paste("- Number of trees of the Random Forest model: ", params$numTrees, ".", sep = "")}`
 `r if(executeRF){"- Number of predictors that are evaluated at each partition (node) of each tree: params$mtry."}`
 `r if(executeRF){"- Rule used to select the predictor and the optimal value to separate a node into two branches during the tree construction: params$splitRule."}`
 `r if(executeRF){"- Fraction of the training data that will be used to create each of the trees in the forest: params$sampleFraction."}`
