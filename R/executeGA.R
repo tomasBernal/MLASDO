@@ -235,13 +235,13 @@
     nBits = nrow(omicTrain), # Number of bits in the genome (one for each example in the dataset)
     popSize = populationSize, # Size of the initial population
     population = generateInitialPopulation, # Function that generates the initial population (explained above)
-    selection = selectionOperator, #  Function that performs the selection of the best individuals
+    selection = get(selectionOperator), #  Function that performs the selection of the best individuals
     maxiter = nIterations, # Number of iterations to perform
     run = nStopIter, # Number of iterations to stop if the fitness value doesn't change
     pcrossover = crossoverProbability, # Probability of performing crossover between parents
-    crossover = crossoverOperator, # Function that performs crossover
+    crossover = get(crossoverOperator), # Function that performs crossover
     pmutation = mutationProbability, # Probability of performing mutation in parents
-    mutation = mutationOperator, # Function that performs mutation
+    mutation = get(mutationOperator), # Function that performs mutation
     parallel = nCores # Number of cores used in the parallelization
   )
 

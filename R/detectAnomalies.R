@@ -42,10 +42,10 @@
 #' @param nStopIter Integer | Number of iterations after which the algorithm will stop if all of them have the same fitness value. Default value: 25.
 #' @param populationSize Integer | Number of solutions that will be part of the initial population. Default value: 150.
 #' @param diagnosticChangeProbability Decimal | Percentage (expressed as a fraction) indicating the probability of each gene in the solutions to be changed. Default value: 0.1 (10%).
-#' @param crossoverOperator String | Crossover operator used in the genetic algorithm. Default value: Single Point Crossover.
+#' @param crossoverOperator String | Name of the crossover operator used in the genetic algorithm. Default value: Single Point Crossover.
 #' @param crossoverProbability Decimal | Percentage (expressed as a fraction) indicating the probability of crossover occurrence. Default value: 0.8 (80%).
-#' @param selectionOperator String | Selection operator used in the genetic algorithm. Default value: Tournament Selection.
-#' @param mutationOperator String | Mutation operator used in the genetic algorithm. Default value: Random Mutation.
+#' @param selectionOperator String | Name of the selection operator used in the genetic algorithm. Default value: Tournament Selection.
+#' @param mutationOperator String | Name of the mutation operator used in the genetic algorithm. Default value: Random Mutation.
 #' @param mutationProbability Decimal | Percentage (expressed as a fraction) indicating the probability of mutation occurrence. Default value: 0.1 (10%).
 #' @param seed Integer | Seed used for the creation of training and test sets. Default value: 1234.
 #'
@@ -93,10 +93,10 @@ detectAnomalies <- function(
     nStopIter = 25,
     populationSize = 150,
     diagnosticChangeProbability = 0.1,
-    crossoverOperator = gabin_spCrossover,
+    crossoverOperator = "gabin_spCrossover",
     crossoverProbability = 0.8,
-    selectionOperator = gabin_tourSelection,
-    mutationOperator = gabin_raMutation,
+    selectionOperator = "gabin_tourSelection",
+    mutationOperator = "gabin_raMutation",
     mutationProbability = 0.1,
     seed = 1234
 ){
