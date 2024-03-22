@@ -43,7 +43,7 @@ params:
   seed : NULL
   numModelExecutions : NULL
   bestAfterDetectionCM : NULL
-  worstModelCM : NULL
+  bestBaselineModelCM : NULL
   predictorsImp : NULL
 ---
 
@@ -82,7 +82,7 @@ predictorsLine <- params$baselinePredictors
 lassoText <- paste(paste("Also, the mean number of selected predictors has gone from", predictorsLine, "to", tail(params$lassoPredictors, n=1),  sep = " "), ".", sep = "")
 
 bestAfterDetectionCM <- params$bestAfterDetectionCM
-worstCM <- params$worstModelCM
+bestBaselineModelCM <- params$bestBaselineModelCM
 ```
 
 ```{r, include = FALSE}
@@ -221,7 +221,7 @@ predictorsPlot
 `r if(executeLasso){"### 2.3 Confusion Matrix of the best model obtained before the detection"}`
 `r if(!executeLasso){"### 2.2 Confusion Matrix of the best model obtained before the detection"}`
 ```{r}
-bestAfterDetectionCM
+bestBaselineModelCM
 ```
 
 `r if(executeLasso){"### 2.4 Confusion Matrix of the best model obtained after the detection"}`
@@ -886,7 +886,7 @@ for(indexRatio in 1:nrow(totalTable)){
 ### Ratios between Control and Case patients before detection
 
 ```{r, include = FALSE}
-plotCE <- plot_ly(totalTable,x=~logCE,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCE), height = (nrow(totalTable) * 900) / 36, width = 1000, hoverinfo = "text", text =~textCE)
+plotCE <- plot_ly(totalTable,x=~logCE,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCE), height = (nrow(totalTable) * 850) / 36, width = 1000, hoverinfo = "text", text =~textCE)
 
 title <- "Ratios between Control and Case patients before detection (genetic algorithm)"
 
@@ -903,7 +903,7 @@ plotCE
 
 ### Evolution of the set of Control patients after detection
 ```{r, include = FALSE}
-plotCCCM <- plot_ly(totalTable,x=~logCCCM,y=~rownames(totalTable), type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCCCM ), height = (nrow(totalTable) * 900) / 36, width = 1000, hoverinfo = "text", text =~textCCCM)
+plotCCCM <- plot_ly(totalTable,x=~logCCCM,y=~rownames(totalTable), type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCCCM ), height = (nrow(totalTable) * 850) / 36, width = 1000, hoverinfo = "text", text =~textCCCM)
 
 title <- "Evolution of the set of Control patients after detection (genetic algorithm)"
 plotCCCM <- plotCCCM %>% layout(title = title,
@@ -919,7 +919,7 @@ plotCCCM
 
 ### Evolution of the set of Case patients after detection
 ```{r, include = FALSE}
-plotECEM <- plot_ly(totalTable,x=~logECEM,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsECEM ), height = (nrow(totalTable) * 900) / 36, width = 1000, hoverinfo = "text", text =~textECEM)
+plotECEM <- plot_ly(totalTable,x=~logECEM,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsECEM ), height = (nrow(totalTable) * 850) / 36, width = 1000, hoverinfo = "text", text =~textECEM)
 
 title <- "Evolution of the set of Case patients after detection (genetic algorithm)"
 

@@ -559,6 +559,9 @@ detectAnomalies <- function(
 
   selectedOmicPredictors <- NULL
 
+  bestBaselineModel <- NULL
+  bestBaselineModelBA <- 0
+
   if(mlAlgorithm == "Lasso"){
 
     # This vector will store the balanced means of the numModelExecutions executions
@@ -607,6 +610,12 @@ detectAnomalies <- function(
       # Save the balanced mean obtained in this iteration
       balancedAccValues[i] <- (specificity + sensitivity) / 2
 
+      if(balancedAccValues[i] > bestBaselineModelBA){
+
+        bestBaselineModelBA <- actualBA
+        bestBaselineModel <- model
+      }
+
     }
 
     baselinePrecision <- mean(balancedAccValues)
@@ -648,6 +657,12 @@ detectAnomalies <- function(
       sensitivity <- ifelse(is.na(as.numeric(cfModel$byClass["Sensitivity"])), 0,  as.numeric(cfModel$byClass["Sensitivity"]))
 
       balancedAccValues[i] <- (specificity + sensitivity) / 2
+
+      if(balancedAccValues[i] > bestBaselineModelBA){
+
+        bestBaselineModelBA <- actualBA
+        bestBaselineModel <- model
+      }
     }
 
     baselinePrecision <- mean(balancedAccValues)
@@ -658,6 +673,9 @@ detectAnomalies <- function(
   selectedPredictorsPath <- paste(dirPath, "Predictors_Importance.tsv", sep="_")
 
   selectedPredictors <- read.table(selectedPredictorsPath, header = TRUE, sep = "\t", row.names = 1)
+
+  baselineModelPath <- paste(dirPath, "Best_Model_Before_Detection.rds", sep="_")
+  saveRDS(bestBaselineModel, file = baselineModelPath)
 
   omicDataShow <- omicData
   omicDataShow[subsetTrain,][[classVariable]] <- changedDiagnoses
@@ -710,17 +728,27 @@ detectAnomalies <- function(
 
 
   bestAfterDetectionCM <- NULL
+  bestBaselineModelCM <- NULL
+
+
 
   if(mlAlgorithm == "Lasso"){
 
     bestModelAfterDetectionPrediction <- predict(bestModelAfterDetection, newx = as.matrix(omicTest), alpha = 1, s = "lambda.min", type = "class")
     bestAfterDetectionCM <- confusionMatrix(as.factor(as.integer(bestModelAfterDetectionPrediction)), as.factor(omicTestDiagnosis))
 
+    bestBaselineModelPrediction <- predict(bestBaselineModel, newx = as.matrix(omicTest), alpha = 1, s = "lambda.min", type = "class")
+    bestBaselineModelCM <- confusionMatrix(as.factor(as.integer(bestBaselineModelPrediction)), as.factor(omicTestDiagnosis))
+
   } else if (mlAlgorithm == "RF"){
 
     bestModelAfterDetectionPrediction <- predict(bestModelAfterDetection, omicTest)$predictions
     bestAfterDetectionCM <-
       confusionMatrix(as.factor(as.integer(bestModelAfterDetectionPrediction)), as.factor(omicTestDiagnosis))
+
+    bestBaselineModelPrediction <- predict(bestBaselineModel, omicTest)$predictions
+    bestBaselineModelCM <-
+      confusionMatrix(as.factor(as.integer(bestBaselineModelPrediction)), as.factor(omicTestDiagnosis))
 
   }
 
@@ -765,6 +793,7 @@ detectAnomalies <- function(
     mutationProbability = mutationProbability,
     nCores = nCores,
     seed = seed,
-    bestAfterDetectionCM = bestAfterDetectionCM
+    bestAfterDetectionCM = bestAfterDetectionCM,
+    bestBaselineModelCM = bestBaselineModelCM
     )
 }

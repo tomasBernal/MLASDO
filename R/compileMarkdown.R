@@ -45,12 +45,13 @@
 #' @param seed Integer | Seed used for the creation of training and test sets. Default value: 1234.
 #'
 #' @param bestAfterDetectionCM Confusion Matrix | Confusion matrix of the best model obtained after the detection.
+#' @param bestBaselineModelCM Confusion Matrix | Confusion matrix of the best model obtained before the detection.
 #'
 #' @export
 #'
 #' @examples
 #'
-#' MLASDO::compileMarkdown(savingName = savingName, justAnalysis = justAnalysis, geneticAlgorithm = geneticAlgorithm, mlAlgorithm = mlAlgorithm, numModelExecutions = numModelExecutions, lassoPredictorsPath = lassoPredictorsPath, baselinePrecision = baselinePrecision, baselinePredictors = baselinePredictors, originalDiagnosis = originalDiagnosis, clinicData = clinicData, categoricActivePredictors = categoricActivePredictors, numericActivePredictors = numericActivePredictors, selectedData = selectedData, classVariable = classVariable, idColumn = idColumn, predictorsToSelect = predictorsToSelect, numTrees = numTrees, mtry = mtry, splitRule = splitRule, sampleFraction = sampleFraction, maxDepth = maxDepth, minNodeSize = minNodeSize, nIterations = nIterations, nStopiter = nStopiter, populationSize = populationSize, diagnosticChangeProbability = diagnosticChangeProbability, crossoverOperator = crossoverOperator, crossoverProbability = crossoverProbability, selectionOperator = selectionOperator, mutationOperator = mutationOperator, mutationProbability = mutationProbability, nCores = nCores, seed = seed, bestAfterDetectionCM = bestAfterDetectionCM)
+#' MLASDO::compileMarkdown(savingName = savingName, justAnalysis = justAnalysis, geneticAlgorithm = geneticAlgorithm, mlAlgorithm = mlAlgorithm, numModelExecutions = numModelExecutions, lassoPredictorsPath = lassoPredictorsPath, baselinePrecision = baselinePrecision, baselinePredictors = baselinePredictors, originalDiagnosis = originalDiagnosis, clinicData = clinicData, categoricActivePredictors = categoricActivePredictors, numericActivePredictors = numericActivePredictors, selectedData = selectedData, classVariable = classVariable, idColumn = idColumn, predictorsToSelect = predictorsToSelect, numTrees = numTrees, mtry = mtry, splitRule = splitRule, sampleFraction = sampleFraction, maxDepth = maxDepth, minNodeSize = minNodeSize, nIterations = nIterations, nStopiter = nStopiter, populationSize = populationSize, diagnosticChangeProbability = diagnosticChangeProbability, crossoverOperator = crossoverOperator, crossoverProbability = crossoverProbability, selectionOperator = selectionOperator, mutationOperator = mutationOperator, mutationProbability = mutationProbability, nCores = nCores, seed = seed, bestAfterDetectionCM = bestAfterDetectionCM, bestBaselineModelCM = bestBaselineModelCM)
 #'
 
 compileMarkdown <- function(
@@ -87,7 +88,8 @@ compileMarkdown <- function(
     mutationProbability,
     nCores,
     seed,
-    bestAfterDetectionCM
+    bestAfterDetectionCM,
+    bestBaselineModelCM
     ){
 
   name <- paste("GA", savingName, sep="_")
@@ -169,6 +171,7 @@ compileMarkdown <- function(
                                  seed = seed,
                                  numModelExecutions = numModelExecutions,
                                  bestAfterDetectionCM = bestAfterDetectionCM,
+                                 bestBaselineModelCM = bestBaselineModelCM,
                                  predictorsImp = predictorsImp
                                  ),
                    output_file = outputName,
