@@ -564,7 +564,7 @@ detectAnomalies <- function(
         y = omicTrainDiagnosis,
         num.trees = numTrees,
         mtry = mtry,
-        splitRule = splitRule,
+        splitrule = splitRule,
         importance = "impurity", # In order to obtain the important variables in the prediction
         sample.fraction = sampleFraction,
         max.depth = maxDepth,
