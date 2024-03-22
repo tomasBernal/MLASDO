@@ -612,7 +612,7 @@ detectAnomalies <- function(
 
       if(balancedAccValues[i] > bestBaselineModelBA){
 
-        bestBaselineModelBA <- actualBA
+        bestBaselineModelBA <- balancedAccValues[i]
         bestBaselineModel <- model
       }
 
@@ -660,7 +660,7 @@ detectAnomalies <- function(
 
       if(balancedAccValues[i] > bestBaselineModelBA){
 
-        bestBaselineModelBA <- actualBA
+        bestBaselineModelBA <- balancedAccValues[i]
         bestBaselineModel <- model
       }
     }
