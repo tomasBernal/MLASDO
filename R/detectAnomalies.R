@@ -298,7 +298,7 @@ detectAnomalies <- function(
   # Checking if the coding of the class variable in the omic dataset is correct
   if (0 %in% unique(omicData[[classVariable]])) {
 
-    print("The class variable is coded with 0, those values are changed to Control.")
+    cat("The class variable is coded with 0, those values are changed to Control.\n")
 
     omicData[[classVariable]][omicData[[classVariable]] == 0] <- "Control"
 
@@ -309,7 +309,7 @@ detectAnomalies <- function(
   # Checking if the coding of the class variable in the omic dataset is correct
   if (1 %in% unique(omicData[[classVariable]])) {
 
-    print("The class variable is coded with 1, those values are changed to Case.")
+    cat("The class variable is coded with 1, those values are changed to Case.\n")
 
     omicData[[classVariable]][omicData[[classVariable]] == 1] <- "Case"
 
@@ -320,7 +320,7 @@ detectAnomalies <- function(
   # Checking if the coding of the class variable in the clinic dataset is correct
   if (0 %in% unique(clinicData[[classVariable]])) {
 
-    print("The class variable is coded with 0, those values are changed to Control.")
+    cat("The class variable is coded with 0, those values are changed to Control.\n")
 
     omicData[[classVariable]][omicData[[classVariable]] == 0] <- "Control"
 
@@ -332,7 +332,7 @@ detectAnomalies <- function(
   # Checking if the coding of the class variable in the clinic dataset is correct
   if (1 %in% unique(clinicData[[classVariable]])) {
 
-    print("The class variable is coded with 1, those values are changed to Case.")
+    cat("The class variable is coded with 1, those values are changed to Case.\n")
 
     omicData[[classVariable]][omicData[[classVariable]] == 1] <- "Case"
 
@@ -345,7 +345,8 @@ detectAnomalies <- function(
 
   if (length(invalidPredictors) > 0) {
     cat("The following variables selected for analysis do not exist in the dataframe:\n")
-    print(paste(invalidPredictors, collapse = ", "))
+    cat(paste(invalidPredictors, collapse = ", "))
+    cat("\n")
 
     activePredictors <- activePredictors[!(activePredictors %in% invalidPredictors)]
   }
@@ -362,13 +363,12 @@ detectAnomalies <- function(
     numericActivePredictors <- numericActivePredictors[!(numericActivePredictors %in% invalidPredictors)]
 
 
-    print(paste(activePredictors, collapse = ", "))
 
     cat("Active numerical predictors:\n")
-    print(paste(numericActivePredictors, collapse = ", "))
-    cat("\n")
+    cat(paste(numericActivePredictors, collapse = ", "))
+    cat("\n\n")
     cat("Active categoric predictors:\n")
-    print(paste(categoricActivePredictors, collapse = ", "))
+    cat(paste(categoricActivePredictors, collapse = ", "))
   }
 
   if(!is.null(categoricActivePredictors) & is.null(numericActivePredictors)){
@@ -383,10 +383,10 @@ detectAnomalies <- function(
     categoricActivePredictors <- categoricActivePredictors[!(categoricActivePredictors %in% invalidPredictors)]
 
     cat("Active numerical predictors:\n")
-    print(paste(numericActivePredictors, collapse = ", "))
-    cat("\n")
+    cat(paste(numericActivePredictors, collapse = ", "))
+    cat("\n\n")
     cat("Active categoric predictors:\n")
-    print(paste(categoricActivePredictors, collapse = ", "))
+    cat(paste(categoricActivePredictors, collapse = ", "))
   }
 
 
@@ -395,9 +395,8 @@ detectAnomalies <- function(
     repeatedPredictors <- intersect(numericActivePredictors, categoricActivePredictors)
 
     if (length(repeatedPredictors) > 0) {
-      print("The following variables selected for analysis are listed as categorical and numerical variables:\n")
-      print(paste(repeatedPredictors, collapse = ", "))
-
+      cat("The following variables selected for analysis are listed as categorical and numerical variables:\n")
+      cat(paste(repeatedPredictors, collapse = ", "))
       return("Please remove repeated variables.")
     }
 
@@ -429,7 +428,7 @@ detectAnomalies <- function(
 
     dir.create(paste(savingName, "geneticAlgorithm", sep = "/"))
 
-    print("Executing the genetic algorithm")
+    cat("Executing the genetic algorithm.\n")
     MLASDO::executeGA(
       savingName = savingName,
       omicData = omicData,
@@ -669,7 +668,7 @@ detectAnomalies <- function(
   write.table(selectedOmicPredictors, selectedDataPath, row.names = T, col.names = T, sep =  '\t')
 
 
-  print("Performing PCA analysis")
+  cat("Performing PCA analysis.\n")
   MLASDO::performPCAAnalysis(
     savingName = savingName,
     mlAlgorithm = mlAlgorithm,
@@ -681,7 +680,7 @@ detectAnomalies <- function(
 
   if(!is.null(categoricActivePredictors) & !is.null(numericActivePredictors)){
 
-    print("Performing ratio analysis with the variable classification specified by the user")
+    cat("Performing ratio analysis with the variable classification specified by the user.\n")
     MLASDO::performRatioAnalysisUserVariableClassification(
       savingName = savingName,
       changedClinicData = changedClinicData,
@@ -695,7 +694,7 @@ detectAnomalies <- function(
 
   } else {
 
-    print("Performing ratio analysis with automated variable classification")
+    cat("Performing ratio analysis with automated variable classification.\n")
     MLASDO::performRatioAnalysisAutomatedVariableClassification(
       savingName = savingName,
       changedClinicData = changedClinicData,
@@ -729,7 +728,7 @@ detectAnomalies <- function(
   rownames(changedClinicData) <- changedClinicData[[idColumn]]
   changedClinicData[[idColumn]] <- NULL
 
-  print("Compiling Markdown file")
+  cat("Compiling Markdown file.\n")
   MLASDO::compileMarkdown(
     savingName = savingName,
     justAnalysis = justAnalysis,
@@ -741,6 +740,8 @@ detectAnomalies <- function(
     baselinePredictors = baselinePredictors,
     originalDiagnosis = omicData[[classVariable]],
     clinicData = changedClinicData,
+    categoricActivePredictors = categoricActivePredictors,
+    numericActivePredictors = numericActivePredictors,
     selectedData = selectedOmicPredictors,
     classVariable = classVariable,
     idColumn = idColumn,

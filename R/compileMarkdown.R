@@ -15,6 +15,8 @@
 #'
 #' @param originalDiagnosis Array of Strings | Original diagnostics of the patients.
 #' @param clinicData Dataset | Dataset of clinic data that will be used.
+#' @param omicPredictorsToIgnore Array of Strings | Variables to be removed from the omic dataset. These will not be taken into account in the execution.
+#' @param clinicPredictorsToIgnore Array of Strings | Variables to be removed from the clinic dataset. These will not be taken into account in the execution.
 #' @param selectedData Dataset | Dataset of omic data with only the predictors selected by the Lasso model.
 #'
 #' @param classVariable String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.
@@ -48,7 +50,7 @@
 #'
 #' @examples
 #'
-#' MLASDO::compileMarkdown(savingName = savingName, justAnalysis = justAnalysis, geneticAlgorithm = geneticAlgorithm, mlAlgorithm = mlAlgorithm, numModelExecutions = numModelExecutions, lassoPredictorsPath = lassoPredictorsPath, baselinePrecision = baselinePrecision, baselinePredictors = baselinePredictors, originalDiagnosis = originalDiagnosis, clinicData = clinicData, selectedData = selectedData, classVariable = classVariable, idColumn = idColumn, predictorsToSelect = predictorsToSelect, numTrees = numTrees, mtry = mtry, splitRule = splitRule, sampleFraction = sampleFraction, maxDepth = maxDepth, minNodeSize = minNodeSize, nIterations = nIterations, nStopiter = nStopiter, populationSize = populationSize, diagnosticChangeProbability = diagnosticChangeProbability, crossoverOperator = crossoverOperator, crossoverProbability = crossoverProbability, selectionOperator = selectionOperator, mutationOperator = mutationOperator, mutationProbability = mutationProbability, nCores = nCores, seed = seed, bestAfterDetectionCM = bestAfterDetectionCM)
+#' MLASDO::compileMarkdown(savingName = savingName, justAnalysis = justAnalysis, geneticAlgorithm = geneticAlgorithm, mlAlgorithm = mlAlgorithm, numModelExecutions = numModelExecutions, lassoPredictorsPath = lassoPredictorsPath, baselinePrecision = baselinePrecision, baselinePredictors = baselinePredictors, originalDiagnosis = originalDiagnosis, clinicData = clinicData, categoricActivePredictors = categoricActivePredictors, numericActivePredictors = numericActivePredictors, selectedData = selectedData, classVariable = classVariable, idColumn = idColumn, predictorsToSelect = predictorsToSelect, numTrees = numTrees, mtry = mtry, splitRule = splitRule, sampleFraction = sampleFraction, maxDepth = maxDepth, minNodeSize = minNodeSize, nIterations = nIterations, nStopiter = nStopiter, populationSize = populationSize, diagnosticChangeProbability = diagnosticChangeProbability, crossoverOperator = crossoverOperator, crossoverProbability = crossoverProbability, selectionOperator = selectionOperator, mutationOperator = mutationOperator, mutationProbability = mutationProbability, nCores = nCores, seed = seed, bestAfterDetectionCM = bestAfterDetectionCM)
 #'
 
 compileMarkdown <- function(
@@ -62,6 +64,8 @@ compileMarkdown <- function(
     baselinePredictors,
     originalDiagnosis,
     clinicData,
+    categoricActivePredictors,
+    numericActivePredictors,
     selectedData,
     classVariable,
     idColumn,
@@ -136,6 +140,8 @@ compileMarkdown <- function(
                                  originalDiagnosis = originalDiagnosis,
                                  mlAlgorithm = mlAlgorithm,
                                  clinicData = clinicData,
+                                 categoricActivePredictors = categoricActivePredictors,
+                                 numericActivePredictors = numericActivePredictors,
                                  selectedData = selectedData,
                                  pcaAnalysis = pca,
                                  pcaAnalysisSelected = pcaSelected,
