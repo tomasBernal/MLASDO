@@ -33,6 +33,8 @@
 #'
 #' @param idColumn String | Variable that indicates the identifier of each patient in both datasets. If the user does not specify a path to his own data, the value for the sample data, Trial, will be used.
 #' @param activePredictors Array of Strings | Predictors on which the study of the ratios will be conducted after the genetic algorithm has been performed. Default value: All the predictors in clinic data, except classVariable and idColumn.
+#' @param numericActivePredictors Array of Strings | Numerical predictors of the active predictor list. Default value: All predictors in the active predictor list that return TRUE in the is.numeric function or return TRUE in the is.integer function and have 7 or more distinct values.
+#' @param categoricActivePredictors Array of Strings | Categoric predictors of the active predictor list. Default value: All predictors in the active predictor list that return FALSE in the is.numeric function or return TRUE in the is.integer function and have less than 7 distinct values.
 #' @param classVariable String | Target variable, which must be binary, meaning it has two possible values. If the user does not specify a path to his own data, the value for the sample data, Ca.Co.Last, will be used.
 #' @param savingName String | Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.
 #'
@@ -60,7 +62,7 @@
 #'
 #' MLASDO::detectAnomalies(savingName = "QuickExecution", mlAlgorithm = "Lasso", nIterations = 3, nStopIter = 2, populationSize = 20, activePredictors = c("sex", "age", "Mutation", "Ethnicity"))
 #'
-#' MLASDO::detectAnomalies(savingName = "ExecutionWithOwnData", mlAlgorithm = "RF", predictorsToSelect = 0.3, omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv", idColumn = "Patient.Id", nIterations = 3, populationSize = 10, classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"))
+#' MLASDO::detectAnomalies(savingName = "ExecutionWithOwnData", mlAlgorithm = "RF", predictorsToSelect = 0.3, omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv", idColumn = "Patient.Id", nIterations = 3, populationSize = 10, classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"), numericActivePredictors = c("age"), categoricActivePredictors = c("sex", "Ethnicity"))
 #'
 #' MLASDO::detectAnomalies(justAnalysis = TRUE, mlAlgorithm = "Lasso", geneticPath = "GA.rds", solutionPath = "GA_solution.rds", bestModelAfterDetectionPath = "GA_Best_Model.rds", lassoPredictorsPath = "GA_Lasso_Predictors.rds", savingName = "ExecutionWithOwnData", omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv",idColumn = "Patient.Id",classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"))
 
@@ -85,6 +87,8 @@ detectAnomalies <- function(
     clinicPredictorsToIgnore = NULL,
     idColumn,
     activePredictors = NULL,
+    numericActivePredictors = NULL,
+    categoricActivePredictors = NULL,
     classVariable,
     savingName = "",
     nCores = 6,
@@ -335,10 +339,65 @@ detectAnomalies <- function(
   invalidPredictors <- activePredictors[!(activePredictors %in% names(clinicData))]
 
   if (length(invalidPredictors) > 0) {
-    print("The following selected variables for analysis do not exist in the dataframe:\n")
+    print("The following variables selected for analysis do not exist in the dataframe:\n")
     print(paste(invalidPredictors, collapse = ", "))
 
     activePredictors <- activePredictors[!(activePredictors %in% invalidPredictors)]
+  }
+
+  if(is.null(categoricActivePredictors) & !is.null(numericActivePredictors)){
+    print("You have only indicated which active predictors are numeric, all other active predictors will be treated as categorical.")
+
+    restOfPredictors <- activePredictors[!(activePredictors %in% numericActivePredictors)]
+
+    categoricActivePredictors <- restOfPredictors
+
+    print("Active numerical predictors:")
+    print("")
+    print(paste(numericActivePredictors, collapse = ", "))
+
+    print("")
+    print("Active categoric predictors:")
+    print("")
+    print(paste(categoricActivePredictors, collapse = ", "))
+  }
+
+  if(!is.null(categoricActivePredictors) & is.null(numericActivePredictors)){
+    print("You have only indicated which active predictors are categorical, all other active predictors will be treated as numeric")
+
+    restOfPredictors <- activePredictors[!(activePredictors %in% categoricActivePredictors)]
+
+    numericActivePredictors <- restOfPredictors
+
+    print("Active numerical predictors:")
+    print("")
+    print(paste(numericActivePredictors, collapse = ", "))
+
+    print("")
+    print("Active categoric predictors:")
+    print("")
+    print(paste(categoricActivePredictors, collapse = ", "))
+  }
+
+  if(!is.null(numericActivePredictors)){
+    numericActivePredictors <- numericActivePredictors[!(numericActivePredictors %in% invalidPredictors)]
+  }
+
+  if(!is.null(categoricActivePredictors)){
+    categoricActivePredictors <- categoricActivePredictors[!(categoricActivePredictors %in% invalidPredictors)]
+  }
+
+  if(!is.null(categoricActivePredictors) & !is.null(numericActivePredictors)){
+
+    repeatedPredictors <- intersect(numericActivePredictors, categoricActivePredictors)
+
+    if (length(repeatedPredictors) > 0) {
+      print("The following variables selected for analysis are listed as categorical and numerical variables:\n")
+      print(paste(repeatedPredictors, collapse = ", "))
+
+      return("Please remove repeated variables.")
+    }
+
   }
 
   # If the name is empty, we need to establish a default one
@@ -617,15 +676,34 @@ detectAnomalies <- function(
     classVariable = classVariable
   )
 
-  print("Performing ratio analysis")
-  MLASDO::performRatioAnalysis(
-    savingName = savingName,
-    changedClinicData = changedClinicData,
-    firstGroup = firstGroup,
-    secondGroup = secondGroup,
-    activePredictors = activePredictors,
-    classVariable = classVariable
-  )
+  if(!is.null(categoricActivePredictors) & !is.null(numericActivePredictors)){
+
+    print("Performing ratio analysis with the variable classification specified by the user")
+    MLASDO::performRatioAnalysisUserVariableClassification(
+      savingName = savingName,
+      changedClinicData = changedClinicData,
+      firstGroup = firstGroup,
+      secondGroup = secondGroup,
+      activePredictors = activePredictors,
+      categoricActivePredictors = categoricActivePredictors,
+      numericActivePredictors = numericActivePredictors,
+      classVariable = classVariable
+    )
+
+  } else {
+
+    print("Performing ratio analysis with automated variable classification")
+    MLASDO::performRatioAnalysisAutomatedVariableClassification(
+      savingName = savingName,
+      changedClinicData = changedClinicData,
+      firstGroup = firstGroup,
+      secondGroup = secondGroup,
+      activePredictors = activePredictors,
+      classVariable = classVariable
+    )
+
+  }
+
 
   bestAfterDetectionCM <- NULL
 

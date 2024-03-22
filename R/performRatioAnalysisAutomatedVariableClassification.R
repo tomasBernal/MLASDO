@@ -1,4 +1,4 @@
-#' performRatioAnalysis
+#' performRatioAnalysisAutomatedVariableClassification
 #'
 #' This function performs ratio-based analysis on the active activePredictors passed as parameters.
 #'
@@ -18,10 +18,10 @@
 #'
 #' @examples
 #'
-#' MLASDO::performRatioAnalysis(savingName = savingName, changedClinicData = changedClinicData, firstGroup = firstGroup, secondGroup = secondGroup, activePredictors = activePredictors, classVariable = classVariable)
+#' MLASDO::performRatioAnalysisAutomatedVariableClassification(savingName = savingName, changedClinicData = changedClinicData, firstGroup = firstGroup, secondGroup = secondGroup, activePredictors = activePredictors, classVariable = classVariable)
 
 
-performRatioAnalysis <- function(
+performRatioAnalysisAutomatedVariableClassification <- function(
     savingName,
     changedClinicData,
     firstGroup,
@@ -41,7 +41,7 @@ performRatioAnalysis <- function(
   for (activePredictor in activePredictors){
 
     # Checking if the activePredictor is categorical or discrete
-    if(!is.numeric(clinic[[activePredictor]]) | (is.integer(clinic[[activePredictor]]) & length(unique(clinic[[activePredictor]])) < 6)){
+    if(!is.numeric(clinic[[activePredictor]]) | (is.integer(clinic[[activePredictor]]) & length(unique(clinic[[activePredictor]])) < 7)){
 
         # Replacing NA with the string "Empty"
         clinic[[activePredictor]] <- replace(clinic[[activePredictor]], is.na(clinic[[activePredictor]]), "Empty")
@@ -83,7 +83,7 @@ performRatioAnalysis <- function(
   for(activePredictor in activePredictors){
 
     # Checking if the activePredictor is numerical
-    if((is.numeric(clinic[[activePredictor]]) & !is.integer(clinic[[activePredictor]])) | (is.integer(clinic[[activePredictor]]) & length(unique(clinic[[activePredictor]])) >= 6)){
+    if((is.numeric(clinic[[activePredictor]]) & !is.integer(clinic[[activePredictor]])) | (is.integer(clinic[[activePredictor]]) & length(unique(clinic[[activePredictor]])) >= 7)){
 
       # Obtaining the number of patients for the numerator and the denominator
       # Since the activePredictor is numeric, there will be empty columns
