@@ -223,6 +223,7 @@ detectAnomalies <- function(
     activePredictors <- c(numericActivePredictors, categoricActivePredictors)
 
   } else if(is.null(activePredictors)){
+
     activePredictors <- names(clinicData)
 
     activePredictors <- activePredictors[activePredictors != classVariable]
@@ -343,14 +344,14 @@ detectAnomalies <- function(
   invalidPredictors <- activePredictors[!(activePredictors %in% names(clinicData))]
 
   if (length(invalidPredictors) > 0) {
-    print("The following variables selected for analysis do not exist in the dataframe:\n")
+    cat("The following variables selected for analysis do not exist in the dataframe:\n")
     print(paste(invalidPredictors, collapse = ", "))
 
     activePredictors <- activePredictors[!(activePredictors %in% invalidPredictors)]
   }
 
   if(is.null(categoricActivePredictors) & !is.null(numericActivePredictors)){
-    print("You have only indicated which active predictors are numeric, all other active predictors will be treated as categorical.")
+    cat("You have only indicated which active predictors are numeric, all other active predictors will be treated as categorical.")
 
     restOfPredictors <- activePredictors[!(activePredictors %in% numericActivePredictors)]
 
@@ -359,10 +360,12 @@ detectAnomalies <- function(
     numericActivePredictors <- numericActivePredictors[!(numericActivePredictors %in% invalidPredictors)]
     categoricActivePredictors <- categoricActivePredictors[!(categoricActivePredictors %in% invalidPredictors)]
 
-    print("Active numerical predictors:\n")
+    print(paste(activePredictors, collapse = ", "))
+
+    cat("Active numerical predictors:\n")
     print(paste(numericActivePredictors, collapse = ", "))
-    print("\n")
-    print("Active categoric predictors:\n")
+    cat("\n")
+    cat("Active categoric predictors:\n")
     print(paste(categoricActivePredictors, collapse = ", "))
   }
 
@@ -376,10 +379,10 @@ detectAnomalies <- function(
     numericActivePredictors <- numericActivePredictors[!(numericActivePredictors %in% invalidPredictors)]
     categoricActivePredictors <- categoricActivePredictors[!(categoricActivePredictors %in% invalidPredictors)]
 
-    print("Active numerical predictors:\n")
+    cat("Active numerical predictors:\n")
     print(paste(numericActivePredictors, collapse = ", "))
-    print("\n")
-    print("Active categoric predictors:\n")
+    cat("\n")
+    cat("Active categoric predictors:\n")
     print(paste(categoricActivePredictors, collapse = ", "))
   }
 
