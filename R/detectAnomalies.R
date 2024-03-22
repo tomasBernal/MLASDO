@@ -665,7 +665,7 @@ detectAnomalies <- function(
   selectedOmicPredictors <- omicDataShow[, c(idColumn, rownames(selectedPredictors), classVariable)]
 
   dirPath <- paste(savingName, "analysisData", name, sep = "/")
-  selectedDataPath <- paste(dirPath, "Selected_Predictors.tsv", sep="_")
+  selectedDataPath <- paste(dirPath, "Clinic_Selected_Predictors.tsv", sep="_")
 
   write.table(selectedOmicPredictors, selectedDataPath, row.names = T, col.names = T, sep =  '\t')
 
