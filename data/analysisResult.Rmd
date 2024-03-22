@@ -895,6 +895,8 @@ plotCE <- plotCE %>% layout(title = title,
 plotCE
 ```
 
+`r paste(totalTable$percentageTextCE, collapse = "\n\n")`
+
 ```{r}
 for(i in 1:nrow(totalTable)){
   cat(totalTable$percentageTextCE[i])
