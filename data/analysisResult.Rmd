@@ -154,13 +154,9 @@ A `r modelName` model has been used to detect anomalous cases.
 
 ### 1.4 Categorization of clinical data
 
-The active predictors of numerical type are:
+The active predictors of numerical type are: `r paste("**", paste(params$numericActivePredictors, collapse = ", "), "**", sep = "")`
 
-`r paste(params$numericActivePredictors, collapse = ", ")`
-
-The active predictors of categorical type are:
-
-`r paste(params$categoricActivePredictors, collapse = ", ")`
+The active predictors of categorical type are: `r paste("**", paste(params$categoricActivePredictors, collapse = ", "), "**", sep = "")`
 
 # 2. Evolution of the `r modelName` model during the detection
 
