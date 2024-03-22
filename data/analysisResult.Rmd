@@ -83,9 +83,13 @@ bestAfterDetectionCM <- params$bestAfterDetectionCM
 worstCM <- params$worstModelCM
 ```
 
+```{r, include = FALSE}
+classVariable <- params$classVariable
+```
+
 # 1. Parameters and hyperparameters used for anomalous case detection
 
-The class variable used in the anomalous sample detection process was **params$classVariable**. The variable used as identifier of each patient has been **params$idColumn**.
+The class variable used in the anomalous sample detection process was **`r classVariable`**. The variable used as identifier of each patient has been **params$idColumn**.
 
 This process has been performed by applying a parallelization with **params$nCores** cores. In addition, the seed used in the process has been **params$seed**.
 
