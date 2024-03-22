@@ -356,13 +356,13 @@ detectAnomalies <- function(
 
     categoricActivePredictors <- restOfPredictors
 
-    print("Active numerical predictors:")
-    print("")
-    print(paste(numericActivePredictors, collapse = ", "))
+    numericActivePredictors <- numericActivePredictors[!(numericActivePredictors %in% invalidPredictors)]
+    categoricActivePredictors <- categoricActivePredictors[!(categoricActivePredictors %in% invalidPredictors)]
 
-    print("")
-    print("Active categoric predictors:")
-    print("")
+    print("Active numerical predictors:\n")
+    print(paste(numericActivePredictors, collapse = ", "))
+    print("\n")
+    print("Active categoric predictors:\n")
     print(paste(categoricActivePredictors, collapse = ", "))
   }
 
@@ -373,23 +373,16 @@ detectAnomalies <- function(
 
     numericActivePredictors <- restOfPredictors
 
-    print("Active numerical predictors:")
-    print("")
-    print(paste(numericActivePredictors, collapse = ", "))
+    numericActivePredictors <- numericActivePredictors[!(numericActivePredictors %in% invalidPredictors)]
+    categoricActivePredictors <- categoricActivePredictors[!(categoricActivePredictors %in% invalidPredictors)]
 
-    print("")
-    print("Active categoric predictors:")
-    print("")
+    print("Active numerical predictors:\n")
+    print(paste(numericActivePredictors, collapse = ", "))
+    print("\n")
+    print("Active categoric predictors:\n")
     print(paste(categoricActivePredictors, collapse = ", "))
   }
 
-  if(!is.null(numericActivePredictors)){
-    numericActivePredictors <- numericActivePredictors[!(numericActivePredictors %in% invalidPredictors)]
-  }
-
-  if(!is.null(categoricActivePredictors)){
-    categoricActivePredictors <- categoricActivePredictors[!(categoricActivePredictors %in% invalidPredictors)]
-  }
 
   if(!is.null(categoricActivePredictors) & !is.null(numericActivePredictors)){
 
