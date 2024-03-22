@@ -1,6 +1,6 @@
 #' performRatioAnalysis
 #'
-#' @description This function performs ratio-based analysis on the active activePredictors passed as parameters.
+#' This function performs ratio-based analysis on the active activePredictors passed as parameters.
 #'
 #' @param savingName String | Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.
 #'

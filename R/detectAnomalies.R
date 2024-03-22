@@ -1,6 +1,6 @@
 #' executeAndPerformAnalysis
 #'
-#' @description Methodology based on the combination of a genetic algorithm and a Machine Learning technique to mutate the final
+#' Methodology based on the combination of a genetic algorithm and a Machine Learning technique to mutate the final
 #' diagnosis of patients, detecting anomalies in them.
 #'
 #' These discrepancies may have their origin in the evolution of the subject itself, leading it from one group to
@@ -62,13 +62,13 @@
 #'
 #' MLASDO::detectAnomalies(savingName = "ExecutionWithOwnData", mlAlgorithm = "RF", predictorsToSelect = 0.3, omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv", idColumn = "Patient.Id", nIterations = 3, populationSize = 10, classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"))
 #'
-#' MLASDO::detectAnomalies(justAnalysis = TRUE, mlAlgorithm = "Lasso", geneticPath = "GA.rds", solutionPath = "GA_solution.rds", bestModelPath = "GA_Best_Model.rds", lassoPredictorsPath = "GA_Lasso_Predictors.rds", savingName = "ExecutionWithOwnData", omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv",idColumn = "Patient.Id",classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"))
+#' MLASDO::detectAnomalies(justAnalysis = TRUE, mlAlgorithm = "Lasso", geneticPath = "GA.rds", solutionPath = "GA_solution.rds", bestModelAfterDetectionPath = "GA_Best_Model.rds", lassoPredictorsPath = "GA_Lasso_Predictors.rds", savingName = "ExecutionWithOwnData", omicDataPath = "./myOmicData.tsv", clinicDataPath = "./myClinicData.tsv",idColumn = "Patient.Id",classVariable = "Diagnosis", activePredictors = c("sex", "age", "Ethnicity"))
 
 detectAnomalies <- function(
     justAnalysis = FALSE,
     solutionPath = "",
     geneticPath = "",
-    bestModelPath = "",
+    bestModelAfterDetectionPath = "",
     lassoPredictorsPath = "",
     mlAlgorithm,
     predictorsToSelect = 15,

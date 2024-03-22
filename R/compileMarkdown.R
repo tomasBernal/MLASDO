@@ -1,6 +1,6 @@
 #' compileMarkdown
 #'
-#' @description This function compiles the markdown file with the analysis results
+#' This function compiles the markdown file with the analysis results
 #'
 #' @param savingName String | Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.
 #'

@@ -1,6 +1,6 @@
 #' executeGA
 #'
-#' @description Methodology based on the combination of a genetic algorithm and a Machine Learning technique to mutate the final
+#' Methodology based on the combination of a genetic algorithm and a Machine Learning technique to mutate the final
 #' diagnosis of patients, detecting anomalies in them.
 #'
 #' These discrepancies may have their origin in the evolution of the subject itself, leading it from one group to

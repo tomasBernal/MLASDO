@@ -1,6 +1,6 @@
 #' performPCAAnalysis
 #'
-#' @description This function performs PCA analysis on the changed diagnoses after the execution of the genetic algorithm.
+#' This function performs PCA analysis on the changed diagnoses after the execution of the genetic algorithm.
 #'
 #' @param savingName String | Name under which the model and solution will be saved after execution. If the user does not set any name, it will create a string with the current date.
 #'
