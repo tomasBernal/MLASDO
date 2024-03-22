@@ -434,9 +434,9 @@ for(indexRatio in 1:nrow(totalTable)){
     text <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][1]
     text <- paste(text, "(Numeric)", "<br>", sep = " ")
     
-    text <- paste(text, "Ratio:", round(totalTable$CCCM[indexRatio], digits = 3),  sep = " ")
+    text <- paste(text, "Ratio: ", round(totalTable$CCCM[indexRatio], digits = 3), " (", round(numericTable[rownames(totalTable)[indexRatio], "MeanCC"], digits = 3), "/", round(numericTable[rownames(totalTable)[indexRatio], "MeanCM"], digits = 3), ")",  sep = "")
     
-    text <- paste(text, "Ratio (logaritmic):", sep = "<br>")
+    text <- paste(text, "Ratio (logaritmic scale):", sep = "<br>")
     text <- paste(text, round(totalTable$logCCCM[indexRatio], digits = 3),  sep = " ")
     
     text <- paste(text, "Number of Control -> Case patients:", sep = "<br>")
@@ -504,9 +504,17 @@ for(indexRatio in 1:nrow(totalTable)){
 
     text <- paste(strsplit(predictor, " ")[[1]][1], "=", predictorValue, "(Categoric)", "<br>", sep = " ")
     
-    text <- paste(text, "Ratio:", round(totalTable$CCCM[indexRatio], digits = 3), sep = " ")
+    if(allFlag){
+      
+      text <- paste(text, "Ratio:", round(totalTable$CCCM[indexRatio], digits = 3), sep = " ")
+      
+    } else {
+      
+      text <- paste(text, "Ratio: ", round(totalTable$CCCM[indexRatio], digits = 3), " (", totalTable$SumCCNumerator[indexRatio], "/", totalTable$SumCCDenominator[indexRatio], ") / (", totalTable$SumCCDenominator[indexRatio], "/", totalTable$SumCMNumerator[indexRatio], ")",  sep = "")
+      
+    }
     
-    text <- paste(text, "Ratio (logaritmic):", sep = "<br>")
+    text <- paste(text, "Ratio (logaritmic scale):", sep = "<br>")
     text <- paste(text, round(totalTable$logCCCM[indexRatio], digits = 3),  sep = " ")
 
     text <- paste(text, "<br>", sep = "")
@@ -586,10 +594,10 @@ for(indexRatio in 1:nrow(totalTable)){
     text <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][1]
 
     text <- paste(text, "(Numeric)", "<br>", sep = " ")
-    
-    text <- paste(text, "Ratio:", round(totalTable$ECEM[indexRatio], digits = 3), sep = " ")
+      
+    text <- paste(text, "Ratio: ", round(totalTable$ECEM[indexRatio], digits = 3), " (", round(numericTable[rownames(totalTable)[indexRatio], "MeanEC"], digits = 3), "/", round(numericTable[rownames(totalTable)[indexRatio], "MeanEM"], digits = 3), ")",  sep = "")
   
-    text <- paste(text, "Ratio (logaritmic):", sep = "<br>")
+    text <- paste(text, "Ratio (logaritmic scale):", sep = "<br>")
     text <- paste(text, round(totalTable$logECEM[indexRatio], digits = 3),  sep = " ")
     
     text <- paste(text, "Number of Case -> Control patients:", sep = "<br>")
@@ -660,9 +668,17 @@ for(indexRatio in 1:nrow(totalTable)){
     
     text <- paste(strsplit(predictor, " ")[[1]][1], "=", predictorValue, "(Categoric)","<br>", sep = " ")
     
-    text <- paste(text, "Ratio:", round(totalTable$ECEM[indexRatio], digits = 3), sep = " ")
+    if(allFlag){
+      
+      text <- paste(text, "Ratio:", round(totalTable$ECEM[indexRatio], digits = 3), sep = " ")
+      
+    } else {
+      
+      text <- paste(text, "Ratio: ", round(totalTable$ECEM[indexRatio], digits = 3), " (", totalTable$SumECNumerator[indexRatio], "/", totalTable$SumECDenominator[indexRatio], ") / (", totalTable$SumEMNumerator[indexRatio], "/", totalTable$SumEMDenominator[indexRatio], ")",  sep = "")
+      
+    }
     
-    text <- paste(text, "Ratio (logaritmic):", sep = "<br>")
+    text <- paste(text, "Ratio (logaritmic scale):", sep = "<br>")
     text <- paste(text, round(totalTable$logECEM[indexRatio], digits = 3),  sep = " ")
 
     text <- paste(text, "<br>", sep = "")
@@ -744,10 +760,10 @@ for(indexRatio in 1:nrow(totalTable)){
     text <- strsplit(rownames(totalTable)[indexRatio], " vs ")[[1]][1]
 
     text <- paste(text, "(Numeric)", "<br>", sep = " ")
-    
-    text <- paste(text, "Ratio:", round(totalTable$CE[indexRatio], digits = 3), sep = " ")
-    
-    text <- paste(text, "Ratio (logaritmic):", sep = "<br>")
+  
+    text <- paste(text, "Ratio: ", round(totalTable$CE[indexRatio], digits = 3), " (", round(numericTable[rownames(totalTable)[indexRatio], "MeanC"], digits = 3), "/", round(numericTable[rownames(totalTable)[indexRatio], "MeanE"], digits = 3), ")",  sep = "")
+
+    text <- paste(text, "Ratio (logaritmic scale):", sep = "<br>")
     text <- paste(text, round(totalTable$logCE[indexRatio], digits = 3),  sep = " ")
     
     text <- paste(text, "Number of Control patients (before genetic):", sep = "<br>")
@@ -820,9 +836,17 @@ for(indexRatio in 1:nrow(totalTable)){
     
     text <- paste(strsplit(predictor, " ")[[1]][1], "=", predictorValue, "(Categoric)", "<br>", sep = " ")
     
-    text <- paste(text, "Ratio:", round(totalTable$CE[indexRatio], digits = 3), sep = " ")
+    if(allFlag){
+      
+      text <- paste(text, "Ratio:", round(totalTable$CE[indexRatio], digits = 3), sep = " ")
+      
+    } else {
+      
+      text <- paste(text, "Ratio: ", round(totalTable$CE[indexRatio], digits = 3), " (", totalTable$SumCNumerator[indexRatio], "/", totalTable$SumCDenominator[indexRatio], ") / (", totalTable$SumENumerator[indexRatio], "/", totalTable$SumEDenominator[indexRatio], ")",  sep = "")
+      
+    }
     
-    text <- paste(text, "Ratio (logaritmic):", sep = "<br>")
+    text <- paste(text, "Ratio (logaritmic scale):", sep = "<br>")
     text <- paste(text, round(totalTable$logCE[indexRatio], digits = 3),  sep = " ")
     
     text <- paste(text, "<br>", sep = "")
@@ -885,6 +909,10 @@ for(indexRatio in 1:nrow(totalTable)){
 
 ### Ratios between Control and Case patients before detection
 
+For numerical attributes, on the right we see those that show higher mean values for controls than for cases. Analogously on the left. 
+
+For categorical attributes, we see a blob for each possible category versus the rest. If the attribute is binary, only a blob is required. We see there the ratio of members of one category and the rest, for controls, divided by the ratio of members of that category and the rest, for cases.
+
 ```{r, include = FALSE}
 plotCE <- plot_ly(totalTable,x=~logCE,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCE), height = (nrow(totalTable) * 850) / 36, width = 1000, hoverinfo = "text", text =~textCE)
 
@@ -902,6 +930,11 @@ plotCE
 `r paste(totalTable$percentageTextCE, collapse = "\n\n")`
 
 ### Evolution of the set of Control patients after detection
+
+For numerical attributes, on the left we see those that show higher mean values for controls that became cases in comparison to controls that remained as controls. Analogously on the right. 
+
+For categorical attributes, we see a blob for each possible category versus the rest. If the attribute is binary, only a blob is required. We see there the ratio of members of one category versus the rest, for all individuals that changed from control to cases, divided by the ratio of members of one category versus the rest, that remained as controls.
+
 ```{r, include = FALSE}
 plotCCCM <- plot_ly(totalTable,x=~logCCCM,y=~rownames(totalTable), type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsCCCM ), height = (nrow(totalTable) * 850) / 36, width = 1000, hoverinfo = "text", text =~textCCCM)
 
@@ -918,6 +951,11 @@ plotCCCM
 `r paste(totalTable$percentageTextCCCM, collapse = "\n\n")`
 
 ### Evolution of the set of Case patients after detection
+
+For numerical attributes, on the left we see those that show higher mean values for cases that became controls in comparison to cases that remained as cases. Analogously on the right. 
+
+For categorical attributes, we see a blob for each possible category versus the rest. If the attribute is binary, only a blob is required. We see there the ratio of members of one category versus the rest, for all individuals that changed from cases to controls, divided by the ratio of members of one category versus the rest, that remained as cases.
+
 ```{r, include = FALSE}
 plotECEM <- plot_ly(totalTable,x=~logECEM,y=~rownames(totalTable),type="scatter", mode = "markers", marker = list(size = 10, color = totalTable$ColorsECEM ), height = (nrow(totalTable) * 850) / 36, width = 1000, hoverinfo = "text", text =~textECEM)
 
