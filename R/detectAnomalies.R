@@ -364,11 +364,12 @@ detectAnomalies <- function(
 
 
 
-    cat("Active numerical predictors:\n")
+    cat("Active numerical predictors: ")
     cat(paste(numericActivePredictors, collapse = ", "))
-    cat("\n\n")
-    cat("Active categoric predictors:\n")
+    cat("\n")
+    cat("Active categoric predictors: ")
     cat(paste(categoricActivePredictors, collapse = ", "))
+    cat("\n")
   }
 
   if(!is.null(categoricActivePredictors) & is.null(numericActivePredictors)){
@@ -382,11 +383,12 @@ detectAnomalies <- function(
 
     categoricActivePredictors <- categoricActivePredictors[!(categoricActivePredictors %in% invalidPredictors)]
 
-    cat("Active numerical predictors:\n")
+    cat("Active numerical predictors: ")
     cat(paste(numericActivePredictors, collapse = ", "))
-    cat("\n\n")
-    cat("Active categoric predictors:\n")
+    cat("\n")
+    cat("Active categoric predictors: ")
     cat(paste(categoricActivePredictors, collapse = ", "))
+    cat("\n")
   }
 
 

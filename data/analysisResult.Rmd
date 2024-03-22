@@ -150,17 +150,17 @@ A `r modelName` model has been used to detect anomalous cases.
 `r if(executeRF){paste("- Maximum height of each tree in the forest: ", "**", params$maxDepth, "**.", sep = "")}`
 `r if(executeRF){paste("- Minimum number of observations required in a node to be able to split it: ", "**", params$minNodeSize, "**.", sep = "")}`
 
-`r if(executeRF){paste("In the RF model it is necessary to indicate the number of predictors to be selected from the most important predictors. In this case the number of predictors selected has been: ", params$predictorsToSelect, "." , sep = "")}`
+`r if(executeRF){paste("In the RF model it is necessary to indicate the number of predictors to be selected from the most important predictors. In this case the number of predictors selected has been: **", params$predictorsToSelect, "**." , sep = "")}`
 
 ### 1.4 Categorization of clinical data
 
 The active predictors of numerical type are:
 
-`r cat(paste(params$numericActivePredictors, collapse = ", "))`
+`r paste(params$numericActivePredictors, collapse = ", ")`
 
 The active predictors of categorical type are:
 
-`r cat(paste(params$categoricActivePredictors, collapse = ", "))`
+`r paste(params$categoricActivePredictors, collapse = ", ")`
 
 # 2. Evolution of the `r modelName` model during the detection
 
