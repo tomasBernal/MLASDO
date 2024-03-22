@@ -141,7 +141,7 @@ A `r modelName` model has been used to detect anomalous cases.
 
 `r if(executeRF){"The following hyperparameters have been chosen for this model:"}`
 
-`r if(executeRF){paste("- Number of trees of the Random Forest model: ", params$numTrees, ".", sep = "")}`
+`r if(executeRF){paste("- Number of trees of the Random Forest model: ", "**", params$numTrees, "**.", sep = "")}`
 `r if(executeRF){"- Number of predictors that are evaluated at each partition (node) of each tree: params$mtry."}`
 `r if(executeRF){"- Rule used to select the predictor and the optimal value to separate a node into two branches during the tree construction: params$splitRule."}`
 `r if(executeRF){"- Fraction of the training data that will be used to create each of the trees in the forest: params$sampleFraction."}`
