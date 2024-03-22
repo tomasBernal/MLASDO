@@ -351,14 +351,16 @@ detectAnomalies <- function(
   }
 
   if(is.null(categoricActivePredictors) & !is.null(numericActivePredictors)){
-    cat("You have only indicated which active predictors are numeric, all other active predictors will be treated as categorical.")
+    cat("You have only indicated which active predictors are numeric, all other active predictors will be treated as categorical.\n")
 
     restOfPredictors <- activePredictors[!(activePredictors %in% numericActivePredictors)]
 
     categoricActivePredictors <- restOfPredictors
 
+    invalidPredictors <- numericActivePredictors[!(numericActivePredictors %in% names(clinicData))]
+
     numericActivePredictors <- numericActivePredictors[!(numericActivePredictors %in% invalidPredictors)]
-    categoricActivePredictors <- categoricActivePredictors[!(categoricActivePredictors %in% invalidPredictors)]
+
 
     print(paste(activePredictors, collapse = ", "))
 
@@ -370,13 +372,14 @@ detectAnomalies <- function(
   }
 
   if(!is.null(categoricActivePredictors) & is.null(numericActivePredictors)){
-    print("You have only indicated which active predictors are categorical, all other active predictors will be treated as numeric")
+    cat("You have only indicated which active predictors are categorical, all other active predictors will be treated as numeric.\n")
 
     restOfPredictors <- activePredictors[!(activePredictors %in% categoricActivePredictors)]
 
     numericActivePredictors <- restOfPredictors
 
-    numericActivePredictors <- numericActivePredictors[!(numericActivePredictors %in% invalidPredictors)]
+    invalidPredictors <- categoricActivePredictors[!(categoricActivePredictors %in% names(clinicData))]
+
     categoricActivePredictors <- categoricActivePredictors[!(categoricActivePredictors %in% invalidPredictors)]
 
     cat("Active numerical predictors:\n")
