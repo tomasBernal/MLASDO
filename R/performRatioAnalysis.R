@@ -41,7 +41,7 @@ performRatioAnalysis <- function(
   for (activePredictor in activePredictors){
 
     # Checking if the activePredictor is categorical or discrete
-    if(!is.numeric(clinic[[activePredictor]] | (is.integer(clinic[[activePredictor]] & length(unique(clinic[[activePredictor]])) < 6))){
+    if(!is.numeric(clinic[[activePredictor]]) | (is.integer(clinic[[activePredictor]]) & length(unique(clinic[[activePredictor]])) < 6)){
 
         # Replacing NA with the string "Empty"
         clinic[[activePredictor]] <- replace(clinic[[activePredictor]], is.na(clinic[[activePredictor]]), "Empty")
