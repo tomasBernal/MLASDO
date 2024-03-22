@@ -218,7 +218,11 @@ detectAnomalies <- function(
 
   }
 
-  if(is.null(activePredictors)){
+  if(is.null(activePredictors) & !is.null(numericActivePredictors) & !is.null(categoricActivePredictors)){
+
+    activePredictors <- c(numericActivePredictors, categoricActivePredictors)
+
+  } else if(is.null(activePredictors)){
     activePredictors <- names(clinicData)
 
     activePredictors <- activePredictors[activePredictors != classVariable]
