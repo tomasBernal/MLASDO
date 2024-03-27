@@ -333,8 +333,13 @@ pcaSelected <- ggplot(params$pcaAnalysisSelected, aes(PC1, PC2)) +
     geom_jitter(aes(color = classVariable)) +
     xlab(paste("First Principal Component ->", pcaInfo["PC1Selected"], "% variability explained", sep = "")) + 
     ylab(paste("Second Principal Component ->", pcaInfo["PC2Selected"], "% variability explained", sep = "")) + 
-    ggtitle(paste("PCA Analysis of Changed Diagnostics in selected predictors<br>", pcaInfo["PC1Selected"] + pcaInfo["PC2Selected"], "% variability explained", sep = ""))
+    labs(title = "PCA Analysis of Changed Diagnostics in selected predictors<br>Another line")
 ```
+
+```{r, eval=FALSE,include=FALSE}
+ggtitle(paste("PCA Analysis of Changed Diagnostics in selected predictors<br>", pcaInfo["PC1Selected"] + pcaInfo["PC2Selected"], "% variability explained", sep = ""))
+```
+
 
 ```{r}
 pcaSelected
