@@ -151,6 +151,10 @@ detectAnomalies <- function(
     return("The package lazyeval is not installed")
   }
 
+  if (!require("ggtext", character.only = TRUE)) {
+    return("The package ggtext is not installed")
+  }
+
   #### CHECKING INITIAL STEP ####
 
   if(justAnalysis & solutionPath == ""){

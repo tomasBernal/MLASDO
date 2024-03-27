@@ -55,6 +55,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r, include=FALSE}
 library(plotly)
 library(lazyeval)
+library(ggtext)
 ```
 
 ```{r, include=FALSE}
@@ -333,7 +334,10 @@ pcaSelected <- ggplot(params$pcaAnalysisSelected, aes(PC1, PC2)) +
     geom_jitter(aes(color = classVariable)) +
     xlab(paste("First Principal Component ->", pcaInfo["PC1Selected"], "% variability explained", sep = "")) + 
     ylab(paste("Second Principal Component ->", pcaInfo["PC2Selected"], "% variability explained", sep = "")) + 
-    labs(title = "PCA Analysis of Changed Diagnostics in selected predictors<br>Another line")
+    labs(title = "PCA Analysis of Changed Diagnostics in selected predictors<br>Another line")  +
+    theme(plot.title.position = "plot",
+        plot.title = element_markdown(),
+        legend.position = "none")
 ```
 
 ```{r, eval=FALSE,include=FALSE}
