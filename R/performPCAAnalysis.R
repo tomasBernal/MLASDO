@@ -118,5 +118,5 @@ performPCAAnalysis <- function(
 
   # Save the pca analysis
   gaPath <- paste(dirPath, "PCA_Info.tsv", sep="_")
-  write.table(pca, gaPath, row.names = T, col.names = T, sep =  '\t')
+  write.table(pcaInfo, gaPath, row.names = T, col.names = T, sep =  '\t')
 }

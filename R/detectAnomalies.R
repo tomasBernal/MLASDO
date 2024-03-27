@@ -426,6 +426,8 @@ detectAnomalies <- function(
 
   subsetTrain <- createDataPartition(y = omicData[[classVariable]], p = partitionPercentage, list = FALSE)[,1]
 
+  cat("/n")
+
   if(!justAnalysis){
 
     dir.create(paste(savingName, "geneticAlgorithm", sep = "/"))
