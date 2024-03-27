@@ -317,9 +317,12 @@ pcaAnalysis <- ggplot(params$pcaAnalysis, aes(PC1, PC2)) +
     modelr::geom_ref_line(h = 0) +
     modelr::geom_ref_line(v = 0) +
     geom_jitter(aes(color = classVariable)) +
-    xlab(paste("First Principal Component ->", pcaInfo["PC1"], "% variability explained", sep = "")) + 
-    ylab(paste("Second Principal Component ->", pcaInfo["PC2"], "% variability explained", sep = "")) + 
-    ggtitle(paste("PCA Analysis of Changed Diagnostics ", pcaInfo["PC1"] + pcaInfo["PC2"], "% variability explained", sep = ""))
+    xlab(paste("First Principal Component (", pcaInfo["PC1"], "% variability explained)", sep = "")) + 
+    ylab(paste("Second Principal Component (", pcaInfo["PC2"], "% variability explained)", sep = "")) + 
+    labs(title = paste("PCA Analysis of Changed Diagnostics<br>", pcaInfo["PC1"] + pcaInfo["PC2"], "% variability explained by PC1 and PC2", sep = ""))  +
+    theme(plot.title.position = "panel",
+        plot.title = element_markdown(),
+        legend.position = "right")
 ```
 
 ```{r}
@@ -332,16 +335,12 @@ pcaSelected <- ggplot(params$pcaAnalysisSelected, aes(PC1, PC2)) +
     modelr::geom_ref_line(h = 0) +
     modelr::geom_ref_line(v = 0) +
     geom_jitter(aes(color = classVariable)) +
-    xlab(paste("First Principal Component ->", pcaInfo["PC1Selected"], "% variability explained", sep = "")) + 
-    ylab(paste("Second Principal Component ->", pcaInfo["PC2Selected"], "% variability explained", sep = "")) + 
-    labs(title = "PCA Analysis of Changed Diagnostics in selected predictors<br>Another line")  +
-    theme(plot.title.position = "plot",
+    xlab(paste("First Principal Component (", pcaInfo["PC1Selected"], "% variability explained)", sep = "")) + 
+    ylab(paste("Second Principal Component (", pcaInfo["PC2Selected"], "% variability explained)", sep = "")) + 
+    labs(title = paste("PCA Analysis of Changed Diagnostics in selected predictors<br>", pcaInfo["PC1Selected"] + pcaInfo["PC2Selected"], "% variability explained by PC1 and PC2", sep = ""))  +
+    theme(plot.title.position = "panel",
         plot.title = element_markdown(),
-        legend.position = "none")
-```
-
-```{r, eval=FALSE,include=FALSE}
-ggtitle(paste("PCA Analysis of Changed Diagnostics in selected predictors<br>", pcaInfo["PC1Selected"] + pcaInfo["PC2Selected"], "% variability explained", sep = ""))
+        legend.position = "right")
 ```
 
 
