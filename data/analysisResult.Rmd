@@ -19,6 +19,7 @@ params:
   selectedData : NULL
   pcaAnalysis : NULL
   pcaAnalysisSelected : NULL
+  pcaInfo: NULL
   numericTable : NULL
   totalTable : NULL
   classVariable: NULL
@@ -303,6 +304,10 @@ distributionDashboard
 
 # 5. PCA Analysis
 
+```{r, include = FALSE}
+pcaInfo <- params$pcaInfo
+```
+
 ### 5.1 PCA Analysis over total predictors
 ```{r, include = FALSE}
 classVariable <- params$pcaAnalysis[[params$classVariable]]
@@ -311,9 +316,9 @@ pcaAnalysis <- ggplot(params$pcaAnalysis, aes(PC1, PC2)) +
     modelr::geom_ref_line(h = 0) +
     modelr::geom_ref_line(v = 0) +
     geom_jitter(aes(color = classVariable)) +
-     xlab("First Principal Component") + 
-    ylab("Second Principal Component") + 
-    ggtitle("PCA Analysis of Changed Diagnostics")
+    xlab(paste("First Principal Component ", pcaInfo[PC1], "% variability explained", sep = "")) + 
+    ylab(paste("Second Principal Component ", pcaInfo[PC2], "% variability explained", sep = "")) + 
+    ggtitle(paste("PCA Analysis of Changed Diagnostics ", pcaInfo[PC1] + pcaInfo[PC2], "% variability explained", sep = ""))
 ```
 
 ```{r}
@@ -326,26 +331,26 @@ pcaSelected <- ggplot(params$pcaAnalysisSelected, aes(PC1, PC2)) +
     modelr::geom_ref_line(h = 0) +
     modelr::geom_ref_line(v = 0) +
     geom_jitter(aes(color = classVariable)) +
-     xlab("First Principal Component") + 
-    ylab("Second Principal Component") + 
-    ggtitle("PCA Analysis of Changed Diagnostics in selected predictors")
+    xlab(paste("First Principal Component ", pcaInfo[PC1Selected], "% variability explained", sep = "")) + 
+    ylab(paste("Second Principal Component ", pcaInfo[PC2Selected], "% variability explained", sep = "")) + 
+    ggtitle(paste("PCA Analysis of Changed Diagnostics in selected predictors", pcaInfo[PC1Selected] + pcaInfo[PC2Selected], "% variability explained", sep = ""))
 ```
 
 ```{r}
 pcaSelected
 ```
 
-# 6. Table with information about the selected predictors
+# 6. Importance of final selected predictors
 ```{r}
 DT::datatable(params$predictorsImp, class = 'cell-border stripe', options = list(scrollX = TRUE))
 ```
 
-# 7. Omical data with only the selected predictors
+# 7. Omics for the final selected predictors
 ```{r}
 DT::datatable(params$selectedData, class = 'cell-border stripe', options = list(scrollX = TRUE))
 ```
 
-# 8. Table of clinical data for patients
+# 8. Clinical data for individuals in the study
 ```{r}
 DT::datatable(params$clinicData, class = 'cell-border stripe', options = list(scrollX = TRUE))
 ```
@@ -530,7 +535,7 @@ for(indexRatio in 1:nrow(totalTable)){
       
     } else {
       
-      text <- paste(text, "Ratio: ", round(totalTable$CCCM[indexRatio], digits = 3), " -> (", totalTable$SumCCNumerator[indexRatio], "/", totalTable$SumCCDenominator[indexRatio], ") / (", totalTable$SumCCDenominator[indexRatio], "/", totalTable$SumCMNumerator[indexRatio], ")",  sep = "")
+      text <- paste(text, "Ratio: ", round(totalTable$CCCM[indexRatio], digits = 3), " -> (", totalTable$SumCCNumerator[indexRatio], "/", totalTable$SumCCDenominator[indexRatio], ") / (", totalTable$SumCMDenominator[indexRatio], "/", totalTable$SumCMNumerator[indexRatio], ")",  sep = "")
       
     }
     

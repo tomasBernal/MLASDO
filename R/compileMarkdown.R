@@ -102,6 +102,9 @@ compileMarkdown <- function(
   pcaPath <- paste(dirPath, "PCA_Selected.tsv", sep="_")
   pcaSelected <- read.table(pcaPath, header = TRUE, sep = "\t", row.names = 1)
 
+  pcaPath <- paste(dirPath, "PCA_Info.tsv", sep="_")
+  pcaInfo <- read.table(pcaPath, header = TRUE, sep = "\t", row.names = 1)
+
   gaPathNumeric <- paste(dirPath, "NumericTable.tsv", sep="_")
   gaPathTotal <- paste(dirPath, "TotalTable.tsv", sep="_")
 
@@ -147,6 +150,7 @@ compileMarkdown <- function(
                                  selectedData = selectedData,
                                  pcaAnalysis = pca,
                                  pcaAnalysisSelected = pcaSelected,
+                                 pcaInfo = pcaInfo,
                                  numericTable = numeric,
                                  totalTable = total,
                                  classVariable = classVariable,
