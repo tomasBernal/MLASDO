@@ -54,6 +54,12 @@ performPCAAnalysis <- function(
   # Performing prcomp which gives us the deviations of the principal components
   omicResult <- prcomp(omic, scale. = TRUE)
 
+  vExp <- omicResult$sdev^2
+
+  pExp <- vExp / sum(vExp)
+  pExp <- round(pExp, 2)
+
+
   # I convert the PCA analysis into a data frame and add the column indicating the diagnosis.
   pca <- as.data.frame(omicResult$x, stringsAsFactors=F)
 
@@ -84,6 +90,11 @@ performPCAAnalysis <- function(
   # Performing prcomp which gives us the deviations of the principal components
   omicResult <- prcomp(selectedData, scale. = TRUE)
 
+  vExpSelected <- omicResult$sdev^2
+
+  pExpSelected <- vExpSelected / sum(vExpSelected)
+  pExpSelected <- round(pExpSelected, 2)
+
   # I convert the PCA analysis into a data frame and add the column indicating the diagnosis.
   pca <- as.data.frame(omicResult$x, stringsAsFactors=F)
 
@@ -93,11 +104,19 @@ performPCAAnalysis <- function(
   # Changing the column name
   colnames(pca)[colnames(pca) == "classVariable"] <- classVariable
 
-  name <- paste("GA", savingName, sep="_")
-  dirPath <- paste(savingName, "analysisData", name, sep = "/")
-
   # Save the pca analysis
   gaPath <- paste(dirPath, "PCA_Selected.tsv", sep="_")
   write.table(pca, gaPath, row.names = T, col.names = T, sep =  '\t')
 
+
+  pcaInfo <- data.frame(
+    PC1 = pExp[1],
+    PC2 = pExp[2],
+    PC1Selected = pExpSelected[1],
+    PC2Selected = pExpSelected[2]
+  )
+
+  # Save the pca analysis
+  gaPath <- paste(dirPath, "PCA_Info.tsv", sep="_")
+  write.table(pca, gaPath, row.names = T, col.names = T, sep =  '\t')
 }
