@@ -426,13 +426,12 @@ detectAnomalies <- function(
 
   subsetTrain <- createDataPartition(y = omicData[[classVariable]], p = partitionPercentage, list = FALSE)[,1]
 
-  cat("/n")
 
   if(!justAnalysis){
 
     dir.create(paste(savingName, "geneticAlgorithm", sep = "/"))
 
-    cat("Executing the genetic algorithm.\n")
+    cat("\nExecuting the genetic algorithm.\n")
     MLASDO::executeGA(
       savingName = savingName,
       omicData = omicData,
@@ -690,7 +689,12 @@ detectAnomalies <- function(
   write.table(selectedOmicPredictors, selectedDataPath, row.names = T, col.names = T, sep =  '\t')
 
 
-  cat("Performing PCA analysis.\n")
+  if(justAnalysis){
+    cat("\nPerforming PCA analysis.\n")
+  } else {
+    cat("Performing PCA analysis.\n")
+  }
+
   MLASDO::performPCAAnalysis(
     savingName = savingName,
     mlAlgorithm = mlAlgorithm,

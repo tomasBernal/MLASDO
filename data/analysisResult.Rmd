@@ -316,8 +316,8 @@ pcaAnalysis <- ggplot(params$pcaAnalysis, aes(PC1, PC2)) +
     modelr::geom_ref_line(h = 0) +
     modelr::geom_ref_line(v = 0) +
     geom_jitter(aes(color = classVariable)) +
-    xlab(paste("First Principal Component ", pcaInfo["PC1"], "% variability explained", sep = "")) + 
-    ylab(paste("Second Principal Component ", pcaInfo["PC2"], "% variability explained", sep = "")) + 
+    xlab(paste("First Principal Component ->", pcaInfo["PC1"], "% variability explained", sep = "")) + 
+    ylab(paste("Second Principal Component ->", pcaInfo["PC2"], "% variability explained", sep = "")) + 
     ggtitle(paste("PCA Analysis of Changed Diagnostics ", pcaInfo["PC1"] + pcaInfo["PC2"], "% variability explained", sep = ""))
 ```
 
@@ -331,9 +331,9 @@ pcaSelected <- ggplot(params$pcaAnalysisSelected, aes(PC1, PC2)) +
     modelr::geom_ref_line(h = 0) +
     modelr::geom_ref_line(v = 0) +
     geom_jitter(aes(color = classVariable)) +
-    xlab(paste("First Principal Component ", pcaInfo["PC1Selected"], "% variability explained", sep = "")) + 
-    ylab(paste("Second Principal Component ", pcaInfo["PC2Selected"], "% variability explained", sep = "")) + 
-    ggtitle(paste("PCA Analysis of Changed Diagnostics in selected predictors", pcaInfo["PC1Selected"] + pcaInfo["PC2Selected"], "% variability explained", sep = ""))
+    xlab(paste("First Principal Component ->", pcaInfo["PC1Selected"], "% variability explained", sep = "")) + 
+    ylab(paste("Second Principal Component ->", pcaInfo["PC2Selected"], "% variability explained", sep = "")) + 
+    ggtitle(paste("PCA Analysis of Changed Diagnostics in selected predictors<br>", pcaInfo["PC1Selected"] + pcaInfo["PC2Selected"], "% variability explained", sep = ""))
 ```
 
 ```{r}
